@@ -5,14 +5,31 @@ import router from "../router/index";
 
 Vue.use(Vuex);
 
-export default new Vuex.Store({
+fb.postsCollection.orderBy('createdOn', 'desc').onSnapshot(snapshot => {
+  let postsArray = []
+
+  snapshot.forEach(doc => {
+    let post = doc.data()
+    post.id = doc.id
+
+    postsArray.push(post)
+  })
+
+  store.commit('setPosts', postsArray)
+})
+
+const store = new Vuex.Store({
   state: {
     userProfile: {},
+    posts: []
   },
   mutations: {
     setUserProfile(state, val) {
       state.userProfile = val;
     },
+    setPosts(state, val) {
+      state.posts = val
+    }
   },
   actions: {
     async login({ dispatch }, form) {
@@ -60,6 +77,21 @@ export default new Vuex.Store({
       commit("setUserProfile", {});
       router.push("/login");
     },
+    /* eslint-disable */
+    async createPost({ state, commit }, post) {
+      // create post in firebase
+      await fb.postsCollection.add({
+        createdOn: new Date(),
+        content: post.content,
+        userId: fb.auth.currentUser.uid,
+        userName: state.userProfile.name,
+        comments: 0,
+        likes: 0
+      })
+    },
+    /* eslint-enable */
   },
   modules: {},
 });
+
+export default store
