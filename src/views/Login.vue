@@ -6,13 +6,11 @@
     ></PasswordReset>
     <section>
       <div class="col1">
-        <h1>Vuegram</h1>
+        <h1>Mask Required</h1>
         <p>
-          Welcome to the
-          <a href="https://savvyapps.com/" target="_blank">Savvy Apps</a> sample
-          social media web app powered by Vue.js and Firebase. Build this
-          project by checking out The Definitive Guide to Getting Started with
-          Vue.js
+          This is the first release of a new concept by Christopher Ritter
+          which aims to provide a collaborative map of places that require 
+          masks to be worn by customers and employees. 
         </p>
       </div>
       <div :class="{ 'signup-form': !showLoginForm }" class="col2">
