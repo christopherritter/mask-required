@@ -77,6 +77,7 @@ const store = new Vuex.Store({
       commit("setUserProfile", {});
       router.push("/login");
     },
+    
     /* eslint-disable */
     async createPost({ state, commit }, post) {
       // create post in firebase

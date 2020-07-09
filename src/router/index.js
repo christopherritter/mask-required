@@ -29,6 +29,15 @@ const routes = [
       requiresAuth: true,
     },
   },
+  {
+    path: "/close-buy",
+    name: "close-buy",
+    component: () =>
+      import(/* webpackChunkName: "close-buy" */ "../views/CloseBuy.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
 ];
 
 const router = new VueRouter({
