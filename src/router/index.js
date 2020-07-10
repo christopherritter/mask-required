@@ -30,6 +30,15 @@ const routes = [
     },
   },
   {
+    path: "/user-location",
+    name: "user-location",
+    component: () =>
+      import(/* webpackChunkName: "user-location" */ "../views/UserLocation.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/close-buy",
     name: "close-buy",
     component: () =>

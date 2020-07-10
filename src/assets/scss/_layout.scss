@@ -407,3 +407,34 @@ header {
     margin-top: 2rem;
   }
 }
+
+// Map
+
+#map {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-color: red;
+  z-index: -1;
+}
+
+.ui.button,
+.dot.circle.icon {
+  background-color: $primary;
+  color: white;
+}
+
+.pac-icon {
+  display: none;
+}
+
+.pac-item {
+  padding: 10px;
+  font-size: 16px;
+  cursor: pointer;
+  &:hover {
+   background-color: $light; 
+  }
+}
