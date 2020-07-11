@@ -1,49 +1,57 @@
 <template>
-  <div class="six wide column">
-    <form class="ui segment large form">
-      <div class="ui segment">
-        <div class="field">
-          <div class="ui right icon input large">
-            <input
-              type="text"
-              placeholder="Enter your address"
-              v-model="coordinates"
-            />
-            <i class="dot circle link icon" @click="locatorButtonPressed"></i>
-          </div>
-        </div>
-        <div class="field">
-          <div class="two fields">
-            <div class="field">
-              <select v-model="type">
-                <option value="restaurant">Restaurant</option>
-              </select>
-            </div>
-            <div class="field">
-              <select v-model="radius">
-                <option value="5">5 KM</option>
-                <option value="10">10 KM</option>
-                <option value="15">15 KM</option>
-                <option value="20">20 KM</option>
-              </select>
+  <div class="ui grid">
+    <div class="six wide column red">
+      <form action="" class="ui segment large form" @submit.prevent>
+        <div class="ui message red" v-show="error">{{ error }}</div>
+        <div class="ui segment">
+          <div class="field">
+            <div
+              class="ui right icon input large"
+              :class="{ loading: spinner }"
+            >
+              <input
+                type="text"
+                placeholder="Enter your address"
+                v-model="address"
+                id="autocomplete"
+              />
+              <i class="dot circle link icon" @click="locatorButtonPressed"></i>
             </div>
           </div>
+          <div class="field">
+            <div class="two fields">
+              <div class="field">
+                <select v-model="type">
+                  <option value="restaurant">Restaurant</option>
+                </select>
+              </div>
+              <div class="field">
+                <select v-model="radius">
+                  <option value="5">5KM</option>
+                  <option value="10">10KM</option>
+                  <option value="15">15KM</option>
+                  <option value="20">20KM</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <button class="ui button" @click="findCloseBuyButtonPressed">
+            Find Close Buy
+          </button>
         </div>
-        <button class="ui button" @click="findCloseBuyButtonPressed">
-          Find CloseBuy
-        </button>
-      </div>
-    </form>
-    <div class="ui segment" style="max-height:500px;overflow:scroll">
-      <div class="ui divided items">
-        <div class="item" v-for="place in places" :key="place.id">
-          <div class="content">
-            <div class="header">{{ place.name }}</div>
-            <div class="meta">{{ place.vicinity }}</div>
+      </form>
+      <div class="ui segment" style="max-height:500px;overflow:scroll">
+        <div class="ui divided items">
+          <div class="item" v-for="place in places" :key="place.id">
+            <div class="content">
+              <div class="header">{{ place.name }}</div>
+              <div class="meta">{{ place.vicinity }}</div>
+            </div>
           </div>
         </div>
       </div>
     </div>
+    <div class="ten wide column blue" ref="map"></div>
   </div>
 </template>
 
@@ -53,6 +61,10 @@ import axios from "axios";
 export default {
   data() {
     return {
+      address: "",
+      error: "",
+      spinner: false,
+      apiKey: "AIzaSyCHzVbXJqB_-tUwT2AeUGZ_-HRkvJOHjqI",
       lat: 0,
       lng: 0,
       type: "",
@@ -60,38 +72,101 @@ export default {
       places: [],
     };
   },
-  computed: {
-    coordinates() {
-      return `${this.lat}, ${this.lng}`;
-    },
+  mounted() {
+    /* eslint-disable */
+    let autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById("autocomplete")
+    );
+    /* eslint-enable */
   },
   methods: {
     /* eslint-disable */
     locatorButtonPressed() {
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          this.lat = position.coords.latitude;
-          this.lng = position.coords.longitude;
-        },
-        (error) => {
-          console.log("Error getting location");
-        }
-      );
+      this.spinner = true;
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            this.lat = position.coords.latitude;
+            this.lng = position.coords.longitude;
+
+            this.getAddressFrom(
+              position.coords.latitude,
+              position.coords.longitude
+            );
+          },
+          (error) => {
+            this.error = "Can't find your address. Please enter it manually.";
+            this.spinner = false;
+          }
+        );
+      } else {
+        this.error = "Your browser does not support Geolocation API";
+        this.spinner = false;
+      }
     },
-    /* eslint-enable */
+    getAddressFrom(lat, long) {
+      axios
+        .get(
+          "https://cors-anywhere.herokuapp.com/" +
+            "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+            lat +
+            "," +
+            long +
+            "&key=" +
+            this.apiKey
+        )
+        .then((response) => {
+          if (response.data.error_message) {
+            this.error = response.data.error_message;
+          } else {
+            this.address = response.data.results[0].formatted_address;
+          }
+          this.spinner = false;
+        })
+        .catch((error) => {
+          this.error = error.message;
+          this.spinner = false;
+        });
+    },
     findCloseBuyButtonPressed() {
-      const URL = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=-33.8670522,151.1957362&radius=1500&type=restaurant&keyword=cruise&key=AIzaSyDfwF-xQ0RLDqNcOmPy6Xhp-b0OvPvgJ_c`;
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${
+        this.lat
+      },${this.lng}&type=${this.type}&radius=${this.radius * 1000}&key=${
+        this.apiKey
+      }`;
+
       axios
         .get(URL)
         .then((response) => {
           this.places = response.data.results;
-          // this.addLocationsToGoogleMaps();
+          this.showPlacesOnMap();
         })
         .catch((error) => {
-          console.log(error.message);
-          console.log('Places: ' + this.places.length);
+          this.error = error.message;
         });
     },
+    showPlacesOnMap() {
+      const map = new google.maps.Map(
+        this.$refs["map"],
+        {
+          zoom: 15,
+          center: new google.maps.LatLng(this.lat, this.lng),
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        }
+      );
+
+      for (let i = 0; i < this.places.length; i++) {
+        const lat = this.places[i].geometry.location.lat;
+        const lng = this.places[i].geometry.location.lng;
+
+        const marker = new google.maps.Marker({
+          position: new google.maps.LatLng(lat, lng), 
+          map: map
+        });
+      }
+    }
+    /* eslint-enable */
   },
 };
 </script>

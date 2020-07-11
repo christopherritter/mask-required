@@ -16,10 +16,10 @@
                   v-model="address"
                   id="autocomplete"
                 />
-                <i class="dot circle link icon"></i>
+                <i class="dot circle link icon" @click="locatorButtonPressed"></i>
               </div>
             </div>
-            <button class="ui button" @click="locatorButtonPressed">Go</button>
+            <button class="ui button">Go</button>
           </div>
         </form>
       </div>
@@ -86,6 +86,7 @@ export default {
     getAddressFrom(lat, long) {
       axios
         .get(
+          "https://cors-anywhere.herokuapp.com/" +
           "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
             lat +
             "," +
