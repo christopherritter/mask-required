@@ -108,7 +108,7 @@ export default {
     getAddressFrom(lat, long) {
       axios
         .get(
-          // "https://cors-anywhere.herokuapp.com/" +
+          "https://cors-anywhere.herokuapp.com/" +
             "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
             lat +
             "," +
@@ -130,7 +130,7 @@ export default {
         });
     },
     findCloseBuyButtonPressed() {
-      const URL = `https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${
         this.lat
       },${this.lng}&type=${this.type}&radius=${this.radius * 1000}&key=${
         this.apiKey
