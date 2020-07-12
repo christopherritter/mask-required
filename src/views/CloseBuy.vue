@@ -1,5 +1,5 @@
 <template>
-  <div class="ui grid">
+  <main id="close-buy" class="container">
     <div class="six wide column red">
       <form action="" class="ui segment large form" @submit.prevent>
         <div class="ui message red" v-show="error">{{ error }}</div>
@@ -52,7 +52,7 @@
       </div>
     </div>
     <div class="ten wide column blue" ref="map"></div>
-  </div>
+  </main>
 </template>
 
 <script>

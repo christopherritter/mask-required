@@ -1,5 +1,5 @@
 <template>
-  <div id="dashboard">
+  <main id="dashboard" class="container-fluid">
     <transition name="fade">
       <CommentModal
         v-if="showCommentModal"
@@ -39,8 +39,8 @@
         </div>
       </div>
     </transition>
-    <section>
-      <div class="col1">
+    <div class="row">
+      <div class="col-sm-4 p-0">
         <div class="profile">
           <h5>{{ userProfile.name }}</h5>
           <p>{{ userProfile.title }}</p>
@@ -59,7 +59,7 @@
           </div>
         </div>
       </div>
-      <div class="col2">
+      <div class="col-sm-8 p-0">
         <div v-if="posts.length">
           <div v-for="post in posts" :key="post.id" class="post">
             <h5>{{ post.userName }}</h5>
@@ -84,8 +84,8 @@
           <p class="no-results">There are currently no posts</p>
         </div>
       </div>
-    </section>
-  </div>
+    </div>
+  </main>
 </template>
 
 <script>

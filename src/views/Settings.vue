@@ -1,34 +1,38 @@
 <template>
-  <section id="settings">
-    <div class="col1">
-      <h3>Settings</h3>
-      <p>Update your profile</p>
+  <main id="settings" class="container-fluid">
+    <div class="row justify-content-md-center">
+      <div class="col-sm-2">
+        <h3>Settings</h3>
+        <p>Update your profile</p>
 
-      <transition name="fade">
-        <p v-if="showSuccess" class="success">profile updated</p>
-      </transition>
+        <transition name="fade">
+          <p v-if="showSuccess" class="success">profile updated</p>
+        </transition>
 
-      <form @submit.prevent>
-        <label for="name">Name</label>
-        <input
-          v-model.trim="name"
-          type="text"
-          :placeholder="userProfile.name"
-          id="name"
-        />
+        <form @submit.prevent>
+          <label for="name">Name</label>
+          <input
+            v-model.trim="name"
+            type="text"
+            :placeholder="userProfile.name"
+            id="name"
+          />
 
-        <label for="title">Job Title</label>
-        <input
-          v-model.trim="title"
-          type="text"
-          :placeholder="userProfile.title"
-          id="title"
-        />
+          <label for="title">Job Title</label>
+          <input
+            v-model.trim="title"
+            type="text"
+            :placeholder="userProfile.title"
+            id="title"
+          />
 
-        <button @click="updateProfile()" class="button">Update Profile</button>
-      </form>
+          <button @click="updateProfile()" class="button">
+            Update Profile
+          </button>
+        </form>
+      </div>
     </div>
-  </section>
+  </main>
 </template>
 
 <script>

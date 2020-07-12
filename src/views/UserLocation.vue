@@ -1,8 +1,8 @@
 <template>
-  <div>
-    <section class="ui two column centered grid">
-      <div class="column">
-        <form action="" class="ui segment large form" @submit.prevent>
+  <main id="user-location" class="container-fluid">
+    <div class="row justify-content-md-center">
+      <div class="col-sm-4">
+        <form class="ui segment large form" @submit.prevent>
           <div class="ui message red" v-show="error">{{ error }}</div>
           <div class="ui segment">
             <div class="field">
@@ -19,13 +19,12 @@
                 <i class="dot circle link icon" @click="locatorButtonPressed"></i>
               </div>
             </div>
-            <button class="ui button">Go</button>
           </div>
         </form>
       </div>
-    </section>
-    <section id="map"></section>
-  </div>
+    </div>
+    <div id="map"></div>
+  </main>
 </template>
 
 <script>

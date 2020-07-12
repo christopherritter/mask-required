@@ -1,28 +1,22 @@
 <template>
-  <header>
-    <section>
-      <div class="col1">
-        <router-link to="/">
-          <h3>Mask Required</h3>
-        </router-link>
-        <ul class="inline">
-          <li>
-            <router-link to="/">Dashboard</router-link>
-          </li>
-          <li>
-            <router-link to="/settings">Settings</router-link>
-          </li>
-          <li>
-            <router-link to="/user-location">User Location</router-link>
-          </li>
-          <li>
-            <router-link to="/close-buy">Close Buy</router-link>
-          </li>
-          <li><a @click="logout()">Logout</a></li>
-        </ul>
-      </div>
-    </section>
-  </header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+
+    <router-link class="navbar-brand" to="/">Mask Required</router-link>
+
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <router-link to="/user-location" class="nav-link">User Location</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link to="/close-buy" class="nav-link">Close Buy</router-link>
+      </li>
+      <li class="nav-item">
+        <router-link to="/settings" class="nav-link">Settings</router-link>
+      </li>
+      <li class="nav-item"><a @click="logout()" class="nav-link">Logout</a></li>
+    </ul>
+
+  </nav>
 </template>
 
 <script>

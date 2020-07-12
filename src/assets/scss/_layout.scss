@@ -166,28 +166,15 @@ header {
   }
 }
 
-// dashboard
-#dashboard {
-  section {
-    padding: 2rem 0;
-  }
-
-  .col1 {
-    flex: 0 0 30%;
-
-    @media screen and (max-width: 1000px) {
-      flex: 0 0 40%;
-    }
-  }
+main {
+  padding: 3.5rem 0 0 0;
 
   .profile {
     background: $white;
     padding: 2rem;
 
-    h5 {}
-
     p {
-      color: $medium;
+      color: $secondary;
       margin-bottom: 1rem;
     }
   }
@@ -385,7 +372,6 @@ header {
 
 // settings
 #settings {
-  padding: 2rem 0;
 
   .col1 {
     max-width: 600px;
@@ -412,7 +398,7 @@ header {
 
 #map {
   position: absolute;
-  top: 0;
+  top: -0.25rem;
   right: 0;
   bottom: 0;
   left: 0;
