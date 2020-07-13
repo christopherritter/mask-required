@@ -1,26 +1,31 @@
 <template>
   <main id="user-location" class="container-fluid">
     <div class="row justify-content-md-center">
-      <div class="col-sm-4">
-        <form class="ui segment large form" @submit.prevent>
-          <div class="ui message red" v-show="error">{{ error }}</div>
-          <div class="ui segment">
-            <div class="field">
-              <div
-                class="ui right icon input large"
-                :class="{ loading: spinner }"
-              >
-                <input
-                  type="text"
-                  placeholder="Enter your address"
-                  v-model="address"
-                  id="autocomplete"
-                />
-                <i class="dot circle link icon" @click="locatorButtonPressed"></i>
+      <div class="col-md-6">
+        <div class="card mt-3">
+          <form @submit.prevent class="card-body">
+            <div class="alert alert-danger" v-show="error">{{ error }}</div>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Enter your address"
+                v-model="address"
+                id="autocomplete"
+              />
+              <div class="input-group-append">
+                <button
+                  class="btn btn-primary"
+                  :class="{ loading: spinner }"
+                  @click="locatorButtonPressed"
+                  type="button"
+                >
+                  <i class="fas fa-map-marker-alt"></i>
+                </button>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
+        </div>
       </div>
     </div>
     <div id="map"></div>
@@ -52,8 +57,11 @@ export default {
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
       // console.log(place);
-      this.showUserLocationOnTheMap(place.geometry.location.lat(), place.geometry.location.lng());
-    })
+      this.showUserLocationOnTheMap(
+        place.geometry.location.lat(),
+        place.geometry.location.lng()
+      );
+    });
     /* eslint-enable */
   },
   methods: {
@@ -69,7 +77,8 @@ export default {
             );
             this.showUserLocationOnTheMap(
               position.coords.latitude,
-              position.coords.longitude);
+              position.coords.longitude
+            );
           },
           (error) => {
             this.error = "Can't find your address. Please enter it manually.";
@@ -86,7 +95,7 @@ export default {
       axios
         .get(
           "https://cors-anywhere.herokuapp.com/" +
-          "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+            "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
             lat +
             "," +
             long +
@@ -112,15 +121,15 @@ export default {
     showUserLocationOnTheMap(latitude, longitude) {
       // Create a map object
       let map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15, 
-        center: new google.maps.LatLng( latitude, longitude ),
-        mapTypeId: google.maps.MapTypeId.ROADMAP
+        zoom: 15,
+        center: new google.maps.LatLng(latitude, longitude),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
       });
       new google.maps.Marker({
-        position: new google.maps.LatLng( latitude, longitude ),
-        map: map
-      })
-    }
+        position: new google.maps.LatLng(latitude, longitude),
+        map: map,
+      });
+    },
     /* eslint-enable */
   },
 };
