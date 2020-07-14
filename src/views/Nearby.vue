@@ -1,0 +1,11 @@
+<template>
+  <v-main>
+    <v-container>
+      <v-row>
+        <v-col>
+          <h1>Nearby</h1>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-main>
+</template>

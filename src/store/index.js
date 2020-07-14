@@ -21,7 +21,8 @@ fb.postsCollection.orderBy('createdOn', 'desc').onSnapshot(snapshot => {
 const store = new Vuex.Store({
   state: {
     userProfile: {},
-    posts: []
+    place: {},
+    posts: [],
   },
   mutations: {
     setUserProfile(state, val) {
@@ -138,7 +139,6 @@ const store = new Vuex.Store({
     /* eslint-enable */
     
   },
-  modules: {},
 });
 
 export default store

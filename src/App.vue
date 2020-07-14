@@ -13,11 +13,14 @@ export default {
   components: {
     SiteNav
   },
+  created () {
+    this.$vuetify.theme.dark = true
+  },
   computed: {
     ...mapState(['userProfile']),
     showNav() {
       return Object.keys(this.userProfile).length > 1
     }
-  }
+  },
 }
 </script>

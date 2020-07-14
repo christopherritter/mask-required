@@ -1,35 +1,42 @@
 <template>
-  <main id="user-location" class="container-fluid">
-    <div class="row justify-content-md-center">
-      <div class="col-md-6">
-        <div class="card mt-3">
-          <form @submit.prevent class="card-body">
-            <div class="alert alert-danger" v-show="error">{{ error }}</div>
-            <div class="input-group">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Enter your address"
-                v-model="address"
-                id="autocomplete"
-              />
-              <div class="input-group-append">
-                <button
-                  class="btn btn-primary"
-                  :class="{ loading: spinner }"
-                  @click="locatorButtonPressed"
-                  type="button"
-                >
-                  <i class="fas fa-map-marker-alt"></i>
-                </button>
+  <v-main id="user-location" class="container-fluid">
+    <v-container class="fill-height" fluid>
+      <v-row>
+        <v-col>
+          <div class="card mt-3">
+            <form @submit.prevent class="card-body">
+              <div class="alert alert-danger" v-show="error">{{ error }}</div>
+              <div class="input-group">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter your address"
+                  v-model="address"
+                  id="autocomplete"
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-primary"
+                    :class="{ loading: spinner }"
+                    @click="locatorButtonPressed"
+                    type="button"
+                  >
+                    <i class="fas fa-map-marker-alt"></i>
+                  </button>
+                </div>
               </div>
-            </div>
-          </form>
-        </div>
-      </div>
-    </div>
-    <div id="map"></div>
-  </main>
+            </form>
+          </div>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col>
+          <div id="map"></div>
+        </v-col>
+      </v-row>
+    </v-container>
+    
+  </v-main>
 </template>
 
 <script>
@@ -137,11 +144,6 @@ export default {
 
 <style lang="scss" scoped>
 #map {
-  position: absolute;
-  top: -0.25rem;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: -1;
+  height: 500px;
 }
 </style>

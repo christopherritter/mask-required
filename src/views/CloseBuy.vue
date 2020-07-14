@@ -1,60 +1,65 @@
 <template>
-  <main id="close-buy" class="container-fluid">
-    <div class="row">
-      <div class="sidebar col-md-4">
-        <div class="card mt-3">
-          <form class="card-body" @submit.prevent>
-            <div class="alert alert-danger" v-show="error">{{ error }}</div>
-            <div class="input-group mb-3">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Enter your address"
-                v-model="address"
-                id="autocomplete"
-              />
-              <div class="input-group-append">
-                <button
-                  class="btn btn-primary"
-                  :class="{ loading: spinner }"
-                  @click="locatorButtonPressed"
-                  type="button"
-                >
-                  <i class="fas fa-map-marker-alt"></i>
-                </button>
+  <v-main id="close-buy">
+    <v-container fluid>
+      <v-row>
+        <v-col cols="12" md="4" class="shrink">
+          <div class="card mt-3">
+            <form class="card-body" @submit.prevent>
+              <div class="alert alert-danger" v-show="error">{{ error }}</div>
+              <div class="input-group mb-3">
+                <input
+                  type="text"
+                  class="form-control"
+                  placeholder="Enter your address"
+                  v-model="address"
+                  id="autocomplete"
+                />
+                <div class="input-group-append">
+                  <button
+                    class="btn btn-primary"
+                    :class="{ loading: spinner }"
+                    @click="locatorButtonPressed"
+                    type="button"
+                  >
+                    <i class="fas fa-map-marker-alt"></i>
+                  </button>
+                </div>
               </div>
-            </div>
-            <div class="input-group mb-3">
-              <select class="form-control col-md-6 mr-2" v-model="type">
-                <option value="restaurant">Restaurant</option>
-              </select>
+              <div class="input-group mb-3">
+                <select class="form-control col-md-6 mr-2" v-model="type">
+                  <option value="restaurant">Restaurant</option>
+                </select>
 
-              <select class="form-control col-md-6 ml-2" v-model="radius">
-                <option value="5">5KM</option>
-                <option value="10">10KM</option>
-                <option value="15">15KM</option>
-                <option value="20">20KM</option>
-              </select>
-            </div>
-            <button class="btn btn-primary" @click="findCloseBuyButtonPressed">
-              Find Close Buy
-            </button>
-          </form>
-        </div>
-        <ul class="list-group mt-3 mb-3">
-          <li
-            class="list-group-item list-group-item-action flex-column align-items-start"
-            v-for="place in places"
-            :key="place.id"
-          >
-            <h5 class="mb-1">{{ place.name }}</h5>
-            <small class="text-muted">{{ place.vicinity }}</small>
-          </li>
-        </ul>
-      </div>
-    </div>
-    <div id="map" ref="map"></div>
-  </main>
+                <select class="form-control col-md-6 ml-2" v-model="radius">
+                  <option value="5">5KM</option>
+                  <option value="10">10KM</option>
+                  <option value="15">15KM</option>
+                  <option value="20">20KM</option>
+                </select>
+              </div>
+              <button
+                class="btn btn-primary"
+                @click="findCloseBuyButtonPressed"
+              >
+                Find Close Buy
+              </button>
+            </form>
+          </div>
+          <ul class="list-group mt-3 mb-3">
+            <li
+              class="list-group-item list-group-item-action flex-column align-items-start"
+              v-for="place in places"
+              :key="place.id"
+            >
+              <h5 class="mb-1">{{ place.name }}</h5>
+              <small class="text-muted">{{ place.vicinity }}</small>
+            </li>
+          </ul>
+        </v-col>
+        <v-col cols="12" md="8" ref="map"></v-col>
+      </v-row>
+    </v-container>
+  </v-main>
 </template>
 
 <script>
