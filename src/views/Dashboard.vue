@@ -1,5 +1,5 @@
 <template>
-  <main id="dashboard" class="container-fluid">
+  <v-container id="dashboard" fluid>
     <transition name="fade">
       <CommentModal
         v-if="showCommentModal"
@@ -39,8 +39,8 @@
         </div>
       </div>
     </transition>
-    <div class="row">
-      <div class="col-sm-4 p-0">
+    <v-row>
+      <v-col cols="12" md="4" class="pt-0">
         <div class="profile">
           <h5>{{ userProfile.name }}</h5>
           <p>{{ userProfile.title }}</p>
@@ -58,8 +58,8 @@
             </form>
           </div>
         </div>
-      </div>
-      <div class="col-sm-8 p-0">
+      </v-col>
+      <v-col cols="12" md="8" class="pt-0">
         <div v-if="posts.length">
           <div v-for="post in posts" :key="post.id" class="post">
             <h5>{{ post.userName }}</h5>
@@ -83,9 +83,9 @@
         <div v-else>
           <p class="no-results">There are currently no posts</p>
         </div>
-      </div>
-    </div>
-  </main>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script>
@@ -108,7 +108,7 @@ export default {
     };
   },
   components: {
-    CommentModal,
+    CommentModal
   },
   computed: {
     ...mapState(["userProfile", ["posts"]]),

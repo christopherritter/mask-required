@@ -79,3 +79,16 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+#settings {
+
+  form {
+    margin-top: 3rem;
+  }
+
+  .button {
+    margin-top: 2rem;
+  }
+}
+</style>

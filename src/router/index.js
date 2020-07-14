@@ -1,6 +1,6 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Dashboard from "../views/Dashboard.vue";
+import Reviews from "../views/Home.vue";
 import { auth } from "../firebase";
 
 Vue.use(VueRouter);
@@ -8,15 +8,15 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Dashboard",
-    component: Dashboard,
+    name: "Home",
+    component: Reviews,
     meta: {
       requiresAuth: true,
     },
   },
   {
     path: "/login",
-    name: "Login",
+    name: "login",
     component: () =>
       import(/* webpackChunkName: "login" */ "../views/Login.vue"),
   },
@@ -43,6 +43,48 @@ const routes = [
     name: "close-buy",
     component: () =>
       import(/* webpackChunkName: "close-buy" */ "../views/CloseBuy.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/dashboard",
+    name: "dashboard",
+    component: () =>
+      import(/* webpackChunkName: "dashboard" */ "../views/Dashboard.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/home",
+    name: "home",
+    component: () =>
+      import(/* webpackChunkName: "home" */ "../views/Home.vue"),
+  },
+  {
+    path: "/nearby",
+    name: "nearby",
+    component: () =>
+      import(/* webpackChunkName: "nearby" */ "../views/Nearby.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/place",
+    name: "place",
+    component: () =>
+      import(/* webpackChunkName: "place" */ "../views/Place.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
+    path: "/search",
+    name: "search",
+    component: () =>
+      import(/* webpackChunkName: "search" */ "../views/Search.vue"),
     meta: {
       requiresAuth: true,
     },

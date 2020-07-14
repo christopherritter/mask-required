@@ -178,3 +178,14 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+#map {
+  position: absolute;
+  top: -0.25rem;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+}
+</style>
