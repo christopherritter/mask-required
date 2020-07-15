@@ -21,7 +21,13 @@ fb.postsCollection.orderBy('createdOn', 'desc').onSnapshot(snapshot => {
 const store = new Vuex.Store({
   state: {
     userProfile: {},
-    place: {},
+    place: {
+      name: "",
+      formatted_address: "",
+      types: [],
+      url: "",
+      place_id: ""
+    },
     posts: [],
   },
   mutations: {

@@ -62,6 +62,15 @@ const routes = [
     },
   },
   {
+    path: "/search",
+    name: "search",
+    component: () =>
+      import(/* webpackChunkName: "search" */ "../views/Search.vue"),
+    meta: {
+      requiresAuth: true,
+    },
+  },
+  {
     path: "/place",
     name: "place",
     component: () =>
@@ -71,10 +80,10 @@ const routes = [
     },
   },
   {
-    path: "/search",
-    name: "search",
+    path: "/review",
+    name: "review",
     component: () =>
-      import(/* webpackChunkName: "search" */ "../views/Search.vue"),
+      import(/* webpackChunkName: "review" */ "../views/Review.vue"),
     meta: {
       requiresAuth: true,
     },

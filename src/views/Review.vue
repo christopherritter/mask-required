@@ -1,4 +1,3 @@
-/*eslint no-unused-vars: ["error", { "args": "none" }]*/
 <template>
   <v-main>
     <transition name="fade">

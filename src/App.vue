@@ -13,9 +13,6 @@ export default {
   components: {
     SiteNav
   },
-  created () {
-    this.$vuetify.theme.dark = true
-  },
   computed: {
     ...mapState(['userProfile']),
     showNav() {

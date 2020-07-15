@@ -1,35 +1,57 @@
 <template>
   <div id="siteNav">
-    <v-navigation-drawer v-model="drawer" :clipped="$vuetify.breakpoint.lgAndUp" app>
+    <v-navigation-drawer
+      v-model="drawer"
+      :clipped="$vuetify.breakpoint.lgAndUp"
+      app
+    >
       <v-list dense>
+        <v-list-item link>
+          <v-list-item-title @click="$router.push('user-location')">
+            User Location
+          </v-list-item-title>
+        </v-list-item>
 
-          <v-list-item link>
-            <v-list-item-title @click="$router.push('user-location')">
-              User Location
-            </v-list-item-title>
-          </v-list-item>
-
-          <v-list-item link>
-            <v-list-item-title @click="$router.push('close-buy')">
-              Close Buy
-            </v-list-item-title>
-          </v-list-item>
+        <v-list-item link>
+          <v-list-item-title @click="$router.push('close-buy')">
+            Close Buy
+          </v-list-item-title>
+        </v-list-item>
+        
+        <v-list-item link>
+          <v-list-item-title @click="$router.push('nearby')">
+            Nearby
+          </v-list-item-title>
+        </v-list-item>
 
       </v-list>
     </v-navigation-drawer>
-    <v-app-bar app :clipped-left="$vuetify.breakpoint.lgAndUp">
-      <v-app-bar-nav-icon @click="drawer = true"></v-app-bar-nav-icon>
-      <v-toolbar-title @click="$router.push('home')" style="cursor: pointer;">
+    <v-app-bar
+      color="gray darken-3"
+      :clipped-left="$vuetify.breakpoint.lgAndUp"
+      dark
+      app
+    >
+      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
+      <v-toolbar-title @click="$router.push('home')" class="ml-0 p-3" style="cursor: pointer;">
         Mask Required
       </v-toolbar-title>
 
-      <v-text-field class="pl-8 pt-5" v-model="address" id="autocomplete">
-        <v-icon slot="prepend" dark>mdi-magnify</v-icon>
-      </v-text-field>
+      <v-text-field
+        class="pl-4 hidden-sm-and-down"
+        v-model="address"
+        id="autocomplete"
+        flat
+        solo-inverted
+        hide-details
+        prepend-inner-icon="mdi-magnify"
+        label="Search"
+        placeholder=""
+      ></v-text-field>
 
       <v-spacer></v-spacer>
 
-      <v-btn icon>
+      <v-btn icon @click="$router.push('review')">
         <v-icon>mdi-plus-circle-outline</v-icon>
       </v-btn>
 
@@ -63,11 +85,15 @@
 <script>
 export default {
   data: () => ({
-    address: "",
+    address: null,
     drawer: false,
     group: null,
   }),
   methods: {
+    selectPlace(place) {
+      // console.log(place);
+      this.$store.state.place = place;
+    },
     logout() {
       this.$store.dispatch("logout");
     },
@@ -85,8 +111,10 @@ export default {
 
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
-      this.$store.state.place = place;
-      if (this.$router.currentRoute != "place") {
+
+      this.selectPlace(place);
+
+      if (this.$router.currentRoute.name != "place") {
         this.$router.push("place");
       }
 
