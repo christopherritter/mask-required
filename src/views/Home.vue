@@ -1,115 +1,69 @@
 <template>
-  <v-main>
-    <v-container id="home" fluid>
-      <v-row align="center">
-        <v-col>
-          <v-card>
-            <v-card-title class="headline">
-              Search for Public APIs
-            </v-card-title>
-            <v-card-text>
-              <v-autocomplete
-                v-model="model"
-                :items="items"
-                :loading="isLoading"
-                :search-input.sync="search"
-                color="white"
-                hide-no-data
-                hide-selected
-                item-text="Description"
-                item-value="API"
-                label="Public APIs"
-                placeholder="Start typing to Search"
-                prepend-icon="mdi-database-search"
-                return-object
-              ></v-autocomplete>
-            </v-card-text>
-            <v-divider></v-divider>
-            <v-expand-transition>
-              <v-list v-if="model" class="red lighten-3">
-                <v-list-item v-for="(field, i) in fields" :key="i">
-                  <v-list-item-content>
-                    <v-list-item-title v-text="field.value"></v-list-item-title>
-                    <v-list-item-subtitle
-                      v-text="field.key"
-                    ></v-list-item-subtitle>
-                  </v-list-item-content>
-                </v-list-item>
-              </v-list>
-            </v-expand-transition>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn
-                :disabled="!model"
-                color="grey darken-3"
-                @click="model = null"
-              >
-                Clear
-                <v-icon right>mdi-close-circle</v-icon>
-              </v-btn>
-            </v-card-actions>
-          </v-card>
-        </v-col>
-      </v-row>
+  <v-main class="mt-10">
+    <v-container>
+      <v-card class="p-4">
+        <v-row>
+          <v-col class="text-center">
+            <h3>Find a safe place to shop.</h3>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col>
+            <v-text-field
+              class="pl-4 hidden-sm-and-down"
+              v-model="address"
+              id="home-autocomplete"
+              flat
+              solo-inverted
+              hide-details
+              prepend-inner-icon="mdi-magnify"
+              label="Search"
+              placeholder=""
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-card>
     </v-container>
   </v-main>
 </template>
 
 <script>
 export default {
-    data: () => ({
-      descriptionLimit: 60,
-      entries: [],
-      isLoading: false,
-      model: null,
-      search: null,
-    }),
-
-    computed: {
-      fields () {
-        if (!this.model) return []
-
-        return Object.keys(this.model).map(key => {
-          return {
-            key,
-            value: this.model[key] || 'n/a',
-          }
-        })
-      },
-      items () {
-        return this.entries.map(entry => {
-          const Description = entry.Description.length > this.descriptionLimit
-            ? entry.Description.slice(0, this.descriptionLimit) + '...'
-            : entry.Description
-
-          return Object.assign({}, entry, { Description })
-        })
-      },
+  data: () => ({
+    address: null,
+  }),
+  methods: {
+    selectPlace(place) {
+      // console.log(place);
+      this.$store.state.place = place;
     },
+  },
+  mounted() {
+    this.$store.state.showSearch = false;
 
-    watch: {
-      search (val) {
-        // Items have already been loaded
-        if (this.items.length > 0) return
+    let autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById("home-autocomplete")
+      // {
+      //   bounds: new google.maps.LatLngBounds(
+      //     new google.maps.LatLng(40.367474, -82.996216)
+      //   )
+      // }
+    );
 
-        // Items have already been requested
-        if (this.isLoading) return
+    autocomplete.addListener("place_changed", () => {
+      let place = autocomplete.getPlace();
 
-        this.isLoading = true
+      this.selectPlace(place);
 
-        // Lazily load input items
-        fetch('https://api.publicapis.org/entries')
-          .then(res => res.json())
-          .then(res => {
-            const { count, entries } = res
-            this.count = count
-            this.entries = entries
-          })
-          .catch(err => {
-            console.log(err)
-          })
-          .finally(() => (this.isLoading = false))
-      },
-    },
-  }
+      if (this.$router.currentRoute.name != "place") {
+        this.$router.push("place");
+      }
+
+      // this.showUserLocationOnTheMap(
+      //   place.geometry.location.lat(),
+      //   place.geometry.location.lng()
+      // );
+    });
+  },
+};
 </script>

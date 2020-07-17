@@ -32,14 +32,15 @@
       app
     >
       <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon> -->
-      <v-toolbar-title class="ml-0 p-3">
+      <v-toolbar-title @click="goHome" class="ml-0 p-3" :style="showPointer">
         Mask Required
       </v-toolbar-title>
 
       <v-text-field
+        v-if="this.$store.state.showSearch"
         class="pl-4 hidden-sm-and-down"
         v-model="address"
-        id="autocomplete"
+        id="navbar-autocomplete"
         flat
         solo-inverted
         hide-details
@@ -50,7 +51,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn icon @click="$router.push('review')">
+      <v-btn icon @click="$router.push('search')">
         <v-icon>mdi-plus-circle-outline</v-icon>
       </v-btn>
 
@@ -93,34 +94,50 @@ export default {
       // console.log(place);
       this.$store.state.place = place;
     },
+    goHome() {
+      if (this.$router.currentRoute.name != "home") {
+        this.$router.push({ name: "home" });
+      }
+    },
     logout() {
       this.$store.dispatch("logout");
     },
   },
   mounted() {
-    let autocomplete = new google.maps.places.Autocomplete(
-      document.getElementById("autocomplete")
-      // {
-      //   bounds: new google.maps.LatLngBounds(
-      //     new google.maps.LatLng(40.367474, -82.996216)
-      //   )
-      // }
-    );
+    if (this.$store.state.showSearch) {
+      let autocomplete = new google.maps.places.Autocomplete(
+        document.getElementById("navbar-autocomplete")
+        // {
+        //   bounds: new google.maps.LatLngBounds(
+        //     new google.maps.LatLng(40.367474, -82.996216)
+        //   )
+        // }
+      );
 
-    autocomplete.addListener("place_changed", () => {
-      let place = autocomplete.getPlace();
+      autocomplete.addListener("place_changed", () => {
+        let place = autocomplete.getPlace();
 
-      this.selectPlace(place);
+        this.selectPlace(place);
 
-      if (this.$router.currentRoute.name != "place") {
-        this.$router.push("place");
+        if (this.$router.currentRoute.name != "place") {
+          this.$router.push("place");
+        }
+
+        // this.showUserLocationOnTheMap(
+        //   place.geometry.location.lat(),
+        //   place.geometry.location.lng()
+        // );
+      });
+    }
+  },
+  computed: {
+    showPointer() {
+      if (this.$router.currentRoute.name == "home") {
+        return { pointer: "none" };
+      } else {
+        return { cursor: "pointer" };
       }
-
-      // this.showUserLocationOnTheMap(
-      //   place.geometry.location.lat(),
-      //   place.geometry.location.lng()
-      // );
-    });
+    },
   },
   watch: {
     group() {

@@ -41,26 +41,48 @@
     </transition>
     <v-container id="place" fluid>
       <v-row>
-        <v-col cols="12" md="4">
-          <div class="profile">
-            <h5>{{ place.name }}</h5>
-            <p>{{ place.formatted_address }}</p>
-            <div class="create-post">
-              <p>create a post</p>
+        <v-col cols="12" md="8">
+          <div>
+            <div v-if="profile.name" class="profile-header">
+              <h5>{{ place.name }}</h5>
+              <p>{{ place.formatted_address }}</p>
+            </div>
+            <div v-if="profile.name == null" class="create-post">
+              <h3>Create a Review</h3>
               <form @submit.prevent>
-                <textarea v-model.trim="post.content"></textarea>
-                <button
+                <v-text-field
+                  class="hidden-sm-and-down"
+                  v-model="address"
+                  id="review-autocomplete"
+                  flat
+                  solo-inverted
+                  hide-details
+                  prepend-inner-icon="mdi-magnify"
+                  label="Enter business name and location."
+                  placeholder=""
+                ></v-text-field>
+                <div class="text-center">
+                  <v-rating v-model="rating"></v-rating>
+                </div>
+                <v-textarea
+                  name="input-7-1"
+                  label="Feedback"
+                  v-model.trim="post.content"
+                  value="The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through."
+                  hint="Please provide additional feedback."
+                ></v-textarea>
+                <v-btn
                   @click="createPost()"
                   :disabled="post.content === ''"
-                  class="button"
+                  color="primary"
                 >
                   post
-                </button>
+                </v-btn>
               </form>
             </div>
           </div>
         </v-col>
-        <v-col cols="12" md="8" class="pt-0">
+        <v-col cols="12" md="4" class="pt-0">
           <div v-if="posts.length">
             <div v-for="post in posts" :key="post.id" class="post">
               <h5>{{ post.userName }}</h5>
@@ -99,6 +121,7 @@ import { commentsCollection } from "@/firebase";
 export default {
   data() {
     return {
+      address: null,
       post: {
         content: "",
       },
@@ -116,6 +139,9 @@ export default {
     ...mapState(["userProfile", "place", ["posts"]]),
   },
   methods: {
+    selectPlace(place) {
+      this.$store.state.place = place;
+    },
     createPost() {
       this.$store.dispatch("createPost", { content: this.post.content });
       this.post.content = "";
@@ -151,6 +177,29 @@ export default {
       this.postComments = [];
       this.showPostModal = false;
     },
+  },
+  mounted() {
+    this.$store.state.showSearch = false;
+
+    let autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById("review-autocomplete")
+      // {
+      //   bounds: new google.maps.LatLngBounds(
+      //     new google.maps.LatLng(40.367474, -82.996216)
+      //   )
+      // }
+    );
+
+    autocomplete.addListener("place_changed", () => {
+      let place = autocomplete.getPlace();
+
+      this.selectPlace(place);
+
+      // this.showUserLocationOnTheMap(
+      //   place.geometry.location.lat(),
+      //   place.geometry.location.lng()
+      // );
+    });
   },
   filters: {
     formatDate(val) {

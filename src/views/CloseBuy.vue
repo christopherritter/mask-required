@@ -56,7 +56,7 @@
             </li>
           </ul>
         </v-col>
-        <v-col cols="12" md="8" ref="map"></v-col>
+        <v-col cols="12" md="8" id="map"></v-col>
       </v-row>
     </v-container>
   </v-main>

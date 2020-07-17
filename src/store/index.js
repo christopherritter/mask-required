@@ -22,13 +22,14 @@ const store = new Vuex.Store({
   state: {
     userProfile: {},
     place: {
-      name: "",
-      formatted_address: "",
+      name: null,
+      formatted_address: null,
       types: [],
-      url: "",
-      place_id: ""
+      url: null,
+      place_id: null
     },
     posts: [],
+    showSearch: true,
   },
   mutations: {
     setUserProfile(state, val) {
