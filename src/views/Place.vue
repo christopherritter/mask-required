@@ -61,7 +61,7 @@
       <v-row>
         <v-col>
           <v-card v-if="posts.length">
-            <v-btn color="grey darken-4" dark class="mt-4 mx-4">Write a review</v-btn>
+            <v-btn color="grey darken-4" dark class="mt-4 mx-4" @click="$router.push('review')">Write a review</v-btn>
             <v-divider></v-divider>
             <div v-for="post in posts" :key="post.id" class="post">
               <v-card-title class="post-username">{{

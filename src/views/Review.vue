@@ -43,11 +43,11 @@
       <v-row>
         <v-col cols="12" md="8">
           <div>
-            <div v-if="profile.name" class="profile-header">
+            <div class="profile-header">
               <h5>{{ place.name }}</h5>
               <p>{{ place.formatted_address }}</p>
             </div>
-            <div v-if="profile.name == null" class="create-post">
+            <div class="create-post">
               <h3>Create a Review</h3>
               <form @submit.prevent>
                 <v-text-field
@@ -83,29 +83,29 @@
           </div>
         </v-col>
         <v-col cols="12" md="4" class="pt-0">
-          <div v-if="posts.length">
-            <div v-for="post in posts" :key="post.id" class="post">
-              <h5>{{ post.userName }}</h5>
-              <span>{{ post.createdOn | formatDate }}</span>
-              <p>{{ post.content | trimLength }}</p>
-              <ul>
-                <li>
-                  <a @click="toggleCommentModal(post)"
-                    >comments {{ post.comments }}</a
-                  >
-                </li>
-                <li>
-                  <a @click="likePost(post.id, post.likes)"
-                    >likes {{ post.likes }}</a
-                  >
-                </li>
-                <li><a @click="viewPost(post)">view full post</a></li>
-              </ul>
+          <v-card v-if="posts.length">
+            <div v-for="post in posts" :key="post.id" class="post" @click="viewPost(post)">
+              <v-card-text
+                ><h6>{{ post.userName }}</h6>{{
+                post.createdOn | formatDate
+              }}</v-card-text>
+              <v-card-text>{{ post.content | trimLength }}</v-card-text>
+              <v-card-actions>
+                <v-btn text @click="toggleCommentModal(post)"
+                  >comments {{ post.comments }}
+                </v-btn>
+                <v-btn text @click="likePost(post.id, post.likes)"
+                  >likes {{ post.likes }}</v-btn
+                >
+              </v-card-actions>
+              <v-divider></v-divider>
             </div>
-          </div>
-          <div v-else>
-            <p class="no-results">There are currently no posts</p>
-          </div>
+          </v-card>
+          <v-card v-else>
+            <v-card-text class="no-results"
+              >There are currently no posts</v-card-text
+            >
+          </v-card>
         </v-col>
       </v-row>
     </v-container>
@@ -179,7 +179,7 @@ export default {
     },
   },
   mounted() {
-    this.$store.state.showSearch = false;
+    this.$store.state.showSearch = true;
 
     let autocomplete = new google.maps.places.Autocomplete(
       document.getElementById("review-autocomplete")
