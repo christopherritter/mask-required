@@ -8,16 +8,6 @@
               Search for Public APIs
             </v-card-title>
             <v-card-text>
-              Explore hundreds of free API's ready for consumption! For more
-              information visit
-              <a
-                class="grey--text text--lighten-3"
-                href="https://github.com/toddmotto/public-apis"
-                target="_blank"
-                >the Github repository</a
-              >.
-            </v-card-text>
-            <v-card-text>
               <v-autocomplete
                 v-model="model"
                 :items="items"

@@ -1,6 +1,6 @@
 <template>
   <div id="siteNav">
-    <v-navigation-drawer
+    <!-- <v-navigation-drawer
       v-model="drawer"
       :clipped="$vuetify.breakpoint.lgAndUp"
       app
@@ -17,23 +17,22 @@
             Close Buy
           </v-list-item-title>
         </v-list-item>
-        
+
         <v-list-item link>
           <v-list-item-title @click="$router.push('nearby')">
             Nearby
           </v-list-item-title>
         </v-list-item>
-
       </v-list>
-    </v-navigation-drawer>
+    </v-navigation-drawer> -->
     <v-app-bar
       color="gray darken-3"
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       dark
       app
     >
-      <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon>
-      <v-toolbar-title @click="$router.push('home')" class="ml-0 p-3" style="cursor: pointer;">
+      <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon> -->
+      <v-toolbar-title class="ml-0 p-3">
         Mask Required
       </v-toolbar-title>
 
@@ -99,7 +98,6 @@ export default {
     },
   },
   mounted() {
-    /* eslint-disable */
     let autocomplete = new google.maps.places.Autocomplete(
       document.getElementById("autocomplete")
       // {
@@ -123,7 +121,6 @@ export default {
       //   place.geometry.location.lng()
       // );
     });
-    /* eslint-enable */
   },
   watch: {
     group() {
