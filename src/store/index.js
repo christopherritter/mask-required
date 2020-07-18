@@ -28,12 +28,16 @@ const store = new Vuex.Store({
       url: null,
       place_id: null
     },
+    reviews: [],
     posts: [],
     showSearch: true,
   },
   mutations: {
     setUserProfile(state, val) {
       state.userProfile = val;
+    },
+    setReviews(state, val) {
+      state.reviews = val
     },
     setPosts(state, val) {
       state.posts = val
@@ -85,8 +89,19 @@ const store = new Vuex.Store({
       commit("setUserProfile", {});
       router.push("/login");
     },
-    
-    /* eslint-disable */
+    async createReview({ state, commit }, review) {
+      // create review in firebase
+      await fb.reviewsCollection.add({
+        createdOn: new Date(),
+        rating: review.rating,
+        title: review.title,
+        content: review.content,
+        userId: fb.auth.currentUser.uid,
+        userName: state.userProfile.name,
+        comments: 0,
+        likes: 0
+      })
+    },
     async createPost({ state, commit }, post) {
       // create post in firebase
       await fb.postsCollection.add({
@@ -143,8 +158,6 @@ const store = new Vuex.Store({
         })
       })
     }
-    /* eslint-enable */
-    
   },
 });
 
