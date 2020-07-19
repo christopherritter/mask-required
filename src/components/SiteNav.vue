@@ -37,8 +37,8 @@
       </v-toolbar-title>
 
       <v-text-field
-        v-if="this.$store.state.showSearch"
-        class="pl-4 hidden-sm-and-down"
+        v-show="showSearch"
+        class="pl-4 hidden hidden-sm-and-down"
         v-model="address"
         id="navbar-autocomplete"
         flat
@@ -55,9 +55,9 @@
         <v-icon>mdi-plus-circle-outline</v-icon>
       </v-btn>
 
-      <v-btn icon>
+      <!-- <v-btn icon>
         <v-icon>mdi-heart</v-icon>
-      </v-btn>
+      </v-btn> -->
 
       <v-menu>
         <template v-slot:activator="{ on, attrs }">
@@ -83,16 +83,31 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data: () => ({
     address: null,
     drawer: false,
     group: null,
   }),
+  mounted() {
+    let autocomplete = new google.maps.places.Autocomplete(
+      document.getElementById("navbar-autocomplete")
+    );
+
+    autocomplete.addListener("place_changed", () => {
+      let place = autocomplete.getPlace();
+
+      this.selectPlace(place);
+
+      if (this.$router.currentRoute.name != "place") {
+        this.$router.push("place");
+      }
+    });
+  },
   methods: {
     selectPlace(place) {
-      // console.log(place);
-      this.$store.state.place = place;
+      this.$store.dispatch("selectPlace", place);
     },
     goHome() {
       if (this.$router.currentRoute.name != "home") {
@@ -103,34 +118,10 @@ export default {
       this.$store.dispatch("logout");
     },
   },
-  mounted() {
-    if (this.$store.state.showSearch) {
-      let autocomplete = new google.maps.places.Autocomplete(
-        document.getElementById("navbar-autocomplete")
-        // {
-        //   bounds: new google.maps.LatLngBounds(
-        //     new google.maps.LatLng(40.367474, -82.996216)
-        //   )
-        // }
-      );
-
-      autocomplete.addListener("place_changed", () => {
-        let place = autocomplete.getPlace();
-
-        this.selectPlace(place);
-
-        if (this.$router.currentRoute.name != "place") {
-          this.$router.push("place");
-        }
-
-        // this.showUserLocationOnTheMap(
-        //   place.geometry.location.lat(),
-        //   place.geometry.location.lng()
-        // );
-      });
-    }
-  },
   computed: {
+    showSearch() {
+      return this.$store.state.showSearch;
+    },
     showPointer() {
       if (this.$router.currentRoute.name == "home") {
         return { pointer: "none" };

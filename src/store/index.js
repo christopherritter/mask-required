@@ -89,13 +89,15 @@ const store = new Vuex.Store({
       commit("setUserProfile", {});
       router.push("/login");
     },
-    async selectPlace({ state }, place) {
+    async selectPlace({ state, dispatch }, place) {
       // console.log(place);
       state.place.name = place.name;
       state.place.formatted_address = place.formatted_address;
       state.place.place_id = place.place_id;
       state.place.types = place.types;
       state.place.url = place.url;
+
+      dispatch("fetchReviews");
     },
     async createReview({ state, commit }, review) {
       // create review in firebase
@@ -121,7 +123,7 @@ const store = new Vuex.Store({
 
       if (snapshot.empty) {
         console.log("No matching documents.");
-        store.commit("setReviews", reviewsArray);
+        state.reviews = [];
         return;
       }
 
