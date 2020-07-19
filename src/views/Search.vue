@@ -10,15 +10,13 @@
         <v-row>
           <v-col>
             <v-text-field
-              class="pl-4 hidden-sm-and-down"
+              class="px-4 pb-2"
               v-model="address"
-              id="search-autocomplete"
-              flat
-              solo-inverted
+              id="home-autocomplete"
+              outlined
               hide-details
               prepend-inner-icon="mdi-magnify"
-              label="Search"
-              placeholder=""
+              placeholder="Enter business name or category"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -34,15 +32,14 @@ export default {
   }),
   methods: {
     selectPlace(place) {
-      // console.log(place);
-      this.$store.state.place = place;
+      this.$store.dispatch("selectPlace", place);
     },
   },
   mounted() {
     this.$store.state.showSearch = false;
 
     let autocomplete = new google.maps.places.Autocomplete(
-      document.getElementById("search-autocomplete")
+      document.getElementById("home-autocomplete")
       // {
       //   bounds: new google.maps.LatLngBounds(
       //     new google.maps.LatLng(40.367474, -82.996216)
@@ -52,7 +49,6 @@ export default {
 
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
-
       this.selectPlace(place);
 
       if (this.$router.currentRoute.name != "place") {

@@ -1,12 +1,6 @@
 <template>
   <v-main>
-    <transition name="fade">
-      <CommentModal
-        v-if="showCommentModal"
-        :post="selectedPost"
-        @close="toggleCommentModal()"
-      ></CommentModal>
-    </transition>
+
     <!-- full post modal -->
     <transition name="fade">
       <div v-if="showPostModal" class="p-modal">
@@ -39,6 +33,7 @@
         </div>
       </div>
     </transition>
+
     <v-container id="place" fluid>
       <v-row>
         <v-col cols="12" md="8">
@@ -114,113 +109,18 @@
               <!-- Optional ratings -->
 
               <h6>Could you say a little more about it? (optional)</h6>
-              <v-row>
+              <v-row v-for="question in review.questions" :key="question.id">
                 <v-col sm="12" md="6">
-                  Do they offer regular staff temperature checks?
+                  {{ question.text }}
                 </v-col>
                 <v-col sm="12" md="6">
                   <v-radio-group row>
-                    <v-radio label="Yes" value="yes"></v-radio>
-                    <v-radio label="No" value="no"></v-radio>
-                    <v-radio label="Unsure" value="unsure"></v-radio>
-                  </v-radio-group>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col sm="12" md="6">
-                  Do you know if the regular staff has a paid stay-at-home
-                  policy for those showing symptoms?
-                </v-col>
-                <v-col sm="12" md="6">
-                  <v-radio-group row>
-                    <v-radio label="Yes" value="yes"></v-radio>
-                    <v-radio label="No" value="no"></v-radio>
-                    <v-radio label="Unsure" value="unsure"></v-radio>
-                  </v-radio-group>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col sm="12" md="6">
-                  Did the restaurant have single-use or sanitized menus?
-                </v-col>
-                <v-col sm="12" md="6">
-                  <v-radio-group row>
-                    <v-radio label="Yes" value="yes"></v-radio>
-                    <v-radio label="No" value="no"></v-radio>
-                    <v-radio label="Unsure" value="unsure"></v-radio>
-                  </v-radio-group>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col sm="12" md="6">
-                  Is this a cafe?
-                </v-col>
-                <v-col sm="12" md="6">
-                  <v-radio-group row>
-                    <v-radio label="Yes" value="yes"></v-radio>
-                    <v-radio label="No" value="no"></v-radio>
-                    <v-radio label="Unsure" value="unsure"></v-radio>
-                  </v-radio-group>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col sm="12" md="6">
-                  Does this restaurant offer delivery?
-                </v-col>
-                <v-col sm="12" md="6">
-                  <v-radio-group row>
-                    <v-radio label="Yes" value="yes"></v-radio>
-                    <v-radio label="No" value="no"></v-radio>
-                    <v-radio label="Unsure" value="unsure"></v-radio>
-                  </v-radio-group>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col sm="12" md="6">
-                  Is this restaurant good for local cuisine?
-                </v-col>
-                <v-col sm="12" md="6">
-                  <v-radio-group row>
-                    <v-radio label="Yes" value="yes"></v-radio>
-                    <v-radio label="No" value="no"></v-radio>
-                    <v-radio label="Unsure" value="unsure"></v-radio>
-                  </v-radio-group>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col sm="12" md="6">
-                  Is this a place where you pay before receiving your order?
-                </v-col>
-                <v-col sm="12" md="6">
-                  <v-radio-group row>
-                    <v-radio label="Yes" value="yes"></v-radio>
-                    <v-radio label="No" value="no"></v-radio>
-                    <v-radio label="Unsure" value="unsure"></v-radio>
-                  </v-radio-group>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col sm="12" md="6">
-                  Is this a place where you buy ingredients to cook your own
-                  food?
-                </v-col>
-                <v-col sm="12" md="6">
-                  <v-radio-group row>
-                    <v-radio label="Yes" value="yes"></v-radio>
-                    <v-radio label="No" value="no"></v-radio>
-                    <v-radio label="Unsure" value="unsure"></v-radio>
-                  </v-radio-group>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col sm="12" md="6">
-                  Does this restaurant accept reservations?
-                </v-col>
-                <v-col sm="12" md="6">
-                  <v-radio-group row>
-                    <v-radio label="Yes" value="yes"></v-radio>
-                    <v-radio label="No" value="no"></v-radio>
-                    <v-radio label="Unsure" value="unsure"></v-radio>
+                    <v-radio
+                      v-for="answer in question.answers"
+                      :key="answer.id"
+                      :label="answer.label"
+                      :value="answer.value"
+                    ></v-radio>
                   </v-radio-group>
                 </v-col>
               </v-row>
@@ -230,12 +130,12 @@
               <h6>Click to leave a rating</h6>
               <v-row>
                 <v-col sm="12" md="6">
-                  Service
+                  Friendliless
                 </v-col>
                 <v-col sm="12" md="6">
                   <v-rating
                     dark
-                    size="20"
+                    size="25"
                     full-icon="mdi-circle"
                     half-icon="mdi-circle-half-full"
                     empty-icon="mdi-circle-outline"
@@ -244,12 +144,12 @@
               </v-row>
               <v-row>
                 <v-col sm="12" md="6">
-                  Food
+                  Compliance
                 </v-col>
                 <v-col sm="12" md="6">
                   <v-rating
                     dark
-                    size="20"
+                    size="25"
                     full-icon="mdi-circle"
                     half-icon="mdi-circle-half-full"
                     empty-icon="mdi-circle-outline"
@@ -258,12 +158,12 @@
               </v-row>
               <v-row>
                 <v-col sm="12" md="6">
-                  Value
+                  Respect
                 </v-col>
                 <v-col sm="12" md="6">
                   <v-rating
                     dark
-                    size="20"
+                    size="25"
                     full-icon="mdi-circle"
                     half-icon="mdi-circle-half-full"
                     empty-icon="mdi-circle-outline"
@@ -271,20 +171,20 @@
                 </v-col>
               </v-row>
 
-              <!-- Price of place -->
+              <!-- Price of place
               <h6>How expensive is this restaurant?</h6>
 
               <v-radio-group row>
                 <v-radio label="Cheap eats" value="cheap-eats"></v-radio>
                 <v-radio label="Mid-range" value="mid-range"></v-radio>
                 <v-radio label="Fine dining" value="fine-dining"></v-radio>
-              </v-radio-group>
+              </v-radio-group> -->
 
-              <!-- What dishes do you recommend? -->
+              <!-- What dishes do you recommend?
 
               <h6>What dish or dishes do you recommend?</h6>
 
-              <v-text-field outlined name="review-title"></v-text-field>
+              <v-text-field outlined name="review-title"></v-text-field> -->
 
               <!-- I certify this review -->
 
@@ -306,8 +206,8 @@
             </form>
           </div>
         </v-col>
-        <v-col cols="12" md="4" class="pt-0">
-          <v-card v-if="posts.length">
+        <v-col cols="12" md="4">
+          <v-card v-if="reviews.length">
             <div
               v-for="post in posts"
               :key="post.id"
@@ -320,9 +220,6 @@
               >
               <v-card-text>{{ post.content | trimLength }}</v-card-text>
               <v-card-actions>
-                <v-btn text @click="toggleCommentModal(post)"
-                  >comments {{ post.comments }}
-                </v-btn>
                 <v-btn text @click="likePost(post.id, post.likes)"
                   >likes {{ post.likes }}</v-btn
                 >
@@ -332,7 +229,7 @@
           </v-card>
           <v-card v-else>
             <v-card-text class="no-results"
-              >There are currently no posts</v-card-text
+              >There are currently no reviews.</v-card-text
             >
           </v-card>
         </v-col>
@@ -344,8 +241,6 @@
 <script>
 import { mapState } from "vuex";
 import moment from "moment";
-import CommentModal from "@/components/CommentModal";
-import { commentsCollection } from "@/firebase";
 
 export default {
   data() {
@@ -370,27 +265,264 @@ export default {
           ],
         },
         questions: [
-          "Did they limit the number of people inside the store?",
-          "Were you asked to stand back from the registers?",
-          "Were there any plastic shields protecting the cashiers?",
-          "Was there any hand sanitizer available to the customers?",
-          "Did they provide free masks to customers without one?",
-          "Did they regularly wipe down everything that customer use?",
-          "Do they have home delivery or curb-side pick-up options?",
-          "Did you see signs that clearly state the store policies?",
-          "Was someone enforcing store policies at the front door?",
-          "Were the customers spaced six feet apart from each other?",
-          "Were there physical barriers separating the customers?",
-          "Did you see signs to direct the flow of traffic?"
+          {
+            id: "0",
+            text: "Did they limit the number of people inside the store?",
+            answers: [
+              {
+                id: "0",
+                label: "Yes",
+                value: "yes",
+              },
+              {
+                id: "1",
+                label: "No",
+                value: "no",
+              },
+              {
+                id: "2",
+                label: "Unsure",
+                value: "unsure",
+              },
+            ],
+          },
+          {
+            id: "1",
+            text: "Were you asked to stand back from the registers?",
+            answers: [
+              {
+                id: "0",
+                label: "Yes",
+                value: "yes",
+              },
+              {
+                id: "1",
+                label: "No",
+                value: "no",
+              },
+              {
+                id: "2",
+                label: "Unsure",
+                value: "unsure",
+              },
+            ],
+          },
+          {
+            id: "2",
+            text: "Were there any plastic shields protecting the cashiers?",
+            answers: [
+              {
+                id: "0",
+                label: "Yes",
+                value: "yes",
+              },
+              {
+                id: "1",
+                label: "No",
+                value: "no",
+              },
+              {
+                id: "2",
+                label: "Unsure",
+                value: "unsure",
+              },
+            ],
+          },
+          {
+            id: "3",
+            text: "Was there any hand sanitizer available to the customers?",
+            answers: [
+              {
+                id: "0",
+                label: "Yes",
+                value: "yes",
+              },
+              {
+                id: "1",
+                label: "No",
+                value: "no",
+              },
+              {
+                id: "2",
+                label: "Unsure",
+                value: "unsure",
+              },
+            ],
+          },
+          {
+            id: "4",
+            text: "Did they provide free masks to customers without one?",
+            answers: [
+              {
+                id: "0",
+                label: "Yes",
+                value: "yes",
+              },
+              {
+                id: "1",
+                label: "No",
+                value: "no",
+              },
+              {
+                id: "2",
+                label: "Unsure",
+                value: "unsure",
+              },
+            ],
+          },
+          {
+            id: "5",
+            text: "Did they regularly wipe down everything that customer use?",
+            answers: [
+              {
+                id: "0",
+                label: "Yes",
+                value: "yes",
+              },
+              {
+                id: "1",
+                label: "No",
+                value: "no",
+              },
+              {
+                id: "2",
+                label: "Unsure",
+                value: "unsure",
+              },
+            ],
+          },
+          {
+            id: "6",
+            text: "Do they have home delivery or curb-side pick-up options?",
+            answers: [
+              {
+                id: "0",
+                label: "Yes",
+                value: "yes",
+              },
+              {
+                id: "1",
+                label: "No",
+                value: "no",
+              },
+              {
+                id: "2",
+                label: "Unsure",
+                value: "unsure",
+              },
+            ],
+          },
+          {
+            id: "7",
+            text: "Did you see signs that clearly state the store policies?",
+            answers: [
+              {
+                id: "0",
+                label: "Yes",
+                value: "yes",
+              },
+              {
+                id: "1",
+                label: "No",
+                value: "no",
+              },
+              {
+                id: "2",
+                label: "Unsure",
+                value: "unsure",
+              },
+            ],
+          },
+          {
+            id: "8",
+            text: "Was someone enforcing store policies at the front door?",
+            answers: [
+              {
+                id: "0",
+                label: "Yes",
+                value: "yes",
+              },
+              {
+                id: "1",
+                label: "No",
+                value: "no",
+              },
+              {
+                id: "2",
+                label: "Unsure",
+                value: "unsure",
+              },
+            ],
+          },
+          {
+            id: "9",
+            text: "Were the customers spaced six feet apart from each other?",
+            answers: [
+              {
+                id: "0",
+                label: "Yes",
+                value: "yes",
+              },
+              {
+                id: "1",
+                label: "No",
+                value: "no",
+              },
+              {
+                id: "2",
+                label: "Unsure",
+                value: "unsure",
+              },
+            ],
+          },
+          {
+            id: "10",
+            text: "Were there physical barriers separating the customers?",
+            answers: [
+              {
+                id: "0",
+                label: "Yes",
+                value: "yes",
+              },
+              {
+                id: "1",
+                label: "No",
+                value: "no",
+              },
+              {
+                id: "2",
+                label: "Unsure",
+                value: "unsure",
+              },
+            ],
+          },
+          {
+            id: "11",
+            text: "Did you see signs to direct the flow of traffic?",
+            answers: [
+              {
+                id: "0",
+                label: "Yes",
+                value: "yes",
+              },
+              {
+                id: "1",
+                label: "No",
+                value: "no",
+              },
+              {
+                id: "2",
+                label: "Unsure",
+                value: "unsure",
+              },
+            ],
+          },
         ],
-        ratings: [
-          "Friendliness", "Compliance", "Respect"
-        ]
+        ratings: ["Friendliness", "Compliance", "Respect"],
       },
       post: {
         content: "",
       },
-      showCommentModal: false,
       selectedPost: {},
       showPostModal: false,
       fullPost: {},
@@ -398,15 +530,15 @@ export default {
       showTooltip: true,
     };
   },
-  components: {
-    CommentModal,
+  mounted() {
+    this.$store.state.showSearch = true;
   },
   computed: {
     ...mapState(["userProfile", "place", ["reviews"], ["posts"]]),
   },
   methods: {
     selectPlace(place) {
-      this.$store.state.place = place;
+      this.$store.dispatch("selectPlace", place);
     },
     createReview() {
       this.$store.dispatch("createReview", {
@@ -416,36 +548,8 @@ export default {
       });
       this.review.content = "";
     },
-    createPost() {
-      this.$store.dispatch("createPost", { content: this.post.content });
-      this.post.content = "";
-    },
-    toggleCommentModal(post) {
-      this.showCommentModal = !this.showCommentModal;
-
-      // if opening modal set selectedPost, else clear
-      if (this.showCommentModal) {
-        this.selectedPost = post;
-      } else {
-        this.selectedPost = {};
-      }
-    },
     likePost(id, likesCount) {
       this.$store.dispatch("likePost", { id, likesCount });
-    },
-    async viewPost(post) {
-      const docs = await commentsCollection
-        .where("postId", "==", post.id)
-        .get();
-
-      docs.forEach((doc) => {
-        let comment = doc.data();
-        comment.id = doc.id;
-        this.postComments.push(comment);
-      });
-
-      this.fullPost = post;
-      this.showPostModal = true;
     },
     closePostModal() {
       this.postComments = [];

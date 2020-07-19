@@ -1,13 +1,6 @@
 /*eslint no-unused-vars: ["error", { "args": "none" }]*/
 <template>
   <v-main>
-    <transition name="fade">
-      <CommentModal
-        v-if="showCommentModal"
-        :post="selectedPost"
-        @close="toggleCommentModal()"
-      ></CommentModal>
-    </transition>
     <!-- full post modal -->
     <transition name="fade">
       <div v-if="showPostModal" class="p-modal">
@@ -60,24 +53,26 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-card v-if="posts.length">
-            <v-btn color="grey darken-4" dark class="mt-4 mx-4" @click="$router.push('review')">Write a review</v-btn>
+          <v-card v-if="reviews.length">
+            <v-btn
+              color="grey darken-4"
+              dark
+              class="mt-4 mx-4"
+              @click="$router.push('review')"
+              >Write a review</v-btn
+            >
             <v-divider></v-divider>
-            <div v-for="post in posts" :key="post.id" class="post">
-              <v-card-title class="post-username">{{
-                post.userName
+            <div v-for="review in reviews" :key="review.id" class="review">
+              <v-card-title class="review-username">{{
+                review.userName
               }}</v-card-title>
-              <v-card-subtitle class="post-created-on">{{
-                post.createdOn | formatDate
+              <v-card-subtitle class="review-created-on">{{
+                review.createdOn | formatDate
               }}</v-card-subtitle>
-              <v-card-text class="post-content">{{
-                post.content | trimLength
+              <v-card-text class="review-content">{{
+                review.content | trimLength
               }}</v-card-text>
               <v-card-actions>
-                <v-btn text @click="toggleCommentModal(post)"
-                  >comments {{ post.comments }}</v-btn
-                >
-
                 <v-btn text @click="likePost(post.id, post.likes)"
                   >likes {{ post.likes }}</v-btn
                 >
@@ -89,7 +84,7 @@
           </v-card>
           <v-card v-else>
             <v-card-text class="no-results"
-              >There are currently no posts</v-card-text
+              >There are currently no reviews</v-card-text
             >
           </v-card>
         </v-col>
@@ -101,8 +96,7 @@
 <script>
 import { mapState } from "vuex";
 import moment from "moment";
-import CommentModal from "@/components/CommentModal";
-import { commentsCollection } from "@/firebase";
+import * as fb from "../firebase";
 
 export default {
   data() {
@@ -110,50 +104,42 @@ export default {
       post: {
         content: "",
       },
-      showCommentModal: false,
       selectedPost: {},
       showPostModal: false,
       fullPost: {},
-      postComments: [],
     };
   },
-  components: {
-    CommentModal,
+  mounted() {
+    this.$store.state.showSearch = true;
+    this.$store.dispatch("fetchReviews");
+    // fb.reviewsCollection.orderBy("createdOn", "desc").onSnapshot((snapshot) => {
+    //   let reviewsArray = [];
+
+    //   snapshot.forEach((doc) => {
+    //     let review = doc.data();
+    //     review.id = doc.id;
+    //     console.log(review);
+    //     // if (review.place.id == this.$store.state.place.id) {
+    //       reviewsArray.push(review);
+    //     // } else {
+    //     //   console.log(review.place.id);
+    //     // }
+
+    //   });
+
+    //   this.$store.commit("setReviews", reviewsArray);
+    // });
   },
   computed: {
-    ...mapState(["userProfile", "place", ["posts"]]),
+    ...mapState(["userProfile", "place", ["reviews"], ["posts"]]),
   },
   methods: {
     createPost() {
       this.$store.dispatch("createPost", { content: this.post.content });
       this.post.content = "";
     },
-    toggleCommentModal(post) {
-      this.showCommentModal = !this.showCommentModal;
-
-      // if opening modal set selectedPost, else clear
-      if (this.showCommentModal) {
-        this.selectedPost = post;
-      } else {
-        this.selectedPost = {};
-      }
-    },
     likePost(id, likesCount) {
       this.$store.dispatch("likePost", { id, likesCount });
-    },
-    async viewPost(post) {
-      const docs = await commentsCollection
-        .where("postId", "==", post.id)
-        .get();
-
-      docs.forEach((doc) => {
-        let comment = doc.data();
-        comment.id = doc.id;
-        this.postComments.push(comment);
-      });
-
-      this.fullPost = post;
-      this.showPostModal = true;
     },
     closePostModal() {
       this.postComments = [];

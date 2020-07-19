@@ -5,18 +5,18 @@ import router from "../router/index";
 
 Vue.use(Vuex);
 
-fb.postsCollection.orderBy('createdOn', 'desc').onSnapshot(snapshot => {
-  let postsArray = []
+fb.postsCollection.orderBy("createdOn", "desc").onSnapshot((snapshot) => {
+  let postsArray = [];
 
-  snapshot.forEach(doc => {
-    let post = doc.data()
-    post.id = doc.id
+  snapshot.forEach((doc) => {
+    let post = doc.data();
+    post.id = doc.id;
 
-    postsArray.push(post)
-  })
+    postsArray.push(post);
+  });
 
-  store.commit('setPosts', postsArray)
-})
+  store.commit("setPosts", postsArray);
+});
 
 const store = new Vuex.Store({
   state: {
@@ -26,7 +26,7 @@ const store = new Vuex.Store({
       formatted_address: null,
       types: [],
       url: null,
-      place_id: null
+      place_id: null,
     },
     reviews: [],
     posts: [],
@@ -37,11 +37,11 @@ const store = new Vuex.Store({
       state.userProfile = val;
     },
     setReviews(state, val) {
-      state.reviews = val
+      state.reviews = val;
     },
     setPosts(state, val) {
-      state.posts = val
-    }
+      state.posts = val;
+    },
   },
   actions: {
     async login({ dispatch }, form) {
@@ -56,14 +56,14 @@ const store = new Vuex.Store({
     },
     async fetchUserProfile({ commit }, user) {
       // fetch user profile
-      const userProfile = await fb.usersCollection.doc(user.uid).get()
-    
+      const userProfile = await fb.usersCollection.doc(user.uid).get();
+
       // set user profile in state
-      commit('setUserProfile', userProfile.data())
-    
+      commit("setUserProfile", userProfile.data());
+
       // change route to dashboard
-      if (router.currentRoute.path === '/login') {
-        router.push('/')
+      if (router.currentRoute.path === "/login") {
+        router.push("/");
       }
     },
     async signup({ dispatch }, form) {
@@ -89,18 +89,50 @@ const store = new Vuex.Store({
       commit("setUserProfile", {});
       router.push("/login");
     },
+    async selectPlace({ state }, place) {
+      // console.log(place);
+      state.place.name = place.name;
+      state.place.formatted_address = place.formatted_address;
+      state.place.place_id = place.place_id;
+      state.place.types = place.types;
+      state.place.url = place.url;
+    },
     async createReview({ state, commit }, review) {
       // create review in firebase
       await fb.reviewsCollection.add({
         createdOn: new Date(),
+        place: state.place,
         rating: review.rating,
         title: review.title,
         content: review.content,
         userId: fb.auth.currentUser.uid,
         userName: state.userProfile.name,
         comments: 0,
-        likes: 0
-      })
+        likes: 0,
+      });
+    },
+    async fetchReviews({ state }) {
+      // const citiesRef = db.collection("cities");
+      const snapshot = await fb.reviewsCollection
+        .where("place", "==", state.place)
+        .get();
+
+      let reviewsArray = [];
+
+      if (snapshot.empty) {
+        console.log("No matching documents.");
+        store.commit("setReviews", reviewsArray);
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        let review = doc.data();
+        review.id = doc.id;
+
+        reviewsArray.push(review);
+      });
+
+      store.commit("setReviews", reviewsArray); // Duplicative above
     },
     async createPost({ state, commit }, post) {
       // create post in firebase
@@ -110,55 +142,51 @@ const store = new Vuex.Store({
         userId: fb.auth.currentUser.uid,
         userName: state.userProfile.name,
         comments: 0,
-        likes: 0
-      })
+        likes: 0,
+      });
     },
-    async likePost ({ commit }, post) {
-      const userId = fb.auth.currentUser.uid
-      const docId = `${userId}_${post.id}`
-    
+    async likePost({ commit }, post) {
+      const userId = fb.auth.currentUser.uid;
+      const docId = `${userId}_${post.id}`;
+
       // check if user has liked post
-      const doc = await fb.likesCollection.doc(docId).get()
-      if (doc.exists) { return }
-    
+      const doc = await fb.likesCollection.doc(docId).get();
+      if (doc.exists) {
+        return;
+      }
+
       // create post
       await fb.likesCollection.doc(docId).set({
         postId: post.id,
-        userId: userId
-      })
-    
+        userId: userId,
+      });
+
       // update post likes count
       fb.postsCollection.doc(post.id).update({
-        likes: post.likesCount + 1
-      })
+        likes: post.likesCount + 1,
+      });
     },
     async updateProfile({ dispatch }, user) {
-      const userId = fb.auth.currentUser.uid
+      const userId = fb.auth.currentUser.uid;
       // update user object
       const userRef = await fb.usersCollection.doc(userId).update({
         name: user.name,
-        title: user.title
-      })
-    
-      dispatch('fetchUserProfile', { uid: userId })
-    
+        title: user.title,
+      });
+
+      dispatch("fetchUserProfile", { uid: userId });
+
       // update all posts by user
-      const postDocs = await fb.postsCollection.where('userId', '==', userId).get()
-      postDocs.forEach(doc => {
+      const postDocs = await fb.postsCollection
+        .where("userId", "==", userId)
+        .get();
+      postDocs.forEach((doc) => {
         fb.postsCollection.doc(doc.id).update({
-          userName: user.name
-        })
-      })
-    
-      // update all comments by user
-      const commentDocs = await fb.commentsCollection.where('userId', '==', userId).get()
-      commentDocs.forEach(doc => {
-        fb.commentsCollection.doc(doc.id).update({
-          userName: user.name
-        })
-      })
-    }
+          userName: user.name,
+        });
+      });
+    },
   },
 });
 
-export default store
+export default store;
