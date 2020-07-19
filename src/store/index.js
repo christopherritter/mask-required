@@ -31,6 +31,279 @@ const store = new Vuex.Store({
     reviews: [],
     posts: [],
     showSearch: true,
+    masks: {
+      employees: [
+        "All of the employees were properly wearing masks",
+        "Some of the employees were wearing some kind of mask",
+        "Hardly any of the employees were wearing their masks properly",
+        "None of the employees were properly wearing masks",
+      ],
+      customers: [
+        "All of the customers were wearing masks",
+        "Some of the customers were wearing masks",
+        "Hardly any of the customers were wearing masks",
+        "None of the customers were wearing masks",
+      ],
+    },
+    questions: [
+      {
+        id: "0",
+        text: "Did they limit the number of people inside the store?",
+        answers: [
+          {
+            id: "0",
+            label: "Yes",
+            value: "yes",
+          },
+          {
+            id: "1",
+            label: "No",
+            value: "no",
+          },
+          {
+            id: "2",
+            label: "Unsure",
+            value: "unsure",
+          },
+        ],
+      },
+      {
+        id: "1",
+        text: "Were you asked to stand back from the registers?",
+        answers: [
+          {
+            id: "0",
+            label: "Yes",
+            value: "yes",
+          },
+          {
+            id: "1",
+            label: "No",
+            value: "no",
+          },
+          {
+            id: "2",
+            label: "Unsure",
+            value: "unsure",
+          },
+        ],
+      },
+      {
+        id: "2",
+        text: "Were there any plastic shields protecting the cashiers?",
+        answers: [
+          {
+            id: "0",
+            label: "Yes",
+            value: "yes",
+          },
+          {
+            id: "1",
+            label: "No",
+            value: "no",
+          },
+          {
+            id: "2",
+            label: "Unsure",
+            value: "unsure",
+          },
+        ],
+      },
+      {
+        id: "3",
+        text: "Was there any hand sanitizer available to the customers?",
+        answers: [
+          {
+            id: "0",
+            label: "Yes",
+            value: "yes",
+          },
+          {
+            id: "1",
+            label: "No",
+            value: "no",
+          },
+          {
+            id: "2",
+            label: "Unsure",
+            value: "unsure",
+          },
+        ],
+      },
+      {
+        id: "4",
+        text: "Did they provide free masks to customers without one?",
+        answers: [
+          {
+            id: "0",
+            label: "Yes",
+            value: "yes",
+          },
+          {
+            id: "1",
+            label: "No",
+            value: "no",
+          },
+          {
+            id: "2",
+            label: "Unsure",
+            value: "unsure",
+          },
+        ],
+      },
+      {
+        id: "5",
+        text: "Did they regularly wipe down everything that customer use?",
+        answers: [
+          {
+            id: "0",
+            label: "Yes",
+            value: "yes",
+          },
+          {
+            id: "1",
+            label: "No",
+            value: "no",
+          },
+          {
+            id: "2",
+            label: "Unsure",
+            value: "unsure",
+          },
+        ],
+      },
+      {
+        id: "6",
+        text: "Do they have home delivery or curb-side pick-up options?",
+        answers: [
+          {
+            id: "0",
+            label: "Yes",
+            value: "yes",
+          },
+          {
+            id: "1",
+            label: "No",
+            value: "no",
+          },
+          {
+            id: "2",
+            label: "Unsure",
+            value: "unsure",
+          },
+        ],
+      },
+      {
+        id: "7",
+        text: "Did you see signs that clearly state the store policies?",
+        answers: [
+          {
+            id: "0",
+            label: "Yes",
+            value: "yes",
+          },
+          {
+            id: "1",
+            label: "No",
+            value: "no",
+          },
+          {
+            id: "2",
+            label: "Unsure",
+            value: "unsure",
+          },
+        ],
+      },
+      {
+        id: "8",
+        text: "Was someone enforcing store policies at the front door?",
+        answers: [
+          {
+            id: "0",
+            label: "Yes",
+            value: "yes",
+          },
+          {
+            id: "1",
+            label: "No",
+            value: "no",
+          },
+          {
+            id: "2",
+            label: "Unsure",
+            value: "unsure",
+          },
+        ],
+      },
+      {
+        id: "9",
+        text: "Were the customers spaced six feet apart from each other?",
+        answers: [
+          {
+            id: "0",
+            label: "Yes",
+            value: "yes",
+          },
+          {
+            id: "1",
+            label: "No",
+            value: "no",
+          },
+          {
+            id: "2",
+            label: "Unsure",
+            value: "unsure",
+          },
+        ],
+      },
+      {
+        id: "10",
+        text: "Were there physical barriers separating the customers?",
+        answers: [
+          {
+            id: "0",
+            label: "Yes",
+            value: "yes",
+          },
+          {
+            id: "1",
+            label: "No",
+            value: "no",
+          },
+          {
+            id: "2",
+            label: "Unsure",
+            value: "unsure",
+          },
+        ],
+      },
+      {
+        id: "11",
+        text: "Did you see signs to direct the flow of traffic?",
+        answers: [
+          {
+            id: "0",
+            label: "Yes",
+            value: "yes",
+          },
+          {
+            id: "1",
+            label: "No",
+            value: "no",
+          },
+          {
+            id: "2",
+            label: "Unsure",
+            value: "unsure",
+          },
+        ],
+      },
+    ],
+    ratings: [
+      { id: 0, label: "Friendliness" },
+      { id: 1, label: "Compliance" },
+      { id: 2, label: "Respect" },
+    ],
   },
   mutations: {
     setUserProfile(state, val) {
@@ -113,7 +386,7 @@ const store = new Vuex.Store({
         userId: fb.auth.currentUser.uid,
         userName: state.userProfile.name,
         likes: 0,
-        agreement: review.agreement
+        agreement: review.agreement,
       });
     },
     async fetchReviews({ state }) {
