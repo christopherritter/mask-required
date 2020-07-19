@@ -94,12 +94,18 @@
 
               <h6>Could you say a little more about it? (optional)</h6>
 
-              <v-row v-for="question in questions" :key="'question-' + question.id">
+              <v-row
+                v-for="question in questions"
+                :key="'question-' + question.id"
+              >
                 <v-col sm="12" md="6">
                   {{ question.text }}
                 </v-col>
                 <v-col sm="12" md="6">
-                  <v-radio-group row v-model="review.questions[question.id].value">
+                  <v-radio-group
+                    row
+                    v-model="review.questions[question.id].value"
+                  >
                     <v-radio
                       v-for="answer in question.answers"
                       :key="'answer-' + answer.id"
@@ -131,7 +137,8 @@
 
               <h6>Submit your review</h6>
 
-              <v-checkbox v-model="review.agreement"
+              <v-checkbox
+                v-model="review.agreement"
                 label="I certify that this review is based on my own experience and is my genuine opinion of this restaurant, and that I have no personal or business relationship with this establishment, and have not been offered any incentive or payment originating from the establishment to write this review. I understand that Tripadvisor has a zero-tolerance policy on fake reviews."
               ></v-checkbox>
 
@@ -194,7 +201,7 @@ export default {
         content: "",
         masks: {
           employees: "",
-          customers: ""
+          customers: "",
         },
         questions: [
           { id: 0, value: "" },
@@ -213,18 +220,25 @@ export default {
         ratings: [
           { id: 0, value: 0 },
           { id: 1, value: 0 },
-          { id: 2, value: 0 }
+          { id: 2, value: 0 },
         ],
-        agreement: false
+        agreement: false,
       },
-      agreement: false
+      agreement: false,
     };
   },
   mounted() {
     this.$store.state.showSearch = true;
   },
   computed: {
-    ...mapState(["userProfile", "place", ["reviews"], "masks", ["questions"], ["ratings"]]),
+    ...mapState([
+      "userProfile",
+      "place",
+      ["reviews"],
+      "masks",
+      ["questions"],
+      ["ratings"],
+    ]),
   },
   methods: {
     selectPlace(place) {
@@ -241,9 +255,36 @@ export default {
         },
         questions: this.review.questions,
         ratings: this.review.ratings,
-        agreement: this.review.agreement
+        agreement: this.review.agreement,
       });
+      this.review.rating = 0;
+      this.review.title = "";
       this.review.content = "";
+      this.review.masks = {
+        employees: "",
+        customers: "",
+      };
+      this.review.questions = [
+        { id: 0, value: "" },
+        { id: 1, value: "" },
+        { id: 2, value: "" },
+        { id: 3, value: "" },
+        { id: 4, value: "" },
+        { id: 5, value: "" },
+        { id: 6, value: "" },
+        { id: 7, value: "" },
+        { id: 8, value: "" },
+        { id: 9, value: "" },
+        { id: 10, value: "" },
+        { id: 11, value: "" },
+      ];
+      this.review.ratings = [
+        { id: 0, value: 0 },
+        { id: 1, value: 0 },
+        { id: 2, value: 0 },
+      ];
+      this.review.agreement = false;
+      this.$router.push("place");
     },
     likeReview(id, likesCount) {
       this.$store.dispatch("likeReview", { id, likesCount });

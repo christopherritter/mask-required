@@ -2,7 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import { auth } from "../firebase";
-import store from '../store'
+import store from "../store";
 
 Vue.use(VueRouter);
 
@@ -34,7 +34,9 @@ const routes = [
     path: "/user-location",
     name: "user-location",
     component: () =>
-      import(/* webpackChunkName: "user-location" */ "../views/UserLocation.vue"),
+      import(
+        /* webpackChunkName: "user-location" */ "../views/UserLocation.vue"
+      ),
     meta: {
       requiresAuth: true,
     },
@@ -57,9 +59,9 @@ const routes = [
       requiresAuth: true,
     },
     beforeEnter: (to, from, next) => {
-      if (store.state.place.name) next()
-      else next({ name: 'home' })
-    }
+      if (store.state.place.name) next();
+      else next({ name: "home" });
+    },
   },
   {
     path: "/search",
@@ -79,9 +81,9 @@ const routes = [
       requiresAuth: true,
     },
     beforeEnter: (to, from, next) => {
-      if (store.state.place.name) next()
-      else next({ name: 'home' })
-    }
+      if (store.state.place.name) next();
+      else next({ name: "home" });
+    },
   },
   {
     path: "/review",
@@ -92,9 +94,9 @@ const routes = [
       requiresAuth: true,
     },
     beforeEnter: (to, from, next) => {
-      if (store.state.place.name) next()
-      else next({ name: 'home' })
-    }
+      if (store.state.place.name) next();
+      else next({ name: "home" });
+    },
   },
 ];
 
@@ -102,6 +104,9 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes,
+  scrollBehavior() {
+    document.getElementById("app").scrollIntoView();
+  },
 });
 
 // navigation guard to check for logged in users
