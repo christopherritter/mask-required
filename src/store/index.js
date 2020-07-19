@@ -107,10 +107,13 @@ const store = new Vuex.Store({
         rating: review.rating,
         title: review.title,
         content: review.content,
+        masks: review.masks,
+        questions: review.questions,
+        ratings: review.ratings,
         userId: fb.auth.currentUser.uid,
         userName: state.userProfile.name,
-        comments: 0,
         likes: 0,
+        agreement: review.agreement
       });
     },
     async fetchReviews({ state }) {
@@ -136,20 +139,9 @@ const store = new Vuex.Store({
 
       store.commit("setReviews", reviewsArray); // Duplicative above
     },
-    async createPost({ state, commit }, post) {
-      // create post in firebase
-      await fb.postsCollection.add({
-        createdOn: new Date(),
-        content: post.content,
-        userId: fb.auth.currentUser.uid,
-        userName: state.userProfile.name,
-        comments: 0,
-        likes: 0,
-      });
-    },
-    async likePost({ commit }, post) {
+    async likeReview({ commit }, review) {
       const userId = fb.auth.currentUser.uid;
-      const docId = `${userId}_${post.id}`;
+      const docId = `${userId}_${review.id}`;
 
       // check if user has liked post
       const doc = await fb.likesCollection.doc(docId).get();
@@ -159,13 +151,13 @@ const store = new Vuex.Store({
 
       // create post
       await fb.likesCollection.doc(docId).set({
-        postId: post.id,
+        reviewId: review.id,
         userId: userId,
       });
 
       // update post likes count
-      fb.postsCollection.doc(post.id).update({
-        likes: post.likesCount + 1,
+      fb.reviewsCollection.doc(review.id).update({
+        likes: review.likesCount + 1,
       });
     },
     async updateProfile({ dispatch }, user) {

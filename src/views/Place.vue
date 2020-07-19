@@ -1,70 +1,35 @@
-/*eslint no-unused-vars: ["error", { "args": "none" }]*/
 <template>
   <v-main>
-    <!-- full post modal -->
-    <transition name="fade">
-      <div v-if="showPostModal" class="p-modal">
-        <div class="p-container">
-          <a @click="closePostModal()" class="close">close</a>
-          <div class="post">
-            <h5>{{ fullPost.userName }}</h5>
-            <span>{{ fullPost.createdOn | formatDate }}</span>
-            <p>{{ fullPost.content }}</p>
-            <ul>
-              <li>
-                <a>comments {{ fullPost.comments }}</a>
-              </li>
-              <li>
-                <a>likes {{ fullPost.likes }}</a>
-              </li>
-            </ul>
-          </div>
-          <div v-show="postComments.length" class="comments">
-            <div
-              v-for="comment in postComments"
-              :key="comment.id"
-              class="comment"
-            >
-              <p>{{ comment.userName }}</p>
-              <span>{{ comment.createdOn | formatDate }}</span>
-              <p>{{ comment.content }}</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </transition>
     <v-container id="place" fluid>
       <v-row>
         <v-col>
           <div class="profile">
-            <h5>{{ place.name }}</h5>
+            <h3>{{ place.name }}</h3>
             <p>{{ place.formatted_address }}</p>
-            <!-- <div class="create-post">
-              <p>create a post</p>
-              <form @submit.prevent>
-                <v-textarea v-model.trim="post.content"></v-textarea>
-                <v-btn @click="createPost()" :disabled="post.content === ''">
-                  post
-                </v-btn>
-              </form>
-            </div> -->
           </div>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
           <v-card v-if="reviews.length">
-            <v-btn
-              color="grey darken-4"
-              dark
-              class="mt-4 mx-4"
-              @click="$router.push('review')"
-              >Write a review</v-btn
-            >
+            <v-row>
+              <v-col>
+                <v-card-text>{{ reviews.length }} reviews</v-card-text>
+              </v-col>
+              <v-col>
+                <v-btn
+                  color="grey darken-4"
+                  dark
+                  class="mt-4 mx-4"
+                  @click="$router.push('review')"
+                  >Write a review</v-btn
+                >
+              </v-col>
+            </v-row>
             <v-divider></v-divider>
-            <div v-for="review in reviews" :key="review.id" class="review">
+            <div v-for="review in reviews" :key="'review-' + review.id" class="review">
               <v-card-title class="review-username">{{
-                review.userName
+                review.title
               }}</v-card-title>
               <v-card-subtitle class="review-created-on">{{
                 review.createdOn | formatDate
@@ -73,11 +38,10 @@
                 review.content | trimLength
               }}</v-card-text>
               <v-card-actions>
-                <v-btn text @click="likePost(post.id, post.likes)"
-                  >likes {{ post.likes }}</v-btn
+                <v-btn text @click="likeReview(review.id, review.likes)"
+                  >likes {{ review.likes }}</v-btn
                 >
-
-                <v-btn text @click="viewPost(post)">view full post</v-btn>
+                <v-btn text @click="viewReview(review)">full review</v-btn>
               </v-card-actions>
               <v-divider></v-divider>
             </div>
@@ -99,51 +63,16 @@ import moment from "moment";
 import * as fb from "../firebase";
 
 export default {
-  data() {
-    return {
-      post: {
-        content: "",
-      },
-      selectedPost: {},
-      showPostModal: false,
-      fullPost: {},
-    };
-  },
   mounted() {
     this.$store.state.showSearch = true;
     this.$store.dispatch("fetchReviews");
-    // fb.reviewsCollection.orderBy("createdOn", "desc").onSnapshot((snapshot) => {
-    //   let reviewsArray = [];
-
-    //   snapshot.forEach((doc) => {
-    //     let review = doc.data();
-    //     review.id = doc.id;
-    //     console.log(review);
-    //     // if (review.place.id == this.$store.state.place.id) {
-    //       reviewsArray.push(review);
-    //     // } else {
-    //     //   console.log(review.place.id);
-    //     // }
-
-    //   });
-
-    //   this.$store.commit("setReviews", reviewsArray);
-    // });
   },
   computed: {
-    ...mapState(["userProfile", "place", ["reviews"], ["posts"]]),
+    ...mapState(["userProfile", "place", ["reviews"]]),
   },
   methods: {
-    createPost() {
-      this.$store.dispatch("createPost", { content: this.post.content });
-      this.post.content = "";
-    },
-    likePost(id, likesCount) {
-      this.$store.dispatch("likePost", { id, likesCount });
-    },
-    closePostModal() {
-      this.postComments = [];
-      this.showPostModal = false;
+    likeReview(id, likesCount) {
+      this.$store.dispatch("likeReview", { id, likesCount });
     },
   },
   filters: {
