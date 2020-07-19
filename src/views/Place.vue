@@ -10,24 +10,86 @@
         </v-col>
       </v-row>
       <v-row>
+        <v-col cols="12" sm="12" md="4">
+          <v-card>
+            <v-card-title>Ratings and reviews</v-card-title>
+            <v-card-actions class="pa-4">
+              {{ rating }}
+              <v-rating
+                v-model="rating"
+                background-color="white"
+                color="yellow accent-4"
+                dense
+                half-increments
+                hover
+                size="18"
+              ></v-rating>
+              <span class="caption mr-2"> ({{ reviews }} reviews ) </span>
+            </v-card-actions>
+            <v-divider></v-divider>
+            <v-list dense>
+              <v-subheader>RATINGS</v-subheader>
+              <v-list-item
+                v-for="rating in ratings"
+                :key="'rating' + rating.id"
+              >
+                <v-list-item-icon>
+                  <v-icon v-text="rating.icon" small></v-icon>
+                </v-list-item-icon>
+                <v-list-item-content>
+                  <v-list-item-title v-text="rating.label"></v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-content>
+                  <v-rating
+                    v-model="rating.value"
+                    background-color="purple lighten-3"
+                    color="purple"
+                    small
+                  ></v-rating>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
+          </v-card>
+        </v-col>
+        <v-col cols="12" sm="12" md="4">
+          <v-card>
+            <v-card-title>Details</v-card-title>
+          </v-card>
+        </v-col>
+        <v-col cols="12" sm="12" md="4">
+          <v-card>
+            <v-card-title>Location and contact</v-card-title>
+          </v-card>
+        </v-col>
+      </v-row>
+      <v-row>
         <v-col>
           <v-card v-if="reviews.length">
             <v-row>
               <v-col>
-                <v-card-text>{{ reviews.length }} reviews</v-card-text>
+                <v-card-title
+                  >Reviews
+                  <span class="reviews-length"
+                    >({{ reviews.length }})</span
+                  ></v-card-title
+                >
               </v-col>
               <v-col>
                 <v-btn
                   color="grey darken-4"
                   dark
-                  class="mt-4 mx-4"
+                  class="my-2 mx-5 text-right"
                   @click="$router.push('review')"
                   >Write a review</v-btn
                 >
               </v-col>
             </v-row>
             <v-divider></v-divider>
-            <div v-for="review in reviews" :key="'review-' + review.id" class="review">
+            <div
+              v-for="review in reviews"
+              :key="'review-' + review.id"
+              class="review"
+            >
               <v-card-title class="review-username">{{
                 review.title
               }}</v-card-title>
@@ -63,6 +125,17 @@ import moment from "moment";
 import * as fb from "../firebase";
 
 export default {
+  data() {
+    return {
+      rating: 4.5,
+      reviews: 30,
+      ratings: [
+        { id: 0, icon: "mdi-clock", label: "Compliance", value: 3 },
+        { id: 1, icon: "mdi-account", label: "Safety", value: 3 },
+        { id: 2, icon: "mdi-flag", label: "Concern", value: 3 },
+      ],
+    };
+  },
   mounted() {
     this.$store.state.showSearch = true;
     this.$store.dispatch("fetchReviews");
