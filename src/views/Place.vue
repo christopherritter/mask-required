@@ -17,14 +17,18 @@
               {{ rating }}
               <v-rating
                 v-model="rating"
-                background-color="white"
+                background-color="yellow"
                 color="yellow accent-4"
+                length="5"
                 dense
                 half-increments
                 hover
                 size="18"
+                readonly
               ></v-rating>
-              <span class="caption mr-2"> ({{ reviews }} reviews ) </span>
+              <span class="caption mr-2">
+                ({{ reviews.length }} reviews )
+              </span>
             </v-card-actions>
             <v-divider></v-divider>
             <v-list dense>
@@ -33,18 +37,21 @@
                 v-for="rating in ratings"
                 :key="'rating' + rating.id"
               >
-                <v-list-item-icon>
+                <v-list-item-icon class="mr-2">
                   <v-icon v-text="rating.icon" small></v-icon>
                 </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title v-text="rating.label"></v-list-item-title>
                 </v-list-item-content>
-                <v-list-item-content>
+                <v-list-item-content class="py-0">
                   <v-rating
                     v-model="rating.value"
                     background-color="purple lighten-3"
                     color="purple"
+                    length="5"
+                    dense
                     small
+                    readonly
                   ></v-rating>
                 </v-list-item-content>
               </v-list-item>
@@ -127,8 +134,6 @@ import * as fb from "../firebase";
 export default {
   data() {
     return {
-      rating: 4.5,
-      reviews: 30,
       ratings: [
         { id: 0, icon: "mdi-clock", label: "Compliance", value: 3 },
         { id: 1, icon: "mdi-account", label: "Safety", value: 3 },
@@ -141,7 +146,7 @@ export default {
     this.$store.dispatch("fetchReviews");
   },
   computed: {
-    ...mapState(["userProfile", "place", ["reviews"]]),
+    ...mapState(["userProfile", "place", ["reviews"], "rating"]),
   },
   methods: {
     likeReview(id, likesCount) {

@@ -28,6 +28,7 @@ const store = new Vuex.Store({
       url: null,
       place_id: null,
     },
+    rating: 0,
     reviews: [],
     posts: [],
     showSearch: true,
@@ -363,7 +364,7 @@ const store = new Vuex.Store({
       router.push("/login");
     },
     async selectPlace({ state, dispatch }, place) {
-      // console.log(place);
+      console.log(place);
       state.place.name = place.name;
       state.place.formatted_address = place.formatted_address;
       state.place.place_id = place.place_id;
@@ -396,10 +397,11 @@ const store = new Vuex.Store({
         .get();
 
       let reviewsArray = [];
+      let reviewsRatings = [];
 
       if (snapshot.empty) {
         console.log("No matching documents.");
-        state.reviews = [];
+        store.commit("setReviews", []);
         return;
       }
 
@@ -407,10 +409,18 @@ const store = new Vuex.Store({
         let review = doc.data();
         review.id = doc.id;
 
+        reviewsRatings.push(review.rating);
         reviewsArray.push(review);
       });
 
-      store.commit("setReviews", reviewsArray); // Duplicative above
+      var totalRatings = reviewsRatings.reduce(function(a, b) {
+        return a + b;
+      }, 0);
+
+      totalRatings = totalRatings / reviewsArray.length;
+      state.rating = Math.round(totalRatings * 2) / 2;
+      
+      store.commit("setReviews", reviewsArray);
     },
     async likeReview({ commit }, review) {
       const userId = fb.auth.currentUser.uid;
