@@ -21,13 +21,7 @@ fb.postsCollection.orderBy("createdOn", "desc").onSnapshot((snapshot) => {
 const store = new Vuex.Store({
   state: {
     userProfile: {},
-    place: {
-      name: null,
-      formatted_address: null,
-      types: [],
-      url: null,
-      place_id: null,
-    },
+    place: {},
     rating: 0,
     reviews: [],
     posts: [],
@@ -364,12 +358,21 @@ const store = new Vuex.Store({
       router.push("/login");
     },
     async selectPlace({ state, dispatch }, place) {
-      console.log(place);
-      state.place.name = place.name;
+      // console.log(place);
+      state.place.business_status = place.business_status;
       state.place.formatted_address = place.formatted_address;
+      state.place.formatted_phone_number = place.formatted_phone_number;
+      state.place.lat = place.geometry.location.lat;
+      state.place.lng = place.geometry.location.lng;
+      state.place.icon = place.icon;
+      state.place.name = place.name;
+      state.place.isOpen = place.opening_hours.isOpen();
+      state.place.open_hours = place.opening_hours.weekday_text;
       state.place.place_id = place.place_id;
+      state.place.price_level = place.price_level;
       state.place.types = place.types;
       state.place.url = place.url;
+      state.place.website = place.website;
 
       dispatch("fetchReviews");
     },
@@ -393,7 +396,7 @@ const store = new Vuex.Store({
     async fetchReviews({ state }) {
       // const citiesRef = db.collection("cities");
       const snapshot = await fb.reviewsCollection
-        .where("place", "==", state.place)
+        .where("place.place_id", "==", state.place.place_id)
         .get();
 
       let reviewsArray = [];

@@ -14,7 +14,9 @@
           <v-card>
             <v-card-title>Ratings and reviews</v-card-title>
             <v-card-actions class="pa-4">
+              <v-spacer></v-spacer>
               {{ rating }}
+              <v-spacer></v-spacer>
               <v-rating
                 v-model="rating"
                 background-color="yellow"
@@ -26,6 +28,7 @@
                 size="18"
                 readonly
               ></v-rating>
+              <v-spacer></v-spacer>
               <span class="caption mr-2">
                 ({{ reviews.length }} reviews )
               </span>
@@ -61,11 +64,55 @@
         <v-col cols="12" sm="12" md="4">
           <v-card>
             <v-card-title>Details</v-card-title>
+
+            <v-alert v-if="isOpen" dense text type="success">
+              Currently Open
+            </v-alert>
+            <v-alert v-else dense text type="warning">
+              Currently Closed
+            </v-alert>
+
+            <v-list v-if="place.open_hours" dense>
+              <v-list-item class="hours-title-list-item">
+                <v-list-item-title class="hours-title">Hours</v-list-item-title>
+              </v-list-item>
+              <v-list-item
+                v-for="hours in place.open_hours"
+                :key="hours"
+                class="hours-list-item"
+              >
+                <v-list-item-subtitle>{{ hours }}</v-list-item-subtitle>
+              </v-list-item>
+            </v-list>
           </v-card>
         </v-col>
         <v-col cols="12" sm="12" md="4">
           <v-card>
             <v-card-title>Location and contact</v-card-title>
+            <v-list dense>
+              <v-list-item v-if="place.formatted_phone_number" two-line>
+                <v-list-item-content>
+                  <v-list-item-title>Phone</v-list-item-title>
+                  <v-list-item-subtitle>{{
+                    place.formatted_phone_number
+                  }}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="place.formatted_phone_number" two-line>
+                <v-list-item-content>
+                  <v-list-item-title>Website</v-list-item-title>
+                  <v-list-item-subtitle>{{
+                    place.website
+                  }}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+              <v-list-item v-if="place.formatted_phone_number" two-line>
+                <v-list-item-content>
+                  <v-list-item-title>Location</v-list-item-title>
+                  <v-list-item-subtitle>{{ place.url }}</v-list-item-subtitle>
+                </v-list-item-content>
+              </v-list-item>
+            </v-list>
           </v-card>
         </v-col>
       </v-row>
@@ -171,3 +218,10 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.hours-title-list-item,
+.hours-list-item {
+  min-height: 24px;
+}
+</style>
