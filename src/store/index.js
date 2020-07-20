@@ -310,7 +310,7 @@ const store = new Vuex.Store({
     setPosts(state, val) {
       state.posts = val;
     },
-    getAverageRating(state, ratings) {
+    setComplianceRating(state, ratings) {
       var averageRating = ratings.reduce(function(a, b) {
         return a + b;
       }, 0);
@@ -318,7 +318,27 @@ const store = new Vuex.Store({
       averageRating = averageRating / ratings.length;
       var roundedAverageRating = Math.round(averageRating * 2) / 2;
 
-      return roundedAverageRating;
+      state.ratings[0].value = roundedAverageRating;
+    },
+    setSafetyRating(state, ratings) {
+      var averageRating = ratings.reduce(function(a, b) {
+        return a + b;
+      }, 0);
+
+      averageRating = averageRating / ratings.length;
+      var roundedAverageRating = Math.round(averageRating * 2) / 2;
+
+      state.ratings[1].value = roundedAverageRating;
+    },
+    setConcernRating(state, ratings) {
+      var averageRating = ratings.reduce(function(a, b) {
+        return a + b;
+      }, 0);
+
+      averageRating = averageRating / ratings.length;
+      var roundedAverageRating = Math.round(averageRating * 2) / 2;
+
+      state.ratings[2].value = roundedAverageRating;
     },
   },
   actions: {
@@ -424,10 +444,15 @@ const store = new Vuex.Store({
       let reviewsArray = [];
       let reviewsRatings = [];
       let complianceRatings = [];
+      let safetyRatings = [];
+      let concernRatings = [];
 
       if (snapshot.empty) {
         // console.log("No matching documents.");
         store.commit("setReviews", []);
+        store.commit("setComplianceRating", []);
+        store.commit("setSafetyRating", []);
+        store.commit("setConcernRating", []);
         return;
       }
 
@@ -437,6 +462,14 @@ const store = new Vuex.Store({
 
         if (review.ratings && review.ratings[0].value) {
           complianceRatings.push(review.ratings[0].value);
+        }
+
+        if (review.ratings && review.ratings[1].value) {
+          safetyRatings.push(review.ratings[1].value);
+        }
+
+        if (review.ratings && review.ratings[2].value) {
+          concernRatings.push(review.ratings[2].value);
         }
 
         reviewsRatings.push(review.rating);
@@ -450,8 +483,10 @@ const store = new Vuex.Store({
       totalRating = totalRating / reviewsArray.length;
       state.rating = Math.round(totalRating * 2) / 2;
 
-      store.commit("getAverageRating", complianceRatings);
       store.commit("setReviews", reviewsArray);
+      store.commit("setComplianceRating", complianceRatings);
+      store.commit("setSafetyRating", safetyRatings);
+      store.commit("setConcernRating", concernRatings);
     },
     
     async likeReview({ commit }, review) {

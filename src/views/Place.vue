@@ -180,22 +180,13 @@ import moment from "moment";
 import * as fb from "../firebase";
 
 export default {
-  data() {
-    return {
-      ratings: [
-        { id: 0, icon: "mdi-clock", label: "Compliance", value: 0 },
-        { id: 1, icon: "mdi-account", label: "Safety", value: 0 },
-        { id: 2, icon: "mdi-flag", label: "Concern", value: 0 },
-      ],
-    };
-  },
   mounted() {
     this.$store.state.showSearch = true;
     this.showLocation( this.place.lat, this.place.lng );
     this.$store.dispatch("fetchReviews");
   },
   computed: {
-    ...mapState(["userProfile", "place", ["reviews"], "rating"]),
+    ...mapState(["userProfile", "place", ["reviews"], "rating", ["ratings"]]),
   },
   methods: {
     likeReview(id, likesCount) {
