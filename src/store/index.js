@@ -295,9 +295,9 @@ const store = new Vuex.Store({
       },
     ],
     ratings: [
-      { id: 0, label: "Compliance", value: 0 },
-      { id: 1, label: "Safety", value: 0 },
-      { id: 2, label: "Concern", value: 0 },
+      { id: 0, icon: "mdi-gavel", label: "Compliance", value: 0 },
+      { id: 1, icon: "mdi-shield", label: "Safety", value: 0 },
+      { id: 2, icon: "mdi-hand-heart", label: "Concern", value: 0 },
     ],
   },
   mutations: {
@@ -403,6 +403,7 @@ const store = new Vuex.Store({
       state.place.types = place.types;
       state.place.url = place.url;
       state.place.website = place.website;
+      state.rating = 0;
 
       dispatch("fetchReviews");
     },
