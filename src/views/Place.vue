@@ -65,7 +65,7 @@
           <v-card>
             <v-card-title>Details</v-card-title>
 
-            <v-alert v-if="isOpen" dense text type="success">
+            <v-alert v-if="place.isOpen" dense text type="success">
               Currently Open
             </v-alert>
             <v-alert v-else dense text type="warning">
@@ -89,6 +89,7 @@
         <v-col cols="12" sm="12" md="4">
           <v-card>
             <v-card-title>Location and contact</v-card-title>
+            <div id="map"></div>
             <v-list dense>
               <v-list-item v-if="place.formatted_phone_number" two-line>
                 <v-list-item-content>
@@ -106,12 +107,12 @@
                   }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item v-if="place.formatted_phone_number" two-line>
+              <!-- <v-list-item v-if="place.url" two-line>
                 <v-list-item-content>
                   <v-list-item-title>Location</v-list-item-title>
                   <v-list-item-subtitle>{{ place.url }}</v-list-item-subtitle>
                 </v-list-item-content>
-              </v-list-item>
+              </v-list-item> -->
             </v-list>
           </v-card>
         </v-col>
@@ -190,6 +191,7 @@ export default {
   },
   mounted() {
     this.$store.state.showSearch = true;
+    this.showLocation( this.place.lat, this.place.lng );
     this.$store.dispatch("fetchReviews");
   },
   computed: {
@@ -199,6 +201,9 @@ export default {
     likeReview(id, likesCount) {
       this.$store.dispatch("likeReview", { id, likesCount });
     },
+    showLocation(lat, lng) {
+      this.$store.dispatch("showLocation", { lat, lng });
+    }
   },
   filters: {
     formatDate(val) {
@@ -223,5 +228,10 @@ export default {
 .hours-title-list-item,
 .hours-list-item {
   min-height: 24px;
+}
+
+#map {
+  height: 8rem;
+  background: salmon;
 }
 </style>

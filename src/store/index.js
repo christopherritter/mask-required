@@ -358,12 +358,12 @@ const store = new Vuex.Store({
       router.push("/login");
     },
     async selectPlace({ state, dispatch }, place) {
-      // console.log(place);
+      console.log(place);
       state.place.business_status = place.business_status;
       state.place.formatted_address = place.formatted_address;
       state.place.formatted_phone_number = place.formatted_phone_number;
-      state.place.lat = place.geometry.location.lat;
-      state.place.lng = place.geometry.location.lng;
+      state.place.lat = place.geometry.location.lat();
+      state.place.lng = place.geometry.location.lng();
       state.place.icon = place.icon;
       state.place.name = place.name;
       state.place.isOpen = place.opening_hours.isOpen();
@@ -375,6 +375,20 @@ const store = new Vuex.Store({
       state.place.website = place.website;
 
       dispatch("fetchReviews");
+    },
+    async showLocation({ dispatch }, location) {
+        console.log(location);
+        // Create a map object
+        let map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 15,
+          center: new google.maps.LatLng(location.lat, location.lng),
+          mapTypeId: google.maps.MapTypeId.ROADMAP,
+        });
+        new google.maps.Marker({
+          position: new google.maps.LatLng(location.lat, location.lng),
+          map: map,
+        });
+
     },
     async createReview({ state, commit }, review) {
       // create review in firebase
