@@ -295,9 +295,9 @@ const store = new Vuex.Store({
       },
     ],
     ratings: [
-      { id: 0, label: "Friendliness" },
-      { id: 1, label: "Compliance" },
-      { id: 2, label: "Respect" },
+      { id: 0, label: "Compliance", value: 0 },
+      { id: 1, label: "Safety", value: 0 },
+      { id: 2, label: "Concern", value: 0 },
     ],
   },
   mutations: {
@@ -309,6 +309,16 @@ const store = new Vuex.Store({
     },
     setPosts(state, val) {
       state.posts = val;
+    },
+    getAverageRating(state, ratings) {
+      var averageRating = ratings.reduce(function(a, b) {
+        return a + b;
+      }, 0);
+
+      averageRating = averageRating / ratings.length;
+      var roundedAverageRating = Math.round(averageRating * 2) / 2;
+
+      return roundedAverageRating;
     },
   },
   actions: {
@@ -358,7 +368,7 @@ const store = new Vuex.Store({
       router.push("/login");
     },
     async selectPlace({ state, dispatch }, place) {
-      console.log(place);
+      // console.log(place);
       state.place.business_status = place.business_status;
       state.place.formatted_address = place.formatted_address;
       state.place.formatted_phone_number = place.formatted_phone_number;
@@ -377,18 +387,16 @@ const store = new Vuex.Store({
       dispatch("fetchReviews");
     },
     async showLocation({ dispatch }, location) {
-        console.log(location);
-        // Create a map object
-        let map = new google.maps.Map(document.getElementById("map"), {
-          zoom: 15,
-          center: new google.maps.LatLng(location.lat, location.lng),
-          mapTypeId: google.maps.MapTypeId.ROADMAP,
-        });
-        new google.maps.Marker({
-          position: new google.maps.LatLng(location.lat, location.lng),
-          map: map,
-        });
-
+      // Create a map object
+      let map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 15,
+        center: new google.maps.LatLng(location.lat, location.lng),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+      });
+      new google.maps.Marker({
+        position: new google.maps.LatLng(location.lat, location.lng),
+        map: map,
+      });
     },
     async createReview({ state, commit }, review) {
       // create review in firebase
@@ -415,9 +423,10 @@ const store = new Vuex.Store({
 
       let reviewsArray = [];
       let reviewsRatings = [];
+      let complianceRatings = [];
 
       if (snapshot.empty) {
-        console.log("No matching documents.");
+        // console.log("No matching documents.");
         store.commit("setReviews", []);
         return;
       }
@@ -426,19 +435,25 @@ const store = new Vuex.Store({
         let review = doc.data();
         review.id = doc.id;
 
+        if (review.ratings && review.ratings[0].value) {
+          complianceRatings.push(review.ratings[0].value);
+        }
+
         reviewsRatings.push(review.rating);
         reviewsArray.push(review);
       });
 
-      var totalRatings = reviewsRatings.reduce(function(a, b) {
+      var totalRating = reviewsRatings.reduce(function(a, b) {
         return a + b;
       }, 0);
 
-      totalRatings = totalRatings / reviewsArray.length;
-      state.rating = Math.round(totalRatings * 2) / 2;
-      
+      totalRating = totalRating / reviewsArray.length;
+      state.rating = Math.round(totalRating * 2) / 2;
+
+      store.commit("getAverageRating", complianceRatings);
       store.commit("setReviews", reviewsArray);
     },
+    
     async likeReview({ commit }, review) {
       const userId = fb.auth.currentUser.uid;
       const docId = `${userId}_${review.id}`;
