@@ -6,82 +6,80 @@
     ></PasswordReset>
     <v-container class="fill-height py-0" style="max-width: none">
       <v-row class="fill-height">
-        <v-col cols="12" md="6" class="blue">
-          <h1>Mask Required</h1>
-          <p>
-            This is the first release of a new concept by Christopher Ritter
-            which aims to provide a collaborative map of places that require
-            masks to be worn by customers and employees.
-          </p>
+        <v-col cols="12" md="6" class="blue d-flex align-center">
+          <div class="px-5">
+            <h1 class="white--text">Mask Required</h1>
+            <p class="white--text">
+              This is the first release of a new concept by Christopher Ritter
+              which aims to provide a collaborative map of places that require
+              masks to be worn by customers and employees.
+            </p>
+          </div>
         </v-col>
-        <v-col cols="12" md="6" :class="{ 'signup-form': !showLoginForm }">
+        <v-col
+          cols="12"
+          md="6"
+          :class="{
+            'signup-form': !showLoginForm,
+            'd-flex align-center text-center justify-center': true,
+          }"
+        >
           <form v-if="showLoginForm" @submit.prevent>
-            <h1>Welcome Back</h1>
-            <div>
-              <v-text-field
-                label="Email"
-                v-model.trim="loginForm.email"
-                type="text"
-                placeholder="you@email.com"
-                id="email1"
-              ></v-text-field>
-            </div>
-            <div>
-              <v-text-field
-                label="Password"
-                v-model.trim="loginForm.password"
-                type="password"
-                placeholder="******"
-                id="password1"
-              ></v-text-field>
-            </div>
+            <v-text-field
+              label="Email"
+              v-model.trim="loginForm.email"
+              type="text"
+              placeholder="you@email.com"
+              id="email1"
+              outlined
+            ></v-text-field>
+            <v-text-field
+              label="Password"
+              v-model.trim="loginForm.password"
+              type="password"
+              placeholder="******"
+              id="password1"
+              outlined
+            ></v-text-field>
             <v-btn @click="login()" color="primary">Log In</v-btn>
-            <div class="extras">
-              <a @click="togglePasswordReset()">Forgot Password</a>
-              <a @click="toggleForm()">Create an Account</a>
+            <div class="pt-3">
+              <v-btn text @click="togglePasswordReset()">Forgot Password</v-btn>
+              <v-btn text @click="toggleForm()">Create an Account</v-btn>
             </div>
           </form>
           <form v-else @submit.prevent>
             <h1>Get Started</h1>
-            <div>
-              <label for="name">Name</label>
-              <input
-                v-model.trim="signupForm.name"
-                type="text"
-                placeholder="Savvy Apps"
-                id="name"
-              />
-            </div>
-            <div>
-              <label for="title">Title</label>
-              <input
-                v-model.trim="signupForm.title"
-                type="text"
-                placeholder="Company"
-                id="title"
-              />
-            </div>
-            <div>
-              <label for="email2">Email</label>
-              <input
-                v-model.trim="signupForm.email"
-                type="text"
-                placeholder="you@email.com"
-                id="email2"
-              />
-            </div>
-            <div>
-              <label for="password2">Password</label>
-              <input
-                v-model.trim="signupForm.password"
-                type="password"
-                placeholder="min 6 characters"
-                id="password2"
-              />
-            </div>
-            <button @click="signup()" class="button">Sign Up</button>
+            <v-text-field
+              label="Name"
+              v-model.trim="signupForm.name"
+              type="text"
+              placeholder="Savvy Apps"
+              id="name"
+            ></v-text-field>
+            <v-text-field
+              label="Title"
+              v-model.trim="signupForm.title"
+              type="text"
+              placeholder="Company"
+              id="title"
+            ></v-text-field>
+            <v-text-field
+              label="Email"
+              v-model.trim="signupForm.email"
+              type="text"
+              placeholder="you@email.com"
+              id="email2"
+            ></v-text-field>
+            <v-text-field
+              label="Password"
+              v-model.trim="signupForm.password"
+              type="password"
+              placeholder="min 6 characters"
+              id="password2"
+            ></v-text-field>
+            <v-btn @click="signup()" class="button">Sign Up</v-btn>
             <div class="extras">
-              <a @click="toggleForm()">Back to Log In</a>
+              <v-btn text @click="toggleForm()">Back to Log In</v-btn>
             </div>
           </form>
         </v-col>
