@@ -8,9 +8,13 @@
 
             <v-row>
               <v-col class="d-flex flex-row pb-0">
-                <v-chip medium color="white">{{ place.formatted_address }}</v-chip>
+                <v-chip medium color="white">{{
+                  place.formatted_address
+                }}</v-chip>
                 <v-chip medium color="white">|</v-chip>
-                <v-chip medium color="white">{{ place.formatted_phone_number }}</v-chip>
+                <v-chip medium color="white">{{
+                  place.formatted_phone_number
+                }}</v-chip>
                 <v-chip medium color="white">|</v-chip>
                 <v-chip medium color="white">{{ place.website }}</v-chip>
                 <!-- <v-chip v-if="place.isOpen" medium color="success">
@@ -36,7 +40,7 @@
                 ></v-rating>
                 <v-chip medium color="white">
                   <v-avatar left>
-                    30
+                    {{ reviews.length }}
                   </v-avatar>
                   Reviews
                 </v-chip>
@@ -61,9 +65,10 @@
         <v-col cols="12" sm="12" md="4">
           <v-card>
             <v-card-title>Ratings and reviews</v-card-title>
-            <v-card-actions class="pa-4">
-              <v-spacer></v-spacer>
-              {{ rating }}
+            <v-card-actions class="px-4 pb-4">
+              <v-avatar color="teal" size="64">
+                <span class="white--text headline">{{ rating }}</span>
+              </v-avatar>
               <v-spacer></v-spacer>
               <v-rating
                 v-model="rating"
@@ -78,11 +83,11 @@
               ></v-rating>
               <v-spacer></v-spacer>
               <span class="caption mr-2">
-                ({{ reviews.length }} reviews )
+                ( {{ reviews.length }} reviews )
               </span>
             </v-card-actions>
-            <v-divider></v-divider>
-            <v-list dense>
+            <v-divider class="my-0"></v-divider>
+            <v-list dense class="pl-2">
               <v-subheader>RATINGS</v-subheader>
               <v-list-item
                 v-for="rating in ratings"
@@ -271,5 +276,8 @@ export default {
 #map {
   height: 8rem;
   background: salmon;
+}
+.v-application .caption {
+  font-weight: 500;
 }
 </style>
