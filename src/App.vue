@@ -1,23 +1,28 @@
 <template>
   <v-app id="app">
     <SiteNav v-if="showNav"></SiteNav>
-    <router-view/>
+    <router-view />
+    <v-footer class="font-weight-light">
+      <v-col class="text-center" cols="12">
+        &copy;{{ new Date().getFullYear() }} <strong>Christopher Ritter</strong>. All rights reserved.
+      </v-col>
+    </v-footer>
   </v-app>
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import SiteNav from '@/components/SiteNav'
+import { mapState } from "vuex";
+import SiteNav from "@/components/SiteNav";
 
 export default {
   components: {
-    SiteNav
+    SiteNav,
   },
   computed: {
-    ...mapState(['userProfile']),
+    ...mapState(["userProfile"]),
     showNav() {
-      return Object.keys(this.userProfile).length > 1
-    }
+      return Object.keys(this.userProfile).length > 1;
+    },
   },
-}
+};
 </script>

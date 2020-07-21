@@ -82,7 +82,7 @@
                 readonly
               ></v-rating>
               <v-spacer></v-spacer>
-              <span class="caption mr-2">
+              <span class="caption mr-2 font-weight-medium">
                 ( {{ reviews.length }} reviews )
               </span>
             </v-card-actions>
@@ -276,8 +276,5 @@ export default {
 #map {
   height: 8rem;
   background: salmon;
-}
-.v-application .caption {
-  font-weight: 500;
 }
 </style>
