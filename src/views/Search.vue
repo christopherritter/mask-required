@@ -4,7 +4,8 @@
       <v-card class="p-4">
         <v-row>
           <v-col class="text-center">
-            <h3>Review a place you've visited.</h3>
+            <h3 v-if="!place.business_status">Find a safe place in {{ place.vicinity }}.</h3>
+            <h3 v-else>Review a place you've visited.</h3>
           </v-col>
         </v-row>
         <v-row>
@@ -26,6 +27,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data: () => ({
     address: null,
@@ -40,26 +43,25 @@ export default {
 
     let autocomplete = new google.maps.places.Autocomplete(
       document.getElementById("home-autocomplete")
-      // {
-      //   bounds: new google.maps.LatLngBounds(
-      //     new google.maps.LatLng(40.367474, -82.996216)
-      //   )
-      // }
     );
 
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
       this.selectPlace(place);
 
-      if (this.$router.currentRoute.name != "place") {
-        this.$router.push("place");
+      if (place.business_status) {
+        if (this.$router.currentRoute.name != "place") {
+          this.$router.push("place");
+        }
+      } else {
+        if (this.$router.currentRoute.name != "search") {
+          this.$router.push("search");
+        }
       }
-
-      // this.showUserLocationOnTheMap(
-      //   place.geometry.location.lat(),
-      //   place.geometry.location.lng()
-      // );
     });
+  },
+  computed: {
+    ...mapState(["place"]),
   },
 };
 </script>

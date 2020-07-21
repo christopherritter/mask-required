@@ -389,21 +389,33 @@ const store = new Vuex.Store({
     },
     async selectPlace({ state, dispatch }, place) {
       // console.log(place);
-      state.place.business_status = place.business_status;
       state.place.formatted_address = place.formatted_address;
-      state.place.formatted_phone_number = place.formatted_phone_number;
       state.place.lat = place.geometry.location.lat();
       state.place.lng = place.geometry.location.lng();
       state.place.icon = place.icon;
       state.place.name = place.name;
-      state.place.isOpen = place.opening_hours.isOpen();
-      state.place.open_hours = place.opening_hours.weekday_text;
       state.place.place_id = place.place_id;
-      state.place.price_level = place.price_level;
-      state.place.types = place.types;
       state.place.url = place.url;
-      state.place.website = place.website;
+      state.place.vicinity = place.vicinity;
       state.rating = 0;
+
+      if (place.business_status){
+        state.place.business_status = place.business_status;
+        state.place.formatted_phone_number = place.formatted_phone_number;
+        state.place.isOpen = place.opening_hours.isOpen();
+        state.place.open_hours = place.opening_hours.weekday_text;
+        state.place.price_level = place.price_level;
+        state.place.types = place.types;
+        state.place.website = place.website;
+      } else {
+        state.place.business_status = null;
+        state.place.formatted_phone_number = null;
+        state.place.isOpen = null;
+        state.place.open_hours = null;
+        state.place.price_level = null;
+        state.place.types = null;
+        state.place.website = null;
+      }
 
       dispatch("fetchReviews");
     },
@@ -489,7 +501,6 @@ const store = new Vuex.Store({
       store.commit("setSafetyRating", safetyRatings);
       store.commit("setConcernRating", concernRatings);
     },
-    
     async likeReview({ commit }, review) {
       const userId = fb.auth.currentUser.uid;
       const docId = `${userId}_${review.id}`;

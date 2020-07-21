@@ -97,11 +97,16 @@ export default {
 
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
-      console.log(place);
       this.selectPlace(place);
 
-      if (this.$router.currentRoute.name != "place") {
-        this.$router.push("place");
+      if (place.business_status) {
+        if (this.$router.currentRoute.name != "place") {
+          this.$router.push("place");
+        }
+      } else {
+        if (this.$router.currentRoute.name != "search") {
+          this.$router.push("search");
+        }
       }
     });
   },

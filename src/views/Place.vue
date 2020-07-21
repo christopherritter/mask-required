@@ -3,9 +3,57 @@
     <v-container id="place" fluid>
       <v-row>
         <v-col>
-          <div class="profile">
+          <div class="place-header">
             <h3>{{ place.name }}</h3>
-            <p>{{ place.formatted_address }}</p>
+
+            <v-row>
+              <v-col class="d-flex flex-row pb-0">
+                <v-chip medium color="white">{{ place.formatted_address }}</v-chip>
+                <v-chip medium color="white">|</v-chip>
+                <v-chip medium color="white">{{ place.formatted_phone_number }}</v-chip>
+                <v-chip medium color="white">|</v-chip>
+                <v-chip medium color="white">{{ place.website }}</v-chip>
+                <!-- <v-chip v-if="place.isOpen" medium color="success">
+                  Currently Open
+                </v-chip>
+                <v-chip v-else medium color="warning">
+                  Currently Closed
+                </v-chip> -->
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col class="d-flex flex-row pt-0">
+                <v-rating
+                  v-model="rating"
+                  background-color="yellow"
+                  color="yellow accent-4"
+                  length="5"
+                  dense
+                  half-increments
+                  hover
+                  size="18"
+                  readonly
+                ></v-rating>
+                <v-chip medium color="white">
+                  <v-avatar left>
+                    30
+                  </v-avatar>
+                  Reviews
+                </v-chip>
+                <v-chip medium color="white">|</v-chip>
+                <v-chip medium v-if="place.price_level" color="white">
+                  {{ place.price_level }}
+                </v-chip>
+                <v-chip
+                  medium
+                  v-for="type in place.types"
+                  :key="type"
+                  color="white"
+                >
+                  {{ type }}
+                </v-chip>
+              </v-col>
+            </v-row>
           </div>
         </v-col>
       </v-row>
@@ -177,16 +225,15 @@
 <script>
 import { mapState } from "vuex";
 import moment from "moment";
-import * as fb from "../firebase";
 
 export default {
   mounted() {
     this.$store.state.showSearch = true;
-    this.showLocation( this.place.lat, this.place.lng );
+    this.showLocation(this.place.lat, this.place.lng); // BUG! Only shows location on mounted.
     this.$store.dispatch("fetchReviews");
   },
   computed: {
-    ...mapState(["userProfile", "place", ["reviews"], "rating", ["ratings"]]),
+    ...mapState(["place", ["reviews"], "rating", ["ratings"]]),
   },
   methods: {
     likeReview(id, likesCount) {
@@ -194,7 +241,7 @@ export default {
     },
     showLocation(lat, lng) {
       this.$store.dispatch("showLocation", { lat, lng });
-    }
+    },
   },
   filters: {
     formatDate(val) {
