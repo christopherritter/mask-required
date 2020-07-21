@@ -51,7 +51,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn icon @click="$router.push('search')">
+      <v-btn icon @click="addReview">
         <v-icon>mdi-plus-circle-outline</v-icon>
       </v-btn>
 
@@ -119,11 +119,19 @@ export default {
         this.$router.push({ name: "home" });
       }
     },
+    addReview() {
+      if (this.place && this.place.business_status) {
+        this.$router.push("review");
+      } else {
+        this.$router.push("search");
+      }
+    },
     logout() {
       this.$store.dispatch("logout");
     },
   },
   computed: {
+    ...mapState(["place"]),
     showSearch() {
       return this.$store.state.showSearch;
     },
