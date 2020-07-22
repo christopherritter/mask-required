@@ -1,6 +1,32 @@
 <template>
   <v-main>
     <v-container id="place" fluid>
+      <v-row justify="center">
+        <v-dialog v-model="showReviewModal" width="600px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="primary" dark v-bind="attrs" v-on="on">
+              Open Dialog
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">{{ fullReview.title }}</span>
+            </v-card-title>
+            <v-card-text>
+              {{ fullReview.content }}
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="green darken-1" text @click="dialog = false"
+                >Disagree</v-btn
+              >
+              <v-btn color="green darken-1" text @click="dialog = false"
+                >Agree</v-btn
+              >
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-row>
       <v-row>
         <v-col>
           <div class="place-header">
@@ -232,6 +258,12 @@ import { mapState } from "vuex";
 import moment from "moment";
 
 export default {
+  data() {
+    return {
+      showReviewModal: false,
+      fullReview: {},
+    };
+  },
   mounted() {
     this.$store.state.showSearch = true;
     this.showLocation(this.place.lat, this.place.lng); // BUG! Only shows location on mounted.
@@ -241,11 +273,25 @@ export default {
     ...mapState(["place", ["reviews"], "rating", ["ratings"]]),
   },
   methods: {
+    showLocation(lat, lng) {
+      this.$store.dispatch("showLocation", { lat, lng });
+    },
     likeReview(id, likesCount) {
       this.$store.dispatch("likeReview", { id, likesCount });
     },
-    showLocation(lat, lng) {
-      this.$store.dispatch("showLocation", { lat, lng });
+    async viewReview(review) {
+      // const docs = await commentsCollection
+      //   .where("reviewId", "==", review.id)
+      //   .get();
+
+      // docs.forEach((doc) => {
+      //   let comment = doc.data();
+      //   comment.id = doc.id;
+      //   this.postComments.push(comment);
+      // });
+
+      this.fullReview = review;
+      this.showReviewModal = true;
     },
   },
   filters: {

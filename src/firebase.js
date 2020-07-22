@@ -19,17 +19,18 @@ const db = firebase.firestore();
 const auth = firebase.auth();
 
 // collection references
-const usersCollection = db.collection("users");
-const reviewsCollection = db.collection("reviews");
-const postsCollection = db.collection("posts");
+// const commentsCollection = db.collection("comments");
 const likesCollection = db.collection("likes");
+const postsCollection = db.collection("posts");
+const reviewsCollection = db.collection("reviews");
+const usersCollection = db.collection("users");
 
 // export utils/refs
 export {
   db,
   auth,
-  usersCollection,
-  reviewsCollection,
-  postsCollection,
   likesCollection,
+  postsCollection,
+  reviewsCollection,
+  usersCollection,
 };
