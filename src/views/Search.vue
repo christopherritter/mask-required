@@ -4,8 +4,16 @@
       <v-card class="p-4">
         <v-row>
           <v-col class="text-center">
-            <h3 v-if="place.business_status == null && place.formatted_address">Find a safe place to shop in {{ place.vicinity }}.</h3>
-            <h3 v-else-if="place.business_status == null">Find a safe place to shop.</h3>
+            <h3
+              v-if="
+                place.business_status == null && place.formatted_address != null
+              "
+            >
+              Find a safe place to shop in {{ place.vicinity }}.
+            </h3>
+            <h3 v-else-if="place.business_status == null">
+              Find a safe place to shop.
+            </h3>
             <h3 v-else>Review a place you've visited.</h3>
           </v-col>
         </v-row>
@@ -36,6 +44,7 @@ export default {
   }),
   methods: {
     selectPlace(place) {
+      this.$set(this.place, "vicinity", place.vicinity);
       this.$store.dispatch("selectPlace", place);
     },
   },
@@ -61,6 +70,7 @@ export default {
       }
     });
   },
+
   computed: {
     ...mapState(["place"]),
   },
