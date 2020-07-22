@@ -1,49 +1,47 @@
 <template>
-  <main id="settings" class="container-fluid">
-    <div class="row justify-content-md-center">
-      <div class="col-sm-4">
-        <div class="card mt-4">
-          <h5 class="card-header">Settings</h5>
-          <div class="card-body">
-            <h5 class="card-title">Update your profile</h5>
-            <transition name="fade">
-              <p v-if="showSuccess" class="alert alert-success">
-                Profile updated.
-              </p>
-            </transition>
+  <v-main id="settings" class="container-fluid">
+    <v-container>
+      <v-row class="justify-content-md-center">
+        <v-col sm="4">
+          <v-card class="mt-4">
+            <v-card-title>Settings</v-card-title>
+            <v-card-text>
+              <h6 class="mb-2">Update your profile</h6>
+              <transition name="fade">
+                <p v-if="showSuccess" class="alert alert-success">
+                  Profile updated.
+                </p>
+              </transition>
 
-            <form class="mt-1" @submit.prevent>
-              <div class="form-group">
-                <label for="name">Name</label>
-                <input
+              <form @submit.prevent>
+                <v-text-field
+                  label="Name"
                   v-model.trim="name"
                   type="text"
                   :placeholder="userProfile.name"
-                  class="form-control"
                   id="name"
-                />
-              </div>
+                  outlined
+                ></v-text-field>
 
-              <div class="form-group">
-                <label for="title">Job Title</label>
-                <input
+                <v-text-field
+                  label="Job Title"
                   v-model.trim="title"
                   type="text"
                   :placeholder="userProfile.title"
-                  class="form-control"
                   id="title"
-                />
-              </div>
+                  outlined
+                ></v-text-field>
 
-              <button @click="updateProfile()" class="btn btn-primary">
-                Update Profile
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-  </main>
+                <v-btn @click="updateProfile()" color="primary">
+                  Update Profile
+                </v-btn>
+              </form>
+            </v-card-text>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-main>
 </template>
 
 <script>
@@ -79,16 +77,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-#settings {
-
-  form {
-    margin-top: 3rem;
-  }
-
-  .button {
-    margin-top: 2rem;
-  }
-}
-</style>
