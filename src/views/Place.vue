@@ -3,12 +3,11 @@
     <v-container id="place" fluid>
       <v-row justify="center">
         <v-dialog v-model="showReviewModal" width="600px">
-          <template v-slot:activator="{ on, attrs }">
-            <v-btn color="primary" dark v-bind="attrs" v-on="on">
-              Open Dialog
-            </v-btn>
-          </template>
-          <v-card>
+          <v-card v-if="editReview">
+            <v-card-title>Edit Review</v-card-title>
+            <v-card-text>Edit this review.</v-card-text>
+          </v-card>
+          <v-card v-else>
             <v-card-title>
               <span class="headline">{{ fullReview.title }}</span>
             </v-card-title>
@@ -238,6 +237,10 @@
                   >likes {{ review.likes }}</v-btn
                 >
                 <v-btn text @click="viewReview(review)">full review</v-btn>
+                <v-spacer></v-spacer>
+                <v-btn text @click="viewReview(review, true)"
+                  >edit review</v-btn
+                >
               </v-card-actions>
               <v-divider></v-divider>
             </div>
@@ -261,6 +264,7 @@ export default {
   data() {
     return {
       showReviewModal: false,
+      editReview: false,
       fullReview: {},
     };
   },
@@ -273,13 +277,22 @@ export default {
     ...mapState(["place", ["reviews"], "rating", ["ratings"]]),
   },
   methods: {
-    showLocation(lat, lng) {
-      this.$store.dispatch("showLocation", { lat, lng });
+    showLocation(latitude, longitude) {
+      // Create a map object
+      let map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 15,
+        center: new google.maps.LatLng(latitude, longitude),
+        mapTypeId: google.maps.MapTypeId.ROADMAP,
+      });
+      new google.maps.Marker({
+        position: new google.maps.LatLng(latitude, longitude),
+        map: map,
+      });
     },
     likeReview(id, likesCount) {
       this.$store.dispatch("likeReview", { id, likesCount });
     },
-    async viewReview(review) {
+    async viewReview(review, edit) {
       // const docs = await commentsCollection
       //   .where("reviewId", "==", review.id)
       //   .get();
@@ -290,8 +303,13 @@ export default {
       //   this.postComments.push(comment);
       // });
 
+      this.editReview = false;
       this.fullReview = review;
       this.showReviewModal = true;
+
+      if (edit) {
+        this.editReview = true;
+      }
     },
   },
   filters: {

@@ -401,12 +401,12 @@ const store = new Vuex.Store({
 
       if (place.business_status){
         state.place.business_status = place.business_status;
-        state.place.formatted_phone_number = place.formatted_phone_number;
-        state.place.isOpen = place.opening_hours.isOpen();
-        state.place.open_hours = place.opening_hours.weekday_text;
-        state.place.price_level = place.price_level;
-        state.place.types = place.types;
-        state.place.website = place.website;
+        state.place.formatted_phone_number = place.formatted_phone_number || "";
+        state.place.isOpen = place.opening_hours.isOpen() || false;
+        state.place.open_hours = place.opening_hours.weekday_text || [];
+        state.place.price_level = place.price_level || 0;
+        state.place.types = place.types || [];
+        state.place.website = place.website || "";
       } else {
         state.place.business_status = null;
         state.place.formatted_phone_number = null;
@@ -418,18 +418,6 @@ const store = new Vuex.Store({
       }
 
       dispatch("fetchReviews");
-    },
-    async showLocation({ dispatch }, location) {
-      // Create a map object
-      let map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15,
-        center: new google.maps.LatLng(location.lat, location.lng),
-        mapTypeId: google.maps.MapTypeId.ROADMAP,
-      });
-      new google.maps.Marker({
-        position: new google.maps.LatLng(location.lat, location.lng),
-        map: map,
-      });
     },
     async createReview({ state, commit }, review) {
       // create review in firebase
