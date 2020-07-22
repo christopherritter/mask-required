@@ -123,7 +123,9 @@ export default {
       if (this.place && this.place.business_status) {
         this.$router.push("review");
       } else {
-        this.$router.push("search");
+        if (this.$router.currentRoute.name != "search") {
+          this.$router.push("search");
+        }
       }
     },
     logout() {
