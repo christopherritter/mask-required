@@ -12,6 +12,7 @@
         ></EditReview>
         <DeleteReview
           :dialog-view="showDeleteModal"
+          :full-review="fullReview"
           @close="toggleDeleteModal()"
         ></DeleteReview>
       </v-row>
@@ -268,6 +269,7 @@ export default {
       showViewModal: false,
       showEditModal: false,
       showDeleteModal: false,
+      fullReview: {}
     };
   },
   mounted() {
@@ -311,9 +313,11 @@ export default {
       this.showViewModal = true;
     },
     editReview(review) {
+      this.fullReview = review;
       this.showEditModal = true;
     },
     deleteReview(review) {
+      this.fullReview = review;
       this.showDeleteModal = true;
     },
     toggleViewModal() {

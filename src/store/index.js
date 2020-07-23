@@ -515,6 +515,9 @@ const store = new Vuex.Store({
         likes: review.likesCount + 1,
       });
     },
+    async deleteReview ({ commit }, review) {
+      fb.reviewsCollection.doc(review.id).delete();
+    },
     async updateProfile({ dispatch }, user) {
       const userId = fb.auth.currentUser.uid;
       // update user object

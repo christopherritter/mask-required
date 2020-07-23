@@ -10,7 +10,7 @@
       <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn color="secondary darken-1" @click="$emit('close')" text>Disagree</v-btn>
-        <v-btn color="green darken-1" @click="$emit('close')" text>Agree</v-btn>
+        <v-btn color="green darken-1" @click="deleteReview(fullReview)" text>Agree</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -18,11 +18,12 @@
 
 <script>
 export default {
-  data() {
-    return {
-      fullReview: {},
-    };
-  },
-  props: ['dialogView'],
+  props: ['dialogView', 'fullReview'],
+  methods: {
+    deleteReview(review){
+      this.$store.dispatch("deleteReview", review);
+      this.$emit('close');
+    }
+  }
 };
 </script>
