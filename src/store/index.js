@@ -515,6 +515,9 @@ const store = new Vuex.Store({
         likes: review.likesCount + 1,
       });
     },
+    async editReview ({ commit }, review) {
+      fb.reviewsCollection.doc(review.id).update(review);
+    },
     async deleteReview ({ commit }, review) {
       fb.reviewsCollection.doc(review.id).delete();
     },

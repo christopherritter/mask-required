@@ -4,10 +4,12 @@
       <v-row justify="center">
         <ViewReview
           :dialog-view="showViewModal"
+          :full-review="fullReview"
           @close="toggleViewModal()"
         ></ViewReview>
         <EditReview
           :dialog-view="showEditModal"
+          :full-review="fullReview"
           @close="toggleEditModal()"
         ></EditReview>
         <DeleteReview
@@ -357,6 +359,5 @@ export default {
 
 #map {
   height: 8rem;
-  background: salmon;
 }
 </style>
