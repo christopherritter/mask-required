@@ -3,11 +3,7 @@
     <v-container id="place" fluid>
       <v-row justify="center">
         <v-dialog v-model="showReviewModal" width="600px">
-          <v-card v-if="editReview">
-            <v-card-title>Edit Review</v-card-title>
-            <v-card-text>Edit this review.</v-card-text>
-          </v-card>
-          <v-card v-else>
+          <v-card>
             <v-card-title>
               <span class="headline">{{ fullReview.title }}</span>
             </v-card-title>
@@ -238,7 +234,7 @@
                 >
                 <v-btn text @click="viewReview(review)">full review</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn text @click="viewReview(review, true)"
+                <v-btn text @click="viewReview(review)"
                   >edit review</v-btn
                 >
               </v-card-actions>
@@ -264,7 +260,6 @@ export default {
   data() {
     return {
       showReviewModal: false,
-      editReview: false,
       fullReview: {},
     };
   },
@@ -274,7 +269,7 @@ export default {
     this.$store.dispatch("fetchReviews");
   },
   computed: {
-    ...mapState(["place", ["reviews"], "rating", ["ratings"]]),
+    ...mapState([["userProfile"], "place", ["reviews"], "rating", ["ratings"]]),
   },
   methods: {
     showLocation(latitude, longitude) {
@@ -292,7 +287,13 @@ export default {
     likeReview(id, likesCount) {
       this.$store.dispatch("likeReview", { id, likesCount });
     },
-    async viewReview(review, edit) {
+    async viewReview(review) {
+      // const userId = fb.auth.currentUser.uid
+      // const docId = `${userId}_${post.id}`
+
+      // const doc = await fb.reviewsCollection.doc(docId).get()
+      // if (doc.exists) { return }
+
       // const docs = await commentsCollection
       //   .where("reviewId", "==", review.id)
       //   .get();
@@ -303,13 +304,8 @@ export default {
       //   this.postComments.push(comment);
       // });
 
-      this.editReview = false;
       this.fullReview = review;
       this.showReviewModal = true;
-
-      if (edit) {
-        this.editReview = true;
-      }
     },
   },
   filters: {

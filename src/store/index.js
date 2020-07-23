@@ -421,7 +421,7 @@ const store = new Vuex.Store({
     },
     async createReview({ state, commit }, review) {
       // create review in firebase
-      await fb.reviewsCollection.add({
+      const newReview = await fb.reviewsCollection.add({
         createdOn: new Date(),
         place: state.place,
         rating: review.rating,
@@ -434,6 +434,10 @@ const store = new Vuex.Store({
         userName: state.userProfile.name,
         likes: 0,
         agreement: review.agreement,
+      }).then(function(newReview) {
+        newReview.update({
+          reviewId: fb.auth.currentUser.uid + '_' + newReview.id
+        })
       });
     },
     async fetchReviews({ state }) {
