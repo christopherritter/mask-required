@@ -6,6 +6,14 @@
           :dialog-view="showViewModal"
           @close="toggleViewModal()"
         ></ViewReview>
+        <EditReview
+          :dialog-view="showEditModal"
+          @close="toggleEditModal()"
+        ></EditReview>
+        <DeleteReview
+          :dialog-view="showDeleteModal"
+          @close="toggleDeleteModal()"
+        ></DeleteReview>
       </v-row>
       <v-row>
         <v-col>
@@ -251,11 +259,15 @@
 import { mapState } from "vuex";
 import moment from "moment";
 import ViewReview from "@/components/ViewReview";
+import EditReview from "@/components/EditReview";
+import DeleteReview from "@/components/DeleteReview";
 
 export default {
   data() {
     return {
       showViewModal: false,
+      showEditModal: false,
+      showDeleteModal: false,
     };
   },
   mounted() {
@@ -265,6 +277,8 @@ export default {
   },
   components: {
     ViewReview,
+    EditReview,
+    DeleteReview
   },
   computed: {
     ...mapState([["userProfile"], "place", ["reviews"], "rating", ["ratings"]]),
@@ -282,14 +296,6 @@ export default {
         map: map,
       });
     },
-    likeReview(id, likesCount) {
-      this.$store.dispatch("likeReview", { id, likesCount });
-    },
-    viewReview(review) {
-      this.fullReview = review;
-      this.showViewModal = true;
-      console.log("Show View Modal");
-    },
     userReview(review) {
       if (this.userProfile.userId == review.userId) {
         return true;
@@ -297,15 +303,28 @@ export default {
         return false;
       }
     },
+    likeReview(id, likesCount) {
+      this.$store.dispatch("likeReview", { id, likesCount });
+    },
+    viewReview(review) {
+      this.fullReview = review;
+      this.showViewModal = true;
+    },
     editReview(review) {
-      console.log("Edit Review");
+      this.showEditModal = true;
     },
     deleteReview(review) {
-      console.log("Delete Review");
+      this.showDeleteModal = true;
     },
     toggleViewModal() {
       this.showViewModal = false;
-    }
+    },
+    toggleEditModal() {
+      this.showEditModal = false;
+    },
+    toggleDeleteModal() {
+      this.showDeleteModal = false;
+    },
   },
   filters: {
     formatDate(val) {
