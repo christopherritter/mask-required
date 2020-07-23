@@ -2,25 +2,10 @@
   <v-main>
     <v-container id="place" fluid>
       <v-row justify="center">
-        <v-dialog v-model="showReviewModal" width="600px">
-          <v-card>
-            <v-card-title>
-              <span class="headline">{{ fullReview.title }}</span>
-            </v-card-title>
-            <v-card-text>
-              {{ fullReview.content }}
-            </v-card-text>
-            <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn color="green darken-1" text @click="dialog = false"
-                >Disagree</v-btn
-              >
-              <v-btn color="green darken-1" text @click="dialog = false"
-                >Agree</v-btn
-              >
-            </v-card-actions>
-          </v-card>
-        </v-dialog>
+        <ViewReview
+          :dialog-view="showViewModal"
+          @close="toggleViewModal()"
+        ></ViewReview>
       </v-row>
       <v-row>
         <v-col>
@@ -237,7 +222,14 @@
                 <v-btn
                   v-if="userReview(review)"
                   text
-                  @click="viewReview(review)"
+                  class="text-danger"
+                  @click="deleteReview(review)"
+                  >delete review</v-btn
+                >
+                <v-btn
+                  v-if="userReview(review)"
+                  text
+                  @click="editReview(review)"
                   >edit review</v-btn
                 >
               </v-card-actions>
@@ -258,18 +250,21 @@
 <script>
 import { mapState } from "vuex";
 import moment from "moment";
+import ViewReview from "@/components/ViewReview";
 
 export default {
   data() {
     return {
-      showReviewModal: false,
-      fullReview: {},
+      showViewModal: false,
     };
   },
   mounted() {
     this.$store.state.showSearch = true;
     this.showLocation(this.place.lat, this.place.lng); // BUG! Only shows location on mounted.
     this.$store.dispatch("fetchReviews");
+  },
+  components: {
+    ViewReview,
   },
   computed: {
     ...mapState([["userProfile"], "place", ["reviews"], "rating", ["ratings"]]),
@@ -290,34 +285,27 @@ export default {
     likeReview(id, likesCount) {
       this.$store.dispatch("likeReview", { id, likesCount });
     },
-    async viewReview(review) {
-      // const userId = fb.auth.currentUser.uid
-      // const docId = `${userId}_${post.id}`
-
-      // const doc = await fb.reviewsCollection.doc(docId).get()
-      // if (doc.exists) { return }
-
-      // const docs = await commentsCollection
-      //   .where("reviewId", "==", review.id)
-      //   .get();
-
-      // docs.forEach((doc) => {
-      //   let comment = doc.data();
-      //   comment.id = doc.id;
-      //   this.postComments.push(comment);
-      // });
-
+    viewReview(review) {
       this.fullReview = review;
-      this.showReviewModal = true;
+      this.showViewModal = true;
+      console.log("Show View Modal");
     },
     userReview(review) {
-      console.log(this.userProfile.userId, review.userId);
       if (this.userProfile.userId == review.userId) {
         return true;
       } else {
         return false;
       }
     },
+    editReview(review) {
+      console.log("Edit Review");
+    },
+    deleteReview(review) {
+      console.log("Delete Review");
+    },
+    toggleViewModal() {
+      this.showViewModal = false;
+    }
   },
   filters: {
     formatDate(val) {
