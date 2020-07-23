@@ -375,6 +375,7 @@ const store = new Vuex.Store({
       await fb.usersCollection.doc(user.uid).set({
         name: form.name,
         title: form.title,
+        userId: user.uid
       });
 
       // fetch user profile and set in state

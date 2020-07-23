@@ -234,7 +234,10 @@
                 >
                 <v-btn text @click="viewReview(review)">full review</v-btn>
                 <v-spacer></v-spacer>
-                <v-btn text @click="viewReview(review)"
+                <v-btn
+                  v-if="userReview(review)"
+                  text
+                  @click="viewReview(review)"
                   >edit review</v-btn
                 >
               </v-card-actions>
@@ -306,6 +309,14 @@ export default {
 
       this.fullReview = review;
       this.showReviewModal = true;
+    },
+    userReview(review) {
+      console.log(this.userProfile.userId, review.userId);
+      if (this.userProfile.userId == review.userId) {
+        return true;
+      } else {
+        return false;
+      }
     },
   },
   filters: {
