@@ -137,6 +137,7 @@ export default {
   methods: {
     editReview() {
       this.$store.dispatch("editReview", {
+        id: this.fullReview.id,
         rating: this.fullReview.rating,
         title: this.fullReview.title,
         content: this.fullReview.content,
