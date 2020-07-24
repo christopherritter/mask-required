@@ -16,50 +16,45 @@
           class="mb-5"
         ></v-rating>
 
-        {{ fullReview.content || "Nothing to show." }}
+        <p>{{ fullReview.content || "Nothing to show." }}</p>
 
-        <h6>Who was wearing masks? (optional)</h6>
+        <div v-if="fullReview.masks">
+          <h6>Who was wearing masks? (optional)</h6>
 
-        <span v-if="fullReview.masks">
-          {{ fullReview.masks.employees }}
-        </span>
+          <p>{{ fullReview.masks.employees }}</p>
 
-        <span v-if="fullReview.masks">
-          {{ fullReview.masks.customers }}
-        </span>
+          <p>{{ fullReview.masks.customers }}</p>
+        </div>
 
-        <h6>Could you say a little more about it? (optional)</h6>
+        <div v-if="fullReview.questions">
+          <h6>Could you say a little more about it? (optional)</h6>
 
-        <div v-for="question in questions" :key="'question-' + question.id">
-          {{ question.text }}
-          <span v-if="fullReview.questions">{{
-            fullReview.questions[question.id].value
-          }}</span>
-          <span v-else>No response</span>
+          <div v-for="question in questions" :key="'question-' + question.id">
+            {{ question.text }} {{ fullReview.questions[question.id].value }}
+          </div>
         </div>
 
         <!-- Specific ratings -->
 
-        <h6>Click to leave a rating</h6>
+        <div v-if="fullReview.ratings">
+          <h6>Click to leave a rating</h6>
 
-        <div v-for="rating in ratings" :key="'rating-' + rating.id">
-          {{ rating.label }}
+          <div v-for="rating in ratings" :key="'rating-' + rating.id">
+            {{ rating.label }}
 
-          <v-rating
-            v-if="fullReview.ratings"
-            v-model="fullReview.ratings[rating.id].value"
-            dark
-            size="25"
-          ></v-rating>
+            <v-rating
+              v-model="fullReview.ratings[rating.id].value"
+              dark
+              size="25"
+            ></v-rating>
+          </div>
         </div>
       </v-card-text>
 
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="green darken-1" @click="$emit('close')" text
-          >Disagree</v-btn
-        >
-        <v-btn color="green darken-1" @click="$emit('close')" text>Agree</v-btn>
+        <v-btn @click="$emit('close')" text>Disagree</v-btn>
+        <v-btn @click="$emit('close')" text>Agree</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -73,7 +68,7 @@ export default {
   watch: {
     dialogView(val) {
       !val && this.$emit("close");
-    }
+    },
   },
   computed: {
     ...mapState([["masks"], ["questions"], ["ratings"]]),
