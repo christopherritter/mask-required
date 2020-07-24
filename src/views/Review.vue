@@ -15,6 +15,7 @@
               <div>
                 <h6>Your overall rating of this place.</h6>
                 <v-rating
+                  :rules="rules"
                   v-model="review.rating"
                   dark
                   hover
@@ -27,6 +28,7 @@
 
               <!-- Title of review -->
               <v-text-field
+                :rules="rules"
                 outlined
                 name="review-title"
                 label="Title of your review"
@@ -34,6 +36,7 @@
                 placeholder="Summarize your visit or highlight an important detail"
               ></v-text-field>
               <v-textarea
+                :rules="rules"
                 outlined
                 name="review-text"
                 label="Your review"
@@ -192,6 +195,9 @@ export default {
         agreement: false,
       },
       agreement: false,
+      rules: [
+        (value) => !!value || "Required.",
+      ],
     };
   },
   mounted() {

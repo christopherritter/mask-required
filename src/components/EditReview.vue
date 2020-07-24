@@ -14,6 +14,7 @@
           <!-- Content of review -->
           <div>
             <v-rating
+              :rules="rules"
               v-model="fullReview.rating"
               dark
               hover
@@ -25,6 +26,7 @@
           </div>
 
           <v-text-field
+            :rules="rules"
             outlined
             name="review-title"
             label="Title of your review"
@@ -32,6 +34,7 @@
             placeholder="Summarize your visit or highlight an important detail"
           ></v-text-field>
           <v-textarea
+            :rules="rules"
             outlined
             name="review-text"
             label="Your review"
@@ -138,6 +141,18 @@
 import { mapState } from "vuex";
 
 export default {
+  data() {
+    return {
+      rules: [
+        (value) => !!value || "Required.",
+        // (value) => (value || "").length <= 20 || "Max 20 characters",
+        // (value) => {
+        //   const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        //   return pattern.test(value) || "Invalid e-mail.";
+        // },
+      ],
+    };
+  },
   props: ["dialogView", "fullReview"],
   computed: {
     ...mapState([["masks"], ["questions"], ["ratings"]]),
