@@ -199,13 +199,15 @@
                   ></v-card-title
                 >
               </v-col>
-              <v-col>
+              <v-col class="text-right">
                 <v-btn
-                  color="grey darken-4"
-                  dark
-                  class="my-2 mx-5 text-right"
+                  class="ma-2 mr-6"
+                  large
+                  raised
+                  color="success"
                   @click="$router.push('review')"
-                  >Write a review</v-btn
+                  ><v-icon left>mdi-plus-circle-outline</v-icon> Write a
+                  review</v-btn
                 >
               </v-col>
             </v-row>
@@ -248,9 +250,24 @@
             </div>
           </v-card>
           <v-card v-else>
-            <v-card-text class="no-results"
-              >There are currently no reviews</v-card-text
-            >
+            <v-row>
+              <v-col cols="12" md="6">
+                <v-card-title class="no-results">
+                  There are currently no reviews
+                </v-card-title>
+              </v-col>
+              <v-col md="6" class="text-right">
+                <v-btn
+                  class="ma-2 mr-6"
+                  large
+                  raised
+                  color="success"
+                  @click="$router.push('review')"
+                >
+                  <v-icon left>mdi-plus-circle-outline</v-icon> Add Review
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-card>
         </v-col>
       </v-row>
@@ -271,7 +288,7 @@ export default {
       showViewModal: false,
       showEditModal: false,
       showDeleteModal: false,
-      fullReview: {}
+      fullReview: {},
     };
   },
   mounted() {
@@ -282,7 +299,7 @@ export default {
   components: {
     ViewReview,
     EditReview,
-    DeleteReview
+    DeleteReview,
   },
   computed: {
     ...mapState([["userProfile"], "place", ["reviews"], "rating", ["ratings"]]),
