@@ -295,9 +295,9 @@ const store = new Vuex.Store({
       },
     ],
     ratings: [
-      { id: 0, icon: "mdi-gavel", label: "Compliance", value: 0 },
-      { id: 1, icon: "mdi-shield", label: "Safety", value: 0 },
-      { id: 2, icon: "mdi-hand-heart", label: "Concern", value: 0 },
+      { id: 0, icon: "mdi-shield-check", label: "Compliance", value: 0 },
+      { id: 1, icon: "mdi-alarm-light", label: "Notification", value: 0 },
+      { id: 2, icon: "mdi-police-badge", label: "Enforcement", value: 0 },
     ],
   },
   mutations: {
@@ -323,7 +323,7 @@ const store = new Vuex.Store({
 
       state.ratings[0].value = roundedAverageRating;
     },
-    setSafetyRating(state, ratings) {
+    setNotificationRating(state, ratings) {
       var averageRating = ratings.reduce(function(a, b) {
         return a + b;
       }, 0);
@@ -333,7 +333,7 @@ const store = new Vuex.Store({
 
       state.ratings[1].value = roundedAverageRating;
     },
-    setConcernRating(state, ratings) {
+    setEnforcementRating(state, ratings) {
       var averageRating = ratings.reduce(function(a, b) {
         return a + b;
       }, 0);
@@ -458,15 +458,15 @@ const store = new Vuex.Store({
       let reviewsArray = [];
       let reviewsRatings = [];
       let complianceRatings = [];
-      let safetyRatings = [];
-      let concernRatings = [];
+      let notificationRatings = [];
+      let enforcementRatings = [];
 
       if (snapshot.empty) {
         // console.log("No matching documents.");
         store.commit("setReviews", []);
         store.commit("setComplianceRating", []);
-        store.commit("setSafetyRating", []);
-        store.commit("setConcernRating", []);
+        store.commit("setNotificationRating", []);
+        store.commit("setEnforcementRating", []);
         return;
       }
 
@@ -479,11 +479,11 @@ const store = new Vuex.Store({
         }
 
         if (review.ratings && review.ratings[1].value) {
-          safetyRatings.push(review.ratings[1].value);
+          notificationRatings.push(review.ratings[1].value);
         }
 
         if (review.ratings && review.ratings[2].value) {
-          concernRatings.push(review.ratings[2].value);
+          enforcementRatings.push(review.ratings[2].value);
         }
 
         reviewsRatings.push(review.rating);
@@ -499,8 +499,8 @@ const store = new Vuex.Store({
 
       store.commit("setReviews", reviewsArray);
       store.commit("setComplianceRating", complianceRatings);
-      store.commit("setSafetyRating", safetyRatings);
-      store.commit("setConcernRating", concernRatings);
+      store.commit("setNotificationRating", notificationRatings);
+      store.commit("setEnforcementRating", enforcementRatings);
     },
     async likeReview({ commit }, review) {
       const userId = fb.auth.currentUser.uid;
