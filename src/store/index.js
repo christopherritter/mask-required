@@ -304,6 +304,9 @@ const store = new Vuex.Store({
     setUserProfile(state, val) {
       state.userProfile = val;
     },
+    setPlace(state, val) {
+      state.place = val;
+    },
     setReviews(state, val) {
       state.reviews = val;
     },
@@ -390,34 +393,39 @@ const store = new Vuex.Store({
     },
     async selectPlace({ state, dispatch }, place) {
       // console.log(place);
-      state.place.formatted_address = place.formatted_address;
-      state.place.lat = place.geometry.location.lat();
-      state.place.lng = place.geometry.location.lng();
-      state.place.icon = place.icon;
-      state.place.name = place.name;
-      state.place.place_id = place.place_id;
-      state.place.url = place.url;
-      state.place.vicinity = place.vicinity;
-      state.rating = 0;
-
-      if (place.business_status){
-        state.place.business_status = place.business_status;
-        state.place.formatted_phone_number = place.formatted_phone_number || "";
-        state.place.isOpen = place.opening_hours.isOpen() || false;
-        state.place.open_hours = place.opening_hours.weekday_text || [];
-        state.place.price_level = place.price_level || 0;
-        state.place.types = place.types || [];
-        state.place.website = place.website || "";
-      } else {
-        state.place.business_status = null;
-        state.place.formatted_phone_number = null;
-        state.place.isOpen = null;
-        state.place.open_hours = null;
-        state.place.price_level = null;
-        state.place.types = null;
-        state.place.website = null;
+      let newPlace = {
+        formatted_address: place.formatted_address,
+        location: {
+          lat: place.geometry.location.lat(),
+          lng: place.geometry.location.lng(),
+        },
+        icon: place.icon,
+        name: place.name,
+        place_id: place.place_id,
+        url: place.url,
+        vicinity: place.vicinity,
+        rating: 0,
       }
 
+      if (place.business_status){
+        newPlace.business_status = place.business_status;
+        newPlace.formatted_phone_number = place.formatted_phone_number || "";
+        newPlace.isOpen = place.opening_hours.isOpen() || false;
+        newPlace.open_hours = place.opening_hours.weekday_text || [];
+        newPlace.price_level = place.price_level || 0;
+        newPlace.types = place.types || [];
+        newPlace.website = place.website || "";
+      } else {
+        newPlace.business_status = null;
+        newPlace.formatted_phone_number = null;
+        newPlace.isOpen = null;
+        newPlace.open_hours = null;
+        newPlace.price_level = null;
+        newPlace.types = null;
+        newPlace.website = null;
+      }
+
+      store.commit("setPlace", newPlace);
       dispatch("fetchReviews");
     },
     async createReview({ state, commit }, review) {

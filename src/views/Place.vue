@@ -169,7 +169,7 @@
                   }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item v-if="place.formatted_phone_number" two-line>
+              <v-list-item v-if="place.website" two-line>
                 <v-list-item-content>
                   <v-list-item-title>Website</v-list-item-title>
                   <v-list-item-subtitle>{{
@@ -293,13 +293,18 @@ export default {
   },
   mounted() {
     this.$store.state.showSearch = true;
-    this.showLocation(this.place.lat, this.place.lng); // BUG! Only shows location on mounted.
     this.$store.dispatch("fetchReviews");
+    this.showLocation(this.place.location.lat, this.place.location.lng);
   },
   components: {
     ViewReview,
     EditReview,
     DeleteReview,
+  },
+  watch: {
+    place(newValue, oldValue) {
+      this.showLocation(this.place.location.lat, this.place.location.lng);
+    }
   },
   computed: {
     ...mapState([["userProfile"], "place", ["reviews"], "rating", ["ratings"]]),
