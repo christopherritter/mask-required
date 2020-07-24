@@ -1,14 +1,14 @@
 <template>
   <v-dialog v-model="dialogView" scrollable max-width="600px">
     <v-card>
-      <v-card-title>
+      <v-card-title v-if="fullReview.place">
         {{ fullReview.place.name }}
       </v-card-title>
 
-      <v-card-subtitle>
+      <v-card-subtitle v-if="fullReview.place">
         {{ fullReview.place.formatted_address }}
       </v-card-subtitle>
-      
+
       <v-card-text>
         <form @submit.prevent>
           <!-- Content of review -->
