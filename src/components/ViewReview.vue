@@ -2,8 +2,12 @@
   <v-dialog v-model="dialogView" scrollable max-width="600px">
     <v-card>
       <v-card-title>
-        <span class="headline">{{ fullReview.title || "Empty Review" }}</span>
+        {{ fullReview.place.name }}
       </v-card-title>
+
+      <v-card-subtitle>
+        {{ fullReview.place.formatted_address }}
+      </v-card-subtitle>
 
       <v-card-text>
         <v-rating
@@ -15,6 +19,8 @@
           size="35"
           class="mb-5"
         ></v-rating>
+
+        <h5>{{ fullReview.title }}</h5>
 
         <p>{{ fullReview.content || "Nothing to show." }}</p>
 
