@@ -304,6 +304,9 @@ export default {
   watch: {
     place(newValue, oldValue) {
       this.showLocation(this.place.location.lat, this.place.location.lng);
+    },
+    reviews(){
+      this.$store.dispatch("fetchReviews");
     }
   },
   computed: {
