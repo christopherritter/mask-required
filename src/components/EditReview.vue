@@ -1,11 +1,11 @@
 <template>
-  <v-dialog v-model="dialogView" persistent max-width="600px">
+  <v-dialog v-model="dialogView" scrollable max-width="600px">
     <v-card>
+      <v-card-title>Your overall rating of this place.</v-card-title>
       <v-card-text>
         <form @submit.prevent>
           <!-- Content of review -->
           <div>
-            <h6>Your overall rating of this place.</h6>
             <v-rating
               v-model="fullReview.rating"
               dark
@@ -110,14 +110,15 @@
 
           <v-card-actions>
             <v-spacer></v-spacer>
-
+            <v-btn @click="$emit('close')">
+              Cancel
+            </v-btn>
             <v-btn
               @click="editReview()"
-              class="mt-4"
               :disabled="!fullReview.agreement"
-              color="primary"
+              color="success"
             >
-              Submit Your Review
+              Update review
             </v-btn>
           </v-card-actions>
         </form>
@@ -133,6 +134,11 @@ export default {
   props: ["dialogView", "fullReview"],
   computed: {
     ...mapState([["masks"], ["questions"], ["ratings"]]),
+  },
+  watch: {
+    dialogView(val) {
+      !val && this.$emit("close");
+    }
   },
   methods: {
     editReview() {
