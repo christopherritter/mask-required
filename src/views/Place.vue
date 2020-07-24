@@ -71,7 +71,7 @@
                   :key="type"
                   color="white"
                 >
-                  {{ type }}
+                  {{ type | replaceUnderscore }}
                 </v-chip>
               </v-col>
             </v-row>
@@ -305,9 +305,9 @@ export default {
     place(newValue, oldValue) {
       this.showLocation(this.place.location.lat, this.place.location.lng);
     },
-    reviews(){
+    reviews() {
       this.$store.dispatch("fetchReviews");
-    }
+    },
   },
   computed: {
     ...mapState([["userProfile"], "place", ["reviews"], "rating", ["ratings"]]),
@@ -371,6 +371,14 @@ export default {
         return val;
       }
       return `${val.substring(0, 200)}...`;
+    },
+    replaceUnderscore(val) {
+      var i,
+        frags = val.split("_");
+      for (i = 0; i < frags.length; i++) {
+        frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+      }
+      return frags.join(" ");
     },
   },
 };
