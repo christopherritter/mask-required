@@ -5,9 +5,10 @@
       @close="togglePasswordReset()"
     ></PasswordReset>
     <v-container class="fill-height py-0" style="max-width: none">
-      <v-row class="fill-height">
-        <v-col cols="12" md="6" class="blue d-flex align-center">
+      <v-row class="fill-height text-center">
+        <v-col cols="12" md="6" class="grey darken-4 d-flex align-center">
           <div class="px-5">
+            <svg-img icon="logo2" class="logo pr-4"></svg-img>
             <h1 class="white--text">Mask Required</h1>
             <p class="white--text">
               This is the first release of a new concept by Christopher Ritter
@@ -43,10 +44,10 @@
               id="password1"
               outlined
             ></v-text-field>
-            <v-btn @click="login()" color="primary" max-width="100%">Log In</v-btn>
+            <v-btn @click="login()" color="teal" large block dark>Log In</v-btn>
             <div class="pt-3">
-              <v-btn text @click="togglePasswordReset()">Forgot Password</v-btn>
-              <v-btn text @click="toggleForm()">Create an Account</v-btn>
+              <v-btn large text @click="togglePasswordReset()">Forgot Password</v-btn>
+              <v-btn large text @click="toggleForm()">Create an Account</v-btn>
             </div>
           </form>
           <form v-else @submit.prevent>
@@ -93,6 +94,7 @@
 <script>
 import { mapState } from "vuex";
 import PasswordReset from "@/components/PasswordReset";
+import SvgImg from "@/components/Svg-img";
 
 export default {
   data() {
@@ -113,6 +115,7 @@ export default {
   },
   components: {
     PasswordReset,
+    "svg-img": SvgImg,
   },
   methods: {
     login() {
@@ -141,3 +144,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.logo {
+  font-size: 10rem;
+}
+</style>

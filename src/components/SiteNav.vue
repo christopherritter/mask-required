@@ -26,12 +26,13 @@
       </v-list>
     </v-navigation-drawer> -->
     <v-app-bar
-      color="gray darken-3"
+      color="grey darken-4"
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       dark
       app
     >
       <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon> -->
+      <svg-img icon="logo2" class="logo pr-4"></svg-img>
       <v-toolbar-title @click="goHome" class="ml-0 p-3" :style="showPointer">
         Mask Required
       </v-toolbar-title>
@@ -88,6 +89,7 @@
 
 <script>
 import { mapState } from "vuex";
+import SvgImg from "@/components/Svg-img";
 
 export default {
   data: () => ({
@@ -97,8 +99,8 @@ export default {
   }),
   mounted() {
     var options = {
-      types: ['establishment'],
-      componentRestrictions: {country: 'us'},
+      types: ["establishment"],
+      componentRestrictions: { country: "us" },
       fields: [
         "formatted_address",
         "geometry",
@@ -107,11 +109,11 @@ export default {
         "url",
         "vicinity",
         "business_status",
-        "formatted_phone_number", // More expensive 
+        "formatted_phone_number", // More expensive
         "opening_hours", // More expensive (includes isOpen)
         "types",
         "utc_offset_minutes", // Necessary for opening_hours
-        "website" // More expensive
+        "website", // More expensive
       ],
     };
     let autocomplete = new google.maps.places.Autocomplete(
@@ -134,7 +136,10 @@ export default {
       }
     });
   },
-  props: ['loggedIn'],
+  props: ["loggedIn"],
+  components: {
+    "svg-img": SvgImg,
+  },
   methods: {
     selectPlace(place) {
       this.$store.dispatch("selectPlace", place);
@@ -177,3 +182,9 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.logo {
+  font-size: 2.75rem;
+}
+</style>

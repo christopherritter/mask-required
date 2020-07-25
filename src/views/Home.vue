@@ -100,8 +100,8 @@ export default {
 
 <style lang="scss" scoped>
 .jumbotron .jumbotron-image {
+  font-size: 25rem;
   float: left;
-  width: 35rem;
   margin-bottom: -15rem;
 }
 .jumbotron .jumbotron-text {

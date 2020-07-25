@@ -39,13 +39,13 @@ export default {
       }
       // set width and height relative to font size
       // if growByHeight is true, height set to 1em else width set to 1em and remaining is calculated based on widthToHeight ratio
-      // if (this.growByHeight) {
-      //   svgElement.setAttribute("height", "1em");
-      //   svgElement.setAttribute("width", `${widthToHeight}em`);
-      // } else {
-      //   svgElement.setAttribute("width", "1em");
-      //   svgElement.setAttribute("height", `${1 / widthToHeight}em`);
-      // }
+      if (this.growByHeight) {
+        svgElement.setAttribute("height", "1em");
+        svgElement.setAttribute("width", `${widthToHeight}em`);
+      } else {
+        svgElement.setAttribute("width", "1em");
+        svgElement.setAttribute("height", `${1 / widthToHeight}em`);
+      }
       svgElement.classList.add("svg-class");
     }
   },
