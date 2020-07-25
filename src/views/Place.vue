@@ -292,6 +292,7 @@ export default {
     };
   },
   mounted() {
+    console.log(this.place);
     this.$store.state.showSearch = true;
     this.$store.dispatch("fetchReviews");
     this.showLocation(this.place.location.lat, this.place.location.lng);
@@ -322,7 +323,7 @@ export default {
       });
       new google.maps.Marker({
         position: new google.maps.LatLng(latitude, longitude),
-        map: map,
+        map: map
       });
     },
     userReview(review) {

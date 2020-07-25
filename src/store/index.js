@@ -399,7 +399,6 @@ const store = new Vuex.Store({
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
         },
-        icon: place.icon,
         name: place.name,
         place_id: place.place_id,
         url: place.url,

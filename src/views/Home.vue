@@ -42,7 +42,6 @@ export default {
       fields: [
         "formatted_address",
         "geometry",
-        "icon",
         "name",
         "place_id",
         "url",
