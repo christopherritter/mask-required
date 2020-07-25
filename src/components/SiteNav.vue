@@ -102,10 +102,11 @@ export default {
         "url",
         "vicinity",
         "business_status",
-        "formatted_phone_number",
-        "opening_hours",
+        "formatted_phone_number", // More expensive 
+        "opening_hours", // More expensive (includes isOpen)
         "types",
-        "website"
+        "utc_offset_minutes", // Necessary for opening_hours
+        "website" // More expensive
       ],
     };
     let autocomplete = new google.maps.places.Autocomplete(
