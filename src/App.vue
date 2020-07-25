@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <SiteNav :logged-in="loggedIn" v-if="showNav"></SiteNav>
+    <SiteNav :logged-in="loggedIn" v-if="$router.currentRoute.name != 'login'"></SiteNav>
     <router-view />
     <v-footer class="font-weight-light">
       <v-col class="text-center" cols="12">
@@ -21,12 +21,12 @@ export default {
   },
   computed: {
     ...mapState(["userProfile"]),
-    showNav() {
-      return this.$router.currentRoute.name != "login";
-    },
     loggedIn() {
       return Object.keys(this.userProfile).length > 1;
     },
+  },
+  methods: {
+    
   },
 };
 </script>

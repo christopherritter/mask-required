@@ -1,6 +1,6 @@
 <template>
   <v-main>
-    <v-container id="place" fluid>
+    <v-container id="place">
       <v-row>
         <v-col cols="12" md="8">
           <div class="create-review">

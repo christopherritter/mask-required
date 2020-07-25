@@ -1,6 +1,6 @@
 <template>
   <v-main>
-    <v-container id="place" fluid>
+    <v-container id="place">
       <v-row justify="center">
         <ViewReview
           :dialog-view="showViewModal"
