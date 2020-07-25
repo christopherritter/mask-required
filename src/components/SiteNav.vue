@@ -51,7 +51,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn icon @click="addReview">
+      <v-btn v-if="loggedIn" icon @click="addReview">
         <v-icon>mdi-plus-circle-outline</v-icon>
       </v-btn>
 
@@ -59,7 +59,7 @@
         <v-icon>mdi-heart</v-icon>
       </v-btn> -->
 
-      <v-menu>
+      <v-menu v-if="loggedIn">
         <template v-slot:activator="{ on, attrs }">
           <v-btn icon v-bind="attrs" v-on="on">
             <v-icon>mdi-dots-vertical</v-icon>
@@ -78,6 +78,10 @@
           </v-list-item>
         </v-list>
       </v-menu>
+
+      <v-btn v-if="!loggedIn" @click="$router.push('login')">
+        Signup / Login
+      </v-btn>
     </v-app-bar>
   </div>
 </template>
@@ -129,6 +133,7 @@ export default {
       }
     });
   },
+  props: ['loggedIn'],
   methods: {
     selectPlace(place) {
       this.$store.dispatch("selectPlace", place);

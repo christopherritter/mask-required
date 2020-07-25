@@ -1,10 +1,11 @@
 <template>
   <v-app id="app">
-    <SiteNav v-if="showNav"></SiteNav>
+    <SiteNav :logged-in="loggedIn" v-if="showNav"></SiteNav>
     <router-view />
     <v-footer class="font-weight-light">
       <v-col class="text-center" cols="12">
-        &copy;{{ new Date().getFullYear() }} <strong>Christopher Ritter</strong>. All rights reserved.
+        &copy;{{ new Date().getFullYear() }}
+        <strong>Christopher Ritter</strong>. All rights reserved.
       </v-col>
     </v-footer>
   </v-app>
@@ -21,6 +22,9 @@ export default {
   computed: {
     ...mapState(["userProfile"]),
     showNav() {
+      return this.$router.currentRoute.name != "login";
+    },
+    loggedIn() {
       return Object.keys(this.userProfile).length > 1;
     },
   },

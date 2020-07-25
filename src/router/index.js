@@ -11,9 +11,6 @@ const routes = [
     path: "/",
     name: "home",
     component: Home,
-    meta: {
-      requiresAuth: true,
-    },
   },
   {
     path: "/login",
@@ -68,18 +65,12 @@ const routes = [
     name: "search",
     component: () =>
       import(/* webpackChunkName: "search" */ "../views/Search.vue"),
-    meta: {
-      requiresAuth: true,
-    },
   },
   {
     path: "/place",
     name: "place",
     component: () =>
       import(/* webpackChunkName: "place" */ "../views/Place.vue"),
-    meta: {
-      requiresAuth: true,
-    },
     beforeEnter: (to, from, next) => {
       if (store.state.place.name) next();
       else next({ name: "home" });
