@@ -5,12 +5,12 @@ import "firebase/firestore";
 // firebase init - add your own config here
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_GOOGLE_API,
-  authDomain: "mask-required.firebaseapp.com",
-  databaseURL: "https://mask-required.firebaseio.com",
+  authDomain: process.env.VUE_APP_AUTH_DOMAIN,
+  databaseURL: process.env.VUE_APP_DATABASE_URL,
   projectId: "mask-required",
-  storageBucket: "mask-required.appspot.com",
-  messagingSenderId: "783326866906",
-  appId: "1:783326866906:web:80587a7cde78e644f924e3",
+  storageBucket: process.env.VUE_APP_STORAGE_BUCKET,
+  messagingSenderId: process.env.VUE_APP_MESSAGING_SENDER,
+  appId: process.env.VUE_APP_APP_ID,
 };
 firebase.initializeApp(firebaseConfig);
 
