@@ -62,9 +62,6 @@
                   Reviews
                 </v-chip>
                 <v-chip medium color="white">|</v-chip>
-                <v-chip medium v-if="place.price_level" color="white">
-                  {{ place.price_level }}
-                </v-chip>
                 <v-chip
                   medium
                   v-for="type in place.types"

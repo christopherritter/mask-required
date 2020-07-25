@@ -411,7 +411,6 @@ const store = new Vuex.Store({
         newPlace.formatted_phone_number = place.formatted_phone_number || "";
         newPlace.isOpen = place.opening_hours.isOpen() || false;
         newPlace.open_hours = place.opening_hours.weekday_text || [];
-        newPlace.price_level = place.price_level || 0;
         newPlace.types = place.types || [];
         newPlace.website = place.website || "";
       } else {
@@ -419,7 +418,6 @@ const store = new Vuex.Store({
         newPlace.formatted_phone_number = null;
         newPlace.isOpen = null;
         newPlace.open_hours = null;
-        newPlace.price_level = null;
         newPlace.types = null;
         newPlace.website = null;
       }

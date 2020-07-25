@@ -104,7 +104,6 @@ export default {
         "business_status",
         "formatted_phone_number",
         "opening_hours",
-        "price_level",
         "types",
         "website"
       ],
