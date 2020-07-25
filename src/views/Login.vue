@@ -27,6 +27,7 @@
           <form v-if="showLoginForm" @submit.prevent>
             <v-text-field
               label="Email"
+              :rules="[ rules.required, rules.email ]"
               v-model.trim="loginForm.email"
               type="text"
               placeholder="you@email.com"
@@ -35,13 +36,14 @@
             ></v-text-field>
             <v-text-field
               label="Password"
+              :rules="[ rules.required ]"
               v-model.trim="loginForm.password"
               type="password"
               placeholder="******"
               id="password1"
               outlined
             ></v-text-field>
-            <v-btn @click="login()" color="primary">Log In</v-btn>
+            <v-btn @click="login()" color="primary" max-width="100%">Log In</v-btn>
             <div class="pt-3">
               <v-btn text @click="togglePasswordReset()">Forgot Password</v-btn>
               <v-btn text @click="toggleForm()">Create an Account</v-btn>
@@ -89,6 +91,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import PasswordReset from "@/components/PasswordReset";
 
 export default {
@@ -132,6 +135,9 @@ export default {
     togglePasswordReset() {
       this.showPasswordReset = !this.showPasswordReset;
     },
+  },
+  computed: {
+    ...mapState(["rules"]),
   },
 };
 </script>

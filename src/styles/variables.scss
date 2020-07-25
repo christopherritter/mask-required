@@ -1,0 +1,23 @@
+// src/assets/scss/variables.scss
+
+// Globals
+
+$heading-font-family: "Bebas Neue", cursive;
+
+h1 {
+  font-family: $heading-font-family;
+  font-size: 4rem;
+}
+h2 {
+  font-family: $heading-font-family;
+  font-size: 3rem;
+}
+h3 {
+  font-family: $heading-font-family;
+  font-size: 2rem;
+}
+
+.v-toolbar__title {
+  font-family: $heading-font-family;
+  font-size: 2rem;
+}

@@ -4,7 +4,7 @@
       <v-card class="p-4">
         <v-row>
           <v-col class="text-center">
-            <h3>Find a safe place to shop.</h3>
+            <h2>Find a safe place to shop.</h2>
           </v-col>
         </v-row>
         <v-row>

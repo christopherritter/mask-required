@@ -4,17 +4,17 @@
       <v-card class="p-4">
         <v-row>
           <v-col class="text-center">
-            <h3
+            <h2
               v-if="
                 place.business_status == null && place.formatted_address != null
               "
             >
               Find a safe place to shop in {{ place.vicinity }}.
-            </h3>
-            <h3 v-else-if="place.business_status == null">
+            </h2>
+            <h2 v-else-if="place.business_status == null">
               Find a safe place to shop.
-            </h3>
-            <h3 v-else>Review a place you've visited.</h3>
+            </h2>
+            <h2 v-else>Review a place you've visited.</h2>
           </v-col>
         </v-row>
         <v-row>

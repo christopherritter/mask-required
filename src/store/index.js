@@ -29,15 +29,17 @@ const store = new Vuex.Store({
     masks: {
       employees: [
         "All of the employees were properly wearing masks",
-        "Some of the employees were wearing some kind of mask",
-        "Hardly any of the employees were wearing their masks properly",
+        "Most of the employees were wearing some kind of mask",
+        "Only a few employees were wearing their masks properly",
         "None of the employees were properly wearing masks",
+        "I didn't see any employees.",
       ],
       customers: [
         "All of the customers were wearing masks",
-        "Some of the customers were wearing masks",
-        "Hardly any of the customers were wearing masks",
+        "Most of the customers were wearing masks",
+        "Only a few customers were wearing masks",
         "None of the customers were wearing masks",
+        "I didn't see any customers."
       ],
     },
     questions: [
@@ -64,7 +66,7 @@ const store = new Vuex.Store({
       },
       {
         id: "1",
-        text: "Were you asked to stand back from the registers?",
+        text: "Were you instructed to stand back from the registers?",
         answers: [
           {
             id: "0",
@@ -299,6 +301,15 @@ const store = new Vuex.Store({
       { id: 1, icon: "mdi-alarm-light", label: "Notification", value: 0 },
       { id: 2, icon: "mdi-police-badge", label: "Enforcement", value: 0 },
     ],
+    rules: {
+      required: (value) => !!value || "This is a required field",
+      counter: (value) => value.length <= 80 || "Max 80 characters",
+      email: (value) => {
+        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return pattern.test(value) || "Invalid e-mail.";
+      },
+      minLength: (value) => value.length >= 100 || "Min 100 characters",
+    },
   },
   mutations: {
     setUserProfile(state, val) {

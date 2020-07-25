@@ -15,7 +15,7 @@
               <div>
                 <h6>Your overall rating of this place.</h6>
                 <v-rating
-                  :rules="rules"
+                  :rules="[rules.required]"
                   v-model="review.rating"
                   dark
                   hover
@@ -28,15 +28,17 @@
 
               <!-- Title of review -->
               <v-text-field
-                :rules="rules"
+                :rules="[rules.required, rules.counter]"
                 outlined
+                counter
+                maxlength="80"
                 name="review-title"
                 label="Title of your review"
                 v-model="review.title"
                 placeholder="Summarize your visit or highlight an important detail"
               ></v-text-field>
               <v-textarea
-                :rules="rules"
+                :rules="[rules.required, rules.minLength]"
                 outlined
                 name="review-text"
                 label="Your review"
@@ -44,10 +46,11 @@
                 placeholder="Tell others about your experience. Did you see people wearing masks?"
               ></v-textarea>
 
-              <h6>Who was wearing masks? (optional)</h6>
+              <h6>Who was wearing masks?</h6>
 
               <v-select
                 :items="masks.employees"
+                :rules="[rules.required]"
                 v-model="review.masks.employees"
                 label="Were employees wearing masks?"
                 outlined
@@ -55,6 +58,7 @@
 
               <v-select
                 :items="masks.customers"
+                :rules="[rules.required]"
                 v-model="review.masks.customers"
                 label="Were customers wearing masks?"
                 outlined
@@ -62,7 +66,10 @@
 
               <!-- Optional ratings -->
 
-              <h6>Could you say a little more about it? (optional)</h6>
+              <h6>
+                Could you say a little more about it?
+                <span color="secondary">(optional)</span>
+              </h6>
 
               <v-row
                 v-for="question in questions"
@@ -96,6 +103,7 @@
                 </v-col>
                 <v-col sm="12" md="6">
                   <v-rating
+                    :rules="[rules.required]"
                     v-model="review.ratings[rating.id].value"
                     dark
                     size="25"
@@ -125,6 +133,9 @@
             </form>
           </div>
         </v-col>
+
+        <!-- List of reviews -->
+
         <v-col cols="12" md="4">
           <v-card v-if="reviews.length">
             <div
@@ -195,9 +206,6 @@ export default {
         agreement: false,
       },
       agreement: false,
-      rules: [
-        (value) => !!value || "Required.",
-      ],
     };
   },
   mounted() {
@@ -211,6 +219,7 @@ export default {
       "masks",
       ["questions"],
       ["ratings"],
+      "rules",
     ]),
   },
   methods: {
