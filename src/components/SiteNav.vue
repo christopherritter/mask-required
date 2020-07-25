@@ -92,7 +92,23 @@ export default {
   }),
   mounted() {
     var options = {
-      componentRestrictions: {country: 'us'}
+      types: ['establishment'],
+      componentRestrictions: {country: 'us'},
+      fields: [
+        "formatted_address",
+        "geometry",
+        "icon",
+        "name",
+        "place_id",
+        "url",
+        "vicinity",
+        "business_status",
+        "formatted_phone_number",
+        "opening_hours",
+        "price_level",
+        "types",
+        "website"
+      ],
     };
     let autocomplete = new google.maps.places.Autocomplete(
       document.getElementById("navbar-autocomplete"),

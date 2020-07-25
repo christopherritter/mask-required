@@ -36,15 +36,29 @@ export default {
     },
   },
   mounted() {
-    this.$store.state.showSearch = false;
-
+    var options = {
+      types: ['establishment'],
+      componentRestrictions: {country: 'us'},
+      fields: [
+        "formatted_address",
+        "geometry",
+        "icon",
+        "name",
+        "place_id",
+        "url",
+        "vicinity",
+        "business_status",
+        "formatted_phone_number",
+        "opening_hours",
+        "price_level",
+        "types",
+        "website"
+      ],
+    };
+    
     let autocomplete = new google.maps.places.Autocomplete(
-      document.getElementById("home-autocomplete")
-      // {
-      //   bounds: new google.maps.LatLngBounds(
-      //     new google.maps.LatLng(40.367474, -82.996216)
-      //   )
-      // }
+      document.getElementById("home-autocomplete"),
+      options
     );
 
     autocomplete.addListener("place_changed", () => {
@@ -66,6 +80,8 @@ export default {
       //   place.geometry.location.lng()
       // );
     });
+
+    this.$store.state.showSearch = false;
   },
 };
 </script>
