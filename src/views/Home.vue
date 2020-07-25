@@ -1,29 +1,33 @@
 <template>
   <v-main class="mt-10">
     <v-container>
-      <v-card class="p-4">
-        <v-row>
-          <v-col class="text-center">
-            <h2>Find a safe place to shop.</h2>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col>
-            <div class="smile-icon">
-              <svg-img icon="social-distancing"></svg-img>
-            </div>
-            <v-text-field
-              class="px-4 pb-2"
-              v-model="address"
-              id="home-autocomplete"
-              outlined
-              hide-details
-              prepend-inner-icon="mdi-magnify"
-              placeholder="Enter business name or category"
-            ></v-text-field>
-          </v-col>
-        </v-row>
-      </v-card>
+      <v-row>
+        <v-col>
+          <v-card class="p-4 jumbotron text-center" color="#c5f9da">
+            <v-row>
+              <v-col cols="12" md="5" class="hidden-sm-and-down">
+                <svg-img
+                  class="jumbotron-image"
+                  icon="social-distancing"
+                ></svg-img>
+              </v-col>
+              <v-col md="7">
+                <div class="jumbotron-text">
+                  <h2 class="jumbotron-header">Find a safe place to shop.</h2>
+                  <v-text-field
+                    class="px-4 pb-2 jumbotron-search"
+                    v-model="address"
+                    id="home-autocomplete"
+                    solo
+                    prepend-inner-icon="mdi-magnify"
+                    placeholder="Enter business name or category"
+                  ></v-text-field>
+                </div>
+              </v-col>
+            </v-row>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-container>
   </v-main>
 </template>
@@ -93,3 +97,16 @@ export default {
   },
 };
 </script>
+
+<style lang="scss" scoped>
+.jumbotron .jumbotron-image {
+  float: left;
+  width: 35rem;
+  margin-bottom: -15rem;
+}
+.jumbotron .jumbotron-text {
+  padding-top: 3em;
+  margin-right: 1em;
+  margin-bottom: 1em;
+}
+</style>
