@@ -9,6 +9,9 @@
         </v-row>
         <v-row>
           <v-col>
+            <div class="smile-icon">
+              <svg-img icon="social-distancing"></svg-img>
+            </div>
             <v-text-field
               class="px-4 pb-2"
               v-model="address"
@@ -26,7 +29,10 @@
 </template>
 
 <script>
+import SvgImg from "@/components/Svg-img";
+
 export default {
+  name: "Home",
   data: () => ({
     address: null,
   }),
@@ -37,8 +43,8 @@ export default {
   },
   mounted() {
     var options = {
-      types: ['establishment'],
-      componentRestrictions: {country: 'us'},
+      types: ["establishment"],
+      componentRestrictions: { country: "us" },
       fields: [
         "formatted_address",
         "geometry",
@@ -47,14 +53,14 @@ export default {
         "url",
         "vicinity",
         "business_status",
-        "formatted_phone_number", // More expensive 
+        "formatted_phone_number", // More expensive
         "opening_hours", // More expensive (includes isOpen)
         "types",
         "utc_offset_minutes", // Necessary for opening_hours
-        "website" // More expensive
+        "website", // More expensive
       ],
     };
-    
+
     let autocomplete = new google.maps.places.Autocomplete(
       document.getElementById("home-autocomplete"),
       options
@@ -81,6 +87,9 @@ export default {
     });
 
     this.$store.state.showSearch = false;
+  },
+  components: {
+    "svg-img": SvgImg,
   },
 };
 </script>
