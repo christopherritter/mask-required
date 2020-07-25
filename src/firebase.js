@@ -4,7 +4,7 @@ import "firebase/firestore";
 
 // firebase init - add your own config here
 const firebaseConfig = {
-  apiKey: "AIzaSyCHzVbXJqB_-tUwT2AeUGZ_-HRkvJOHjqI",
+  apiKey: process.env.VUE_APP_GOOGLE_API,
   authDomain: "mask-required.firebaseapp.com",
   databaseURL: "https://mask-required.firebaseio.com",
   projectId: "mask-required",

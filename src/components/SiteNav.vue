@@ -91,8 +91,12 @@ export default {
     group: null,
   }),
   mounted() {
+    var options = {
+      componentRestrictions: {country: 'us'}
+    };
     let autocomplete = new google.maps.places.Autocomplete(
-      document.getElementById("navbar-autocomplete")
+      document.getElementById("navbar-autocomplete"),
+      options
     );
 
     autocomplete.addListener("place_changed", () => {
