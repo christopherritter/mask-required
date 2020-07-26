@@ -108,6 +108,15 @@ const routes = [
       else next({ name: "home" });
     },
   },
+  {
+    path: "/privacy-policy",
+    name: "privacy-policy",
+    component: () =>
+      import(/* webpackChunkName: "privacy-policy" */ "../views/PrivacyPolicy.vue"),
+    meta: {
+      title: "MaskRequired.US Privacy Policy",
+    },
+  },
 ];
 
 const router = new VueRouter({

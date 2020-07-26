@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import firebase from "../firebase";
 import * as fb from "../firebase";
 import router from "../router/index";
 
@@ -39,7 +40,7 @@ const store = new Vuex.Store({
         "Most of the customers were wearing masks",
         "Only a few customers were wearing masks",
         "None of the customers were wearing masks",
-        "I didn't see any customers."
+        "I didn't see any customers.",
       ],
     },
     questions: [
@@ -366,6 +367,40 @@ const store = new Vuex.Store({
       // fetch user profile and set in state
       dispatch("fetchUserProfile", user);
     },
+    async googleLogin() {
+      const provider = new firebase.auth.GoogleAuthProvider();
+
+      fb.auth.signInWithPopup(provider).then((result) => {
+        this.router.replace('home');
+      }).catch((err) => {
+        console.log(err.message)
+      });
+    },
+    async facebookLogin() {
+      var provider = new firebase.auth.FacebookAuthProvider();
+
+      firebase.auth()
+        .signInWithPopup(provider)
+        .then(function(result) {
+          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
+          var token = result.credential.accessToken;
+          // The signed-in user info.
+          var user = result.user;
+          console.log(user);
+        })
+        .catch(function(error) {
+          // Handle Errors here.
+          var errorCode = error.code;
+          var errorMessage = error.message;
+          // The email of the user's account used.
+          console.log(error.message);
+          
+          var email = error.email;
+          // The firebase.auth.AuthCredential type that was used.
+          var credential = error.credential;
+          // ...
+        });
+    },
     async fetchUserProfile({ commit }, user) {
       // fetch user profile
       const userProfile = await fb.usersCollection.doc(user.uid).get();
@@ -389,7 +424,7 @@ const store = new Vuex.Store({
       await fb.usersCollection.doc(user.uid).set({
         name: form.name,
         title: form.title,
-        userId: user.uid
+        userId: user.uid,
       });
 
       // fetch user profile and set in state
@@ -415,9 +450,9 @@ const store = new Vuex.Store({
         url: place.url,
         vicinity: place.vicinity,
         rating: 0,
-      }
+      };
 
-      if (place.business_status){
+      if (place.business_status) {
         newPlace.business_status = place.business_status;
         newPlace.formatted_phone_number = place.formatted_phone_number || "";
         newPlace.isOpen = place.opening_hours.isOpen() || false;
@@ -438,24 +473,26 @@ const store = new Vuex.Store({
     },
     async createReview({ state, commit }, review) {
       // create review in firebase
-      const newReview = await fb.reviewsCollection.add({
-        createdOn: new Date(),
-        place: state.place,
-        rating: review.rating,
-        title: review.title,
-        content: review.content,
-        masks: review.masks,
-        questions: review.questions,
-        ratings: review.ratings,
-        userId: fb.auth.currentUser.uid,
-        userName: state.userProfile.name,
-        likes: 0,
-        agreement: review.agreement,
-      }).then(function(newReview) {
-        newReview.update({
-          reviewId: fb.auth.currentUser.uid + '_' + newReview.id
+      const newReview = await fb.reviewsCollection
+        .add({
+          createdOn: new Date(),
+          place: state.place,
+          rating: review.rating,
+          title: review.title,
+          content: review.content,
+          masks: review.masks,
+          questions: review.questions,
+          ratings: review.ratings,
+          userId: fb.auth.currentUser.uid,
+          userName: state.userProfile.name,
+          likes: 0,
+          agreement: review.agreement,
         })
-      });
+        .then(function(newReview) {
+          newReview.update({
+            reviewId: fb.auth.currentUser.uid + "_" + newReview.id,
+          });
+        });
     },
     async fetchReviews({ state }) {
       // const citiesRef = db.collection("cities");
@@ -531,10 +568,10 @@ const store = new Vuex.Store({
         likes: review.likesCount + 1,
       });
     },
-    async editReview ({ commit }, review) {
+    async editReview({ commit }, review) {
       fb.reviewsCollection.doc(review.id).update(review);
     },
-    async deleteReview ({ commit }, review) {
+    async deleteReview({ commit }, review) {
       fb.reviewsCollection.doc(review.id).delete();
     },
     async updateProfile({ dispatch }, user) {

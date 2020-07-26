@@ -25,10 +25,30 @@
             'd-flex align-center text-center justify-center': true,
           }"
         >
+          <!-- <v-btn
+            @click="facebookLogin"
+            color="#1877f2"
+            class="btn-facebook"
+            large
+            dark
+          >
+            <v-icon>mdi-facebook</v-icon>
+            Log in with Facebook
+          </v-btn>
+          <v-btn
+            @click="googleLogin"
+            color="white"
+            class="btn-google"
+            large
+            light
+          >
+            <v-icon>mdi-google</v-icon>
+            Log in with Google
+          </v-btn> -->
           <form v-if="showLoginForm" @submit.prevent>
             <v-text-field
               label="Email"
-              :rules="[ rules.required, rules.email ]"
+              :rules="[rules.required, rules.email]"
               v-model.trim="loginForm.email"
               type="text"
               placeholder="you@email.com"
@@ -37,7 +57,7 @@
             ></v-text-field>
             <v-text-field
               label="Password"
-              :rules="[ rules.required ]"
+              :rules="[rules.required]"
               v-model.trim="loginForm.password"
               type="password"
               placeholder="******"
@@ -46,7 +66,9 @@
             ></v-text-field>
             <v-btn @click="login()" color="teal" large block dark>Log In</v-btn>
             <div class="pt-3">
-              <v-btn large text @click="togglePasswordReset()">Forgot Password</v-btn>
+              <v-btn large text @click="togglePasswordReset()"
+                >Forgot Password</v-btn
+              >
               <v-btn large text @click="toggleForm()">Create an Account</v-btn>
             </div>
           </form>
@@ -118,6 +140,12 @@ export default {
     "svg-img": SvgImg,
   },
   methods: {
+    googleLogin() {
+      this.$store.dispatch("googleLogin");
+    },
+    facebookLogin() {
+      this.$store.dispatch("facebookLogin");
+    },
     login() {
       this.$store.dispatch("login", {
         email: this.loginForm.email,
