@@ -52,8 +52,8 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn v-if="loggedIn" icon @click="addReview">
-        <v-icon>mdi-plus-circle-outline</v-icon>
+      <v-btn v-show="showSearch" class="hidden-sm-and-up" icon @click="addReview">
+        <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
       <!-- <v-btn icon>

@@ -461,31 +461,27 @@ const store = new Vuex.Store({
       // console.log(place);
       let newPlace = {
         formatted_address: place.formatted_address,
+        formatted_phone_number: place.formatted_phone_number || "",
         location: {
           lat: place.geometry.location.lat(),
           lng: place.geometry.location.lng(),
         },
         name: place.name,
         place_id: place.place_id,
+        types: place.types || [],
         url: place.url,
         vicinity: place.vicinity,
+        website: place.website || "",
         rating: 0,
       };
-
-      if (place.business_status) {
-        newPlace.business_status = place.business_status;
-        newPlace.formatted_phone_number = place.formatted_phone_number || "";
-        newPlace.isOpen = place.opening_hours.isOpen() || false;
-        newPlace.open_hours = place.opening_hours.weekday_text || [];
-        newPlace.types = place.types || [];
-        newPlace.website = place.website || "";
-      } else {
-        newPlace.business_status = null;
-        newPlace.formatted_phone_number = null;
-        newPlace.isOpen = null;
-        newPlace.open_hours = null;
-        newPlace.types = null;
-        newPlace.website = null;
+      
+      if (place.opening_hours) {
+        // newPlace.business_status = place.business_status;
+        // newPlace.formatted_phone_number = place.formatted_phone_number || "";
+        newPlace.isOpen = place.opening_hours.isOpen();
+        newPlace.open_hours = place.opening_hours.weekday_text;
+        // newPlace.types = place.types || [];
+        // newPlace.website = place.website || "";
       }
 
       store.commit("setPlace", newPlace);

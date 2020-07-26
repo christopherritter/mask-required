@@ -76,7 +76,7 @@
         </v-col>
       </v-row>
       <v-row>
-        <v-col cols="12" sm="12" md="4">
+        <v-col cols="12" sm="12" :md="columnWidth">
           <v-card>
             <v-card-title>Ratings and reviews</v-card-title>
             <v-card-actions class="px-4 pb-4">
@@ -128,7 +128,7 @@
             </v-list>
           </v-card>
         </v-col>
-        <v-col cols="12" sm="12" md="4">
+        <v-col v-if="showDetails" cols="12" sm="12" :md="columnWidth">
           <v-card>
             <v-card-title>Details</v-card-title>
 
@@ -153,7 +153,7 @@
             </v-list>
           </v-card>
         </v-col>
-        <v-col cols="12" sm="12" md="4">
+        <v-col cols="12" sm="12" :md="columnWidth">
           <v-card>
             <v-card-title>Location and contact</v-card-title>
             <div id="map"></div>
@@ -285,6 +285,7 @@ export default {
       showViewModal: false,
       showEditModal: false,
       showDeleteModal: false,
+      showDetails: false,
       fullReview: {},
     };
   },
@@ -292,6 +293,9 @@ export default {
     this.$store.state.showSearch = true;
     this.$store.dispatch("fetchReviews");
     this.showLocation(this.place.location.lat, this.place.location.lng);
+    if (this.place.isOpen) {
+      this.showDetails = true;
+    }
   },
   components: {
     ViewReview,
@@ -301,6 +305,12 @@ export default {
   watch: {
     place(newValue, oldValue) {
       this.showLocation(this.place.location.lat, this.place.location.lng);
+      
+      if (!newValue.open_hours) {
+        this.showDetails = false;
+      } else {
+        this.showDetails = true;
+      }
     },
     reviews() {
       this.$store.dispatch("fetchReviews");
@@ -308,6 +318,13 @@ export default {
   },
   computed: {
     ...mapState([["userProfile"], "place", ["reviews"], "rating", ["ratings"]]),
+    columnWidth() {
+      if (this.showDetails) {
+        return 4
+      } else {
+        return 6
+      }
+    }
   },
   methods: {
     showLocation(latitude, longitude) {
@@ -319,7 +336,7 @@ export default {
       });
       new google.maps.Marker({
         position: new google.maps.LatLng(latitude, longitude),
-        map: map
+        map: map,
       });
     },
     userReview(review) {
