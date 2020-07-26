@@ -370,18 +370,22 @@ const store = new Vuex.Store({
     async googleLogin({ dispatch }) {
       const provider = new firebase.auth.GoogleAuthProvider();
 
-      firebase.auth().signInWithPopup(provider).then((result) => {
+      firebase.auth().signInWithRedirect(provider);
+
+      firebase.auth().getRedirectResult().then(function(result) {
         var user = result.user;
         dispatch("fetchUserProfile", user);
       }).catch((err) => {
         console.log(err.message);
       });
     },
-    async facebookLogin() {
+    async facebookLogin({ dispatch }) {
       var provider = new firebase.auth.FacebookAuthProvider();
 
+      firebase.auth().signInWithRedirect(provider);
+
       firebase.auth()
-        .signInWithPopup(provider)
+        .getRedirectResult()
         .then(function(result) {
           // This gives you a Facebook Access Token. You can use it to access the Facebook API.
           var token = result.credential.accessToken;

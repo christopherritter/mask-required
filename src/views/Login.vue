@@ -26,7 +26,7 @@
           }"
         >
           <div>
-            <v-btn
+            <!-- <v-btn
               @click="facebookLogin"
               color="#1877f2"
               class="btn-facebook mb-4"
@@ -51,7 +51,7 @@
 
             <v-avatar color="grey darken-4" class="mb-4" size="32">
               <h6 class="white--text">OR</h6>
-            </v-avatar>
+            </v-avatar> -->
 
             <form v-if="showLoginForm" @submit.prevent>
               <v-text-field
