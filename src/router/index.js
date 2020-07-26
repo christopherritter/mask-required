@@ -117,6 +117,15 @@ const routes = [
       title: "MaskRequired.US Privacy Policy",
     },
   },
+  {
+    path: "/social-login",
+    name: "social-login",
+    component: () =>
+      import(/* webpackChunkName: "social-login" */ "../views/SocialLogin.vue"),
+    meta: {
+      title: "Social Login Experiment",
+    },
+  },
 ];
 
 const router = new VueRouter({

@@ -1,0 +1,180 @@
+<template>
+  <v-main id="login">
+    <PasswordReset
+      v-if="showPasswordReset"
+      @close="togglePasswordReset()"
+    ></PasswordReset>
+    <v-container class="fill-height py-0" style="max-width: none">
+      <v-row class="fill-height text-center">
+        <v-col cols="12" md="6" class="grey darken-4 d-flex align-center">
+          <div class="px-5">
+            <svg-img icon="logo2" class="logo pr-4"></svg-img>
+            <h1 class="white--text">Mask Required</h1>
+            <p class="white--text">
+              This is the first release of a new concept by Christopher Ritter
+              which aims to provide a collaborative map of places that require
+              masks to be worn by customers and employees.
+            </p>
+          </div>
+        </v-col>
+        <v-col
+          cols="12"
+          md="6"
+          :class="{
+            'signup-form': !showLoginForm,
+            'd-flex align-center text-center justify-center': true,
+          }"
+        >
+          <v-btn
+            @click="facebookLogin"
+            color="#1877f2"
+            class="btn-facebook"
+            large
+            dark
+          >
+            <v-icon>mdi-facebook</v-icon>
+            Log in with Facebook
+          </v-btn>
+          <v-btn
+            @click="googleLogin"
+            color="white"
+            class="btn-google"
+            large
+            light
+          >
+            <v-icon>mdi-google</v-icon>
+            Log in with Google
+          </v-btn>
+          <form v-if="showLoginForm" @submit.prevent>
+            <v-text-field
+              label="Email"
+              :rules="[rules.required, rules.email]"
+              v-model.trim="loginForm.email"
+              type="text"
+              placeholder="you@email.com"
+              id="email1"
+              outlined
+            ></v-text-field>
+            <v-text-field
+              label="Password"
+              :rules="[rules.required]"
+              v-model.trim="loginForm.password"
+              type="password"
+              placeholder="******"
+              id="password1"
+              outlined
+            ></v-text-field>
+            <v-btn @click="login()" color="teal" large block dark>Log In</v-btn>
+            <div class="pt-3">
+              <v-btn large text @click="togglePasswordReset()"
+                >Forgot Password</v-btn
+              >
+              <v-btn large text @click="toggleForm()">Create an Account</v-btn>
+            </div>
+          </form>
+          <form v-else @submit.prevent>
+            <h1>Get Started</h1>
+            <v-text-field
+              label="Name"
+              v-model.trim="signupForm.name"
+              type="text"
+              placeholder="Savvy Apps"
+              id="name"
+            ></v-text-field>
+            <v-text-field
+              label="Title"
+              v-model.trim="signupForm.title"
+              type="text"
+              placeholder="Company"
+              id="title"
+            ></v-text-field>
+            <v-text-field
+              label="Email"
+              v-model.trim="signupForm.email"
+              type="text"
+              placeholder="you@email.com"
+              id="email2"
+            ></v-text-field>
+            <v-text-field
+              label="Password"
+              v-model.trim="signupForm.password"
+              type="password"
+              placeholder="min 6 characters"
+              id="password2"
+            ></v-text-field>
+            <v-btn @click="signup()" class="button">Sign Up</v-btn>
+            <div class="extras">
+              <v-btn text @click="toggleForm()">Back to Log In</v-btn>
+            </div>
+          </form>
+        </v-col>
+      </v-row>
+    </v-container>
+  </v-main>
+</template>
+
+<script>
+import { mapState } from "vuex";
+import PasswordReset from "@/components/PasswordReset";
+import SvgImg from "@/components/Svg-img";
+
+export default {
+  data() {
+    return {
+      loginForm: {
+        email: "",
+        password: "",
+      },
+      signupForm: {
+        name: "",
+        title: "",
+        email: "",
+        password: "",
+      },
+      showLoginForm: true,
+      showPasswordReset: false,
+    };
+  },
+  components: {
+    PasswordReset,
+    "svg-img": SvgImg,
+  },
+  methods: {
+    googleLogin() {
+      this.$store.dispatch("googleLogin");
+    },
+    facebookLogin() {
+      this.$store.dispatch("facebookLogin");
+    },
+    login() {
+      this.$store.dispatch("login", {
+        email: this.loginForm.email,
+        password: this.loginForm.password,
+      });
+    },
+    signup() {
+      this.$store.dispatch("signup", {
+        email: this.signupForm.email,
+        password: this.signupForm.password,
+        name: this.signupForm.name,
+        title: this.signupForm.title,
+      });
+    },
+    toggleForm() {
+      this.showLoginForm = !this.showLoginForm;
+    },
+    togglePasswordReset() {
+      this.showPasswordReset = !this.showPasswordReset;
+    },
+  },
+  computed: {
+    ...mapState(["rules"]),
+  },
+};
+</script>
+
+<style lang="scss" scoped>
+.logo {
+  font-size: 10rem;
+}
+</style>

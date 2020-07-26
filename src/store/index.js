@@ -367,13 +367,14 @@ const store = new Vuex.Store({
       // fetch user profile and set in state
       dispatch("fetchUserProfile", user);
     },
-    async googleLogin() {
+    async googleLogin({ dispatch }) {
       const provider = new firebase.auth.GoogleAuthProvider();
 
-      fb.auth.signInWithPopup(provider).then((result) => {
-        this.router.replace('home');
+      firebase.auth().signInWithPopup(provider).then((result) => {
+        var user = result.user;
+        dispatch("fetchUserProfile", user);
       }).catch((err) => {
-        console.log(err.message)
+        console.log(err.message);
       });
     },
     async facebookLogin() {
@@ -386,7 +387,7 @@ const store = new Vuex.Store({
           var token = result.credential.accessToken;
           // The signed-in user info.
           var user = result.user;
-          console.log(user);
+          dispatch("fetchUserProfile", user);
         })
         .catch(function(error) {
           // Handle Errors here.
