@@ -1,8 +1,9 @@
 <template>
-  <v-main id="settings" class="container-fluid">
+  <v-main id="settings">
     <v-container>
       <v-row class="justify-content-md-center">
-        <v-col sm="4">
+        <v-col md="3" lg="4"></v-col>
+        <v-col cols="12" md="6" lg="4">
           <v-card class="mt-4">
             <v-card-title>Settings</v-card-title>
             <v-card-text>
@@ -39,6 +40,7 @@
             </v-card-text>
           </v-card>
         </v-col>
+        <v-col md="3" lg="4"></v-col>
       </v-row>
     </v-container>
   </v-main>

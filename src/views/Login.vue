@@ -36,22 +36,22 @@
             >
               <v-icon class="mr-2">mdi-facebook</v-icon>
               Log in with Facebook
-            </v-btn>
+            </v-btn> -->
             <v-btn
               @click="googleLogin"
-              color="white"
+              color="#4285f4"
               class="btn-google mb-4"
               large
-              light
+              dark
               block
             >
               <v-icon class="mr-2">mdi-google</v-icon>
               Log in with Google
             </v-btn>
 
-            <v-avatar color="grey darken-4" class="mb-4" size="32">
-              <h6 class="white--text">OR</h6>
-            </v-avatar> -->
+            <v-avatar color="grey lighten-3" class="mb-4" size="32">
+              <h6>OR</h6>
+            </v-avatar>
 
             <form v-if="showLoginForm" @submit.prevent>
               <v-text-field
@@ -59,7 +59,7 @@
                 :rules="[rules.required, rules.email]"
                 v-model.trim="loginForm.email"
                 type="text"
-                placeholder="you@email.com"
+                placeholder="your@email.com"
                 id="email1"
                 outlined
               ></v-text-field>
@@ -124,8 +124,8 @@
       </v-row>
     </v-container>
     <v-snackbar
-      v-model="errorMessage"
-      :multi-line="multiLine"
+      v-model="showError"
+      multi-line
     >
       {{ errorMessage }}
 
@@ -163,6 +163,7 @@ export default {
       },
       showLoginForm: true,
       showPasswordReset: false,
+      showError: false,
     };
   },
   components: {
@@ -196,6 +197,13 @@ export default {
     togglePasswordReset() {
       this.showPasswordReset = !this.showPasswordReset;
     },
+  },
+  watch: {
+    errorMessage() {
+      if (this.errorMessage.length) {
+        this.showError = true;
+      }
+    }
   },
   computed: {
     ...mapState(["rules", "errorMessage"]),

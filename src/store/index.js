@@ -311,7 +311,7 @@ const store = new Vuex.Store({
       },
       minLength: (value) => value.length >= 100 || "Min 100 characters",
     },
-    errorMessage: null,
+    errorMessage: ""
   },
   mutations: {
     setUserProfile(state, val) {
@@ -356,34 +356,49 @@ const store = new Vuex.Store({
 
       state.ratings[2].value = roundedAverageRating;
     },
+    setErrorMessage(state, val) {
+      state.errorMessage = val;
+    },
   },
   actions: {
     async login({ dispatch }, form) {
+      store.commit("setErrorMessage", "");
       // sign user in
-      const { user } = await fb.auth.signInWithEmailAndPassword(
-        form.email,
-        form.password
-      );
+      const { user } = await fb.auth
+        .signInWithEmailAndPassword(form.email, form.password)
+        .catch((err) => {
+          store.commit("setErrorMessage", err.message);
+        });
 
       // fetch user profile and set in state
       dispatch("fetchUserProfile", user);
     },
     async googleLogin({ dispatch }) {
-      const provider = new firebase.auth.GoogleAuthProvider();
+      store.commit("setErrorMessage", "");
 
+      const provider = new firebase.auth.GoogleAuthProvider();
+      
       firebase.auth().signInWithRedirect(provider);
 
-      firebase.auth().getRedirectResult().then(function(result) {
-        var user = result.user;
-        dispatch("fetchUserProfile", user);
-      }).catch((err) => {
-        console.log(err.message);
-      });
+      firebase
+        .auth()
+        .getRedirectResult()
+        .then(function(result) {
+          var user = result.user;
+          dispatch("fetchUserProfile", user);
+        })
+        .catch((err) => {
+          var errorCode = err.code;
+          var errorMessage = err.message;
+
+          store.commit("setErrorMessage", errorMessage);
+        });
     },
     async facebookLogin({ dispatch }) {
       var provider = new firebase.auth.FacebookAuthProvider();
 
-      firebase.auth()
+      firebase
+        .auth()
         .signInWithPopup(provider)
         .then(function(result) {
           // This gives you a Facebook Access Token. You can use it to access the Facebook API.
@@ -397,9 +412,9 @@ const store = new Vuex.Store({
           var errorCode = error.code;
           var errorMessage = error.message;
           // The email of the user's account used.
-          console.log(error.message);
+          console.log("Facebook error! " + error.message);
           this.errorMessage = error.message;
-          
+
           var email = error.email;
           // The firebase.auth.AuthCredential type that was used.
           var credential = error.credential;

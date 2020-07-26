@@ -26,7 +26,7 @@
           }"
         >
           <div>
-            <v-btn
+            <!-- <v-btn
               @click="facebookLogin"
               color="#1877f2"
               class="btn-facebook mb-4"
@@ -36,7 +36,7 @@
             >
               <v-icon class="mr-2">mdi-facebook</v-icon>
               Log in with Facebook
-            </v-btn>
+            </v-btn> -->
             <v-btn
               @click="googleLogin"
               color="white"
