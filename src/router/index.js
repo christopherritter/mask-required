@@ -6,17 +6,25 @@ import store from "../store";
 
 Vue.use(VueRouter);
 
+const DEFAULT_TITLE = 'Some Default Title';
+
 const routes = [
   {
     path: "/",
     name: "home",
     component: Home,
+    meta: {
+      title: "Are masks required? Search on MaskRequired.US.",
+    },
   },
   {
     path: "/login",
     name: "login",
     component: () =>
       import(/* webpackChunkName: "login" */ "../views/Login.vue"),
+    meta: {
+      title: "Sign up to review businesses on MaskRequired.US.",
+    },
   },
   {
     path: "/settings",
@@ -24,6 +32,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "settings" */ "../views/Settings.vue"),
     meta: {
+      title: "Update your private settings on MaskRequired.US.",
       requiresAuth: true,
     },
   },
@@ -35,6 +44,7 @@ const routes = [
         /* webpackChunkName: "user-location" */ "../views/UserLocation.vue"
       ),
     meta: {
+      title: "This is an experiment that doesn't belong on MaskRequired.US.",
       requiresAuth: true,
     },
   },
@@ -44,6 +54,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "close-buy" */ "../views/CloseBuy.vue"),
     meta: {
+      title: "This is an experiment that doesn't belong on MaskRequired.US.",
       requiresAuth: true,
     },
   },
@@ -53,6 +64,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "nearby" */ "../views/Nearby.vue"),
     meta: {
+      title: "This is future enhancement for MaskRequired.US.",
       requiresAuth: true,
     },
     beforeEnter: (to, from, next) => {
@@ -65,6 +77,9 @@ const routes = [
     name: "search",
     component: () =>
       import(/* webpackChunkName: "search" */ "../views/Search.vue"),
+    meta: {
+      title: "Search for safe places to shop on MaskRequired.US.",
+    },
   },
   {
     path: "/place",
@@ -75,6 +90,9 @@ const routes = [
       if (store.state.place.name) next();
       else next({ name: "home" });
     },
+    meta: {
+      title: "Collaborative business reviews on MaskRequired.US.",
+    },
   },
   {
     path: "/review",
@@ -82,6 +100,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "review" */ "../views/Review.vue"),
     meta: {
+      title: "Review a business location on MaskRequired.US.",
       requiresAuth: true,
     },
     beforeEnter: (to, from, next) => {
@@ -110,5 +129,13 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
+
+router.afterEach((to, from) => {
+  // Use next tick to handle router history correctly
+  // see: https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
+  Vue.nextTick(() => {
+      document.title = to.meta.title || DEFAULT_TITLE;
+  });
+})
 
 export default router;
