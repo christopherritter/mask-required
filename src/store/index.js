@@ -311,6 +311,7 @@ const store = new Vuex.Store({
       },
       minLength: (value) => value.length >= 100 || "Min 100 characters",
     },
+    errorMessage: null,
   },
   mutations: {
     setUserProfile(state, val) {
@@ -397,6 +398,7 @@ const store = new Vuex.Store({
           var errorMessage = error.message;
           // The email of the user's account used.
           console.log(error.message);
+          this.errorMessage = error.message;
           
           var email = error.email;
           // The firebase.auth.AuthCredential type that was used.

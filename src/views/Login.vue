@@ -123,6 +123,23 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-snackbar
+      v-model="errorMessage"
+      :multi-line="multiLine"
+    >
+      {{ errorMessage }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="red"
+          text
+          v-bind="attrs"
+          @click="errorMessage = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-main>
 </template>
 
@@ -181,7 +198,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["rules"]),
+    ...mapState(["rules", "errorMessage"]),
   },
 };
 </script>
