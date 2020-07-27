@@ -26,7 +26,7 @@
           }"
         >
           <div>
-            <!-- <v-btn
+            <v-btn
               @click="facebookLogin"
               color="#1877f2"
               class="btn-facebook mb-4"
@@ -36,21 +36,21 @@
             >
               <v-icon class="mr-2">mdi-facebook</v-icon>
               Log in with Facebook
-            </v-btn> -->
+            </v-btn>
             <v-btn
               @click="googleLogin"
-              color="white"
+              color="#4285f4"
               class="btn-google mb-4"
               large
-              light
+              dark
               block
             >
               <v-icon class="mr-2">mdi-google</v-icon>
               Log in with Google
             </v-btn>
 
-            <v-avatar color="grey darken-4" class="mb-4" size="32">
-              <h6 class="white--text">OR</h6>
+            <v-avatar color="grey lighten-3" class="mb-4" size="32">
+              <h6>OR</h6>
             </v-avatar>
 
             <form v-if="showLoginForm" @submit.prevent>
@@ -59,7 +59,7 @@
                 :rules="[rules.required, rules.email]"
                 v-model.trim="loginForm.email"
                 type="text"
-                placeholder="you@email.com"
+                placeholder="your@email.com"
                 id="email1"
                 outlined
               ></v-text-field>
@@ -123,6 +123,23 @@
         </v-col>
       </v-row>
     </v-container>
+    <v-snackbar
+      v-model="showError"
+      multi-line
+    >
+      {{ errorMessage }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="red"
+          text
+          v-bind="attrs"
+          @click="errorMessage = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-main>
 </template>
 
@@ -146,6 +163,7 @@ export default {
       },
       showLoginForm: true,
       showPasswordReset: false,
+      showError: false,
     };
   },
   components: {
@@ -180,8 +198,15 @@ export default {
       this.showPasswordReset = !this.showPasswordReset;
     },
   },
+  watch: {
+    errorMessage() {
+      if (this.errorMessage.length) {
+        this.showError = true;
+      }
+    }
+  },
   computed: {
-    ...mapState(["rules"]),
+    ...mapState(["rules", "errorMessage"]),
   },
 };
 </script>

@@ -311,7 +311,7 @@ const store = new Vuex.Store({
       },
       minLength: (value) => value.length >= 100 || "Min 100 characters",
     },
-    errorMessage: ""
+    errorMessage: "",
   },
   mutations: {
     setUserProfile(state, val) {
@@ -377,13 +377,15 @@ const store = new Vuex.Store({
       store.commit("setErrorMessage", "");
 
       const provider = new firebase.auth.GoogleAuthProvider();
-      
-      firebase.auth().signInWithRedirect(provider);
+
+      // firebase.auth().signInWithRedirect(provider);
 
       firebase
         .auth()
-        .getRedirectResult()
-        .then(function(result) {
+        .signInWithPopup(provider)
+        // .getRedirectResult()
+        .then((result) => {
+          console.log(result);
           var user = result.user;
           dispatch("fetchUserProfile", user);
         })
@@ -474,7 +476,7 @@ const store = new Vuex.Store({
         website: place.website || "",
         rating: 0,
       };
-      
+
       if (place.opening_hours) {
         // newPlace.business_status = place.business_status;
         // newPlace.formatted_phone_number = place.formatted_phone_number || "";
