@@ -407,9 +407,9 @@ const store = new Vuex.Store({
           var token = result.credential.accessToken;
           // The signed-in user info.
           var user = result.user;
-          console.log("Signing in with Facebook provider.")
-          console.log(result);
-          dispatch("fetchUserProfile", user);
+          console.log("Signing in with Facebook provider.");
+          console.log(user);
+          dispatch("fetchUserProfile", result);
         })
         .catch(function(error) {
           // Handle Errors here.
