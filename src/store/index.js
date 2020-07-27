@@ -409,7 +409,7 @@ const store = new Vuex.Store({
           var user = result.user;
           console.log("Signing in with Facebook provider.");
           console.log(user);
-          dispatch("fetchUserProfile", result);
+          dispatch("fetchUserProfile", user);
         })
         .catch(function(error) {
           // Handle Errors here.
