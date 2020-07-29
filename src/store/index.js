@@ -472,12 +472,12 @@ const store = new Vuex.Store({
           commit("setUserProfile", userProfile.data());
           
         }
-
+        
         // change route to dashboard
-        // if (router.currentRoute.path === "/login") {
-        //   console.log("Change route to dashboard.")
-        //   router.push("/");
-        // }
+        if (router.currentRoute.path === "/login") {
+          console.log("Change route to dashboard.")
+          router.push("/");
+        }
       }
 
 
