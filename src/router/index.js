@@ -138,15 +138,46 @@ const router = new VueRouter({
 });
 
 // navigation guard to check for logged in users
-router.beforeEach((to, from, next) => {
-  const requiresAuth = to.matched.some((x) => x.meta.requiresAuth);
+// router.beforeEach((to, from, next) => {
+//   const requiresAuth = to.matched.some((x) => x.meta.requiresAuth);
 
-  if (requiresAuth && !auth.currentUser) {
-    next("/login");
+//   if (requiresAuth && !auth.currentUser) {
+//     next("/login");
+//   } else {
+//     next();
+//   }
+// });
+
+router.beforeEach((to, from, next) => {
+
+  if (to.matched.some(record => record.meta.auth)) {
+    firebase.auth().onAuthStateChanged(user => {
+      if (user) {
+        console.log("Auth user" + user);
+        next()
+      } else {
+        next({
+          path: "/login",
+        })
+      }
+    })
+  } else if (to.matched.some(record => record.meta.guest)) {
+    firebase.auth().onAuthStateChanged(user => {
+      console.log("Guest user" + user);
+      if (user) {
+        next({
+          path: "/search",
+        })
+      } else {
+        next()
+      }
+    })
+
   } else {
-    next();
+    next()
   }
-});
+
+})
 
 router.afterEach((to, from) => {
   // Use next tick to handle router history correctly

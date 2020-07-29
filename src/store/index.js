@@ -391,7 +391,7 @@ const store = new Vuex.Store({
         .signInWithPopup(provider)
         // .getRedirectResult()
         .then((result) => {
-          console.log(result);
+          // console.log(result);
           var user = result.user;
           dispatch("fetchUserProfile", user);
         })
@@ -413,8 +413,8 @@ const store = new Vuex.Store({
           var token = result.credential.accessToken;
           // The signed-in user info.
           var user = result.user;
-          console.log("Signing in with Facebook provider.");
-          console.log(user);
+          // console.log("Signing in with Facebook provider.");
+          // console.log(user);
           dispatch("fetchUserProfile", user);
         })
         .catch(function(error) {
@@ -422,7 +422,7 @@ const store = new Vuex.Store({
           var errorCode = error.code;
           var errorMessage = error.message;
           // The email of the user's account used.
-          console.log("Facebook error! " + error.message);
+          // console.log("Facebook error! " + error.message);
           this.errorMessage = error.message;
 
           var email = error.email;
@@ -431,7 +431,7 @@ const store = new Vuex.Store({
           // ...
         });
     },
-    async socialLogin() {
+    async socialLogin({ commit }) {
       let ui = firebaseui.auth.AuthUI.getInstance();
 
       if (!ui) {
@@ -439,37 +439,60 @@ const store = new Vuex.Store({
       }
 
       var uiConfig = {
-        signInSuccessUrl: "/home",
-        signInOptions: [firebase.auth.FacebookAuthProvider.PROVIDER_ID],
+        signInSuccessUrl: "/search",
+        signInOptions: [
+          firebase.auth.FacebookAuthProvider.PROVIDER_ID,
+          firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+          firebase.auth.EmailAuthProvider.PROVIDER_ID,
+        ],
       };
 
       ui.start("#firebaseui-auth-container", uiConfig);
-      console.log(firebase.auth().currentUser);
-      dispatch("setUser", firebase.auth().currentUser);
+
+      dispatch("fetchUserProfile");
+
     },
     async fetchUserProfile({ commit }, user) {
       // fetch user profile
-      const userProfile = await fb.usersCollection.doc(user.uid).get();
+      const currentUser = await firebase.auth().currentUser; 
+      
+      if (currentUser) { 
+        console.log("Current user found:");
+        console.log(currentUser);
 
-      // set user profile in state
-      commit("setUserProfile", userProfile.data());
+        const userProfile = await fb.usersCollection.doc(currentUser.uid).get();
 
-      // change route to dashboard
-      if (router.currentRoute.path === "/login") {
-        router.push("/");
+        if (!userProfile.exists) {
+          // create new user
+          console.log("Creating new user.");
+          dispatch("signup");
+        } else {
+          // set user profile in state
+          console.log("Setting user profile in state.");
+          commit("setUserProfile", userProfile.data());
+          
+        }
+
+        // change route to dashboard
+        // if (router.currentRoute.path === "/login") {
+        //   console.log("Change route to dashboard.")
+        //   router.push("/");
+        // }
       }
+
+
     },
     async signup({ dispatch }, form) {
       // sign user up
-      const { user } = await fb.auth.createUserWithEmailAndPassword(
-        form.email,
-        form.password
-      );
+      // const { user } = await fb.auth.createUserWithEmailAndPassword(
+      //   form.email,
+      //   form.password
+      // );
 
       // create user profile object in userCollections
       await fb.usersCollection.doc(user.uid).set({
-        name: form.name,
-        title: form.title,
+        name: user.displayName,
+        email: user.email,
         userId: user.uid,
       });
 

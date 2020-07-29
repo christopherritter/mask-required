@@ -55,7 +55,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.dispatch("socialLogin");
+    this.$store.dispatch("socialLogin", {});
   },
   components: {
     PasswordReset,
