@@ -317,6 +317,9 @@ const store = new Vuex.Store({
     errorMessage: "",
   },
   mutations: {
+    setUser(state, val) {
+      state.user = val;
+    },
     setUserProfile(state, val) {
       state.userProfile = val;
     },
@@ -441,6 +444,8 @@ const store = new Vuex.Store({
       };
 
       ui.start("#firebaseui-auth-container", uiConfig);
+      console.log(firebase.auth().currentUser);
+      dispatch("setUser", firebase.auth().currentUser);
     },
     async fetchUserProfile({ commit }, user) {
       // fetch user profile

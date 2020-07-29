@@ -49,16 +49,6 @@ import SvgImg from "@/components/Svg-img";
 export default {
   data() {
     return {
-      loginForm: {
-        email: "",
-        password: "",
-      },
-      signupForm: {
-        name: "",
-        title: "",
-        email: "",
-        password: "",
-      },
       showLoginForm: true,
       showPasswordReset: false,
       showError: false,
@@ -72,26 +62,6 @@ export default {
     "svg-img": SvgImg,
   },
   methods: {
-    googleLogin() {
-      this.$store.dispatch("googleLogin");
-    },
-    facebookLogin() {
-      this.$store.dispatch("facebookLogin");
-    },
-    login() {
-      this.$store.dispatch("login", {
-        email: this.loginForm.email,
-        password: this.loginForm.password,
-      });
-    },
-    signup() {
-      this.$store.dispatch("signup", {
-        email: this.signupForm.email,
-        password: this.signupForm.password,
-        name: this.signupForm.name,
-        title: this.signupForm.title,
-      });
-    },
     toggleForm() {
       this.showLoginForm = !this.showLoginForm;
     },
