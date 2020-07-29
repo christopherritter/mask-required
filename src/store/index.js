@@ -3,6 +3,8 @@ import Vuex from "vuex";
 import firebase from "../firebase";
 import * as fb from "../firebase";
 import router from "../router/index";
+import * as firebaseui from "firebaseui";
+import "firebaseui/dist/firebaseui.css";
 
 Vue.use(Vuex);
 
@@ -21,6 +23,7 @@ fb.postsCollection.orderBy("createdOn", "desc").onSnapshot((snapshot) => {
 
 const store = new Vuex.Store({
   state: {
+    user: {},
     userProfile: {},
     place: {},
     rating: 0,
@@ -424,6 +427,20 @@ const store = new Vuex.Store({
           var credential = error.credential;
           // ...
         });
+    },
+    async socialLogin() {
+      let ui = firebaseui.auth.AuthUI.getInstance();
+
+      if (!ui) {
+        ui = new firebaseui.auth.AuthUI(firebase.auth());
+      }
+
+      var uiConfig = {
+        signInSuccessUrl: "/home",
+        signInOptions: [firebase.auth.FacebookAuthProvider.PROVIDER_ID],
+      };
+
+      ui.start("#firebaseui-auth-container", uiConfig);
     },
     async fetchUserProfile({ commit }, user) {
       // fetch user profile
