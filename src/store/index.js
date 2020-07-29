@@ -462,17 +462,16 @@ const store = new Vuex.Store({
 
         const userProfile = await fb.usersCollection.doc(currentUser.uid).get();
 
-        if (!userProfile.exists) {
-          // create new user
-          console.log("Creating new user.");
-          dispatch("signup");
-        } else {
+        if (userProfile.exists) {
           // set user profile in state
           console.log("Setting user profile in state.");
           commit("setUserProfile", userProfile.data());
-          
+        } else {
+          // create new user
+          console.log("Creating new user.");
+          dispatch("signup");
         }
-        
+
         // change route to dashboard
         if (router.currentRoute.path === "/login") {
           console.log("Change route to dashboard.")
@@ -484,15 +483,15 @@ const store = new Vuex.Store({
     },
     async signup({ dispatch }, form) {
       // sign user up
-      // const { user } = await fb.auth.createUserWithEmailAndPassword(
-      //   form.email,
-      //   form.password
-      // );
+      const { user } = await fb.auth.createUserWithEmailAndPassword(
+        form.email,
+        form.password
+      );
 
       // create user profile object in userCollections
       await fb.usersCollection.doc(user.uid).set({
-        name: user.displayName,
-        email: user.email,
+        name: form.name,
+        title: form.title,
         userId: user.uid,
       });
 
