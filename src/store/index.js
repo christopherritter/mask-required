@@ -431,7 +431,7 @@ const store = new Vuex.Store({
           // ...
         });
     },
-    async socialLogin({ commit }) {
+    async socialLogin({ dispatch }) {
       let ui = firebaseui.auth.AuthUI.getInstance();
 
       if (!ui) {
@@ -450,36 +450,31 @@ const store = new Vuex.Store({
       ui.start("#firebaseui-auth-container", uiConfig);
 
       dispatch("fetchUserProfile");
-
     },
     async fetchUserProfile({ commit }, user) {
       // fetch user profile
-      const currentUser = await firebase.auth().currentUser; 
-      
-      if (currentUser) { 
+      const currentUser = await firebase.auth().currentUser;
+
+      if (currentUser) {
         console.log("Current user found:");
-        console.log(currentUser);
+        // commit("setUser", currentUser);
 
         const userProfile = await fb.usersCollection.doc(currentUser.uid).get();
 
         if (userProfile.exists) {
           // set user profile in state
-          console.log("Setting user profile in state.");
           commit("setUserProfile", userProfile.data());
         } else {
-          // create new user
-          console.log("Creating new user.");
-          dispatch("signup");
-        }
+          // create user profile
+          await fb.usersCollection.doc(user.uid).set({
+            name: user.displayName,
+            title: "",
+            userId: user.uid,
+          });
 
-        // change route to dashboard
-        if (router.currentRoute.path === "/login") {
-          console.log("Change route to dashboard.")
-          router.push("/");
+          commit("setUserProfile", user);
         }
       }
-
-
     },
     async signup({ dispatch }, form) {
       // sign user up

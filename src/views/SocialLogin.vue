@@ -1,9 +1,5 @@
 <template>
   <v-main id="login">
-    <PasswordReset
-      v-if="showPasswordReset"
-      @close="togglePasswordReset()"
-    ></PasswordReset>
     <v-container class="fill-height py-0" style="max-width: none">
       <v-row class="fill-height text-center">
         <v-col cols="12" md="6" class="grey darken-4 d-flex align-center">
@@ -20,64 +16,25 @@
         <v-col
           cols="12"
           md="6"
-          :class="{
-            'signup-form': !showLoginForm,
-            'd-flex align-center text-center justify-center': true,
-          }"
+          class="d-flex align-center text-center justify-center"
         >
           <section id="firebaseui-auth-container"></section>
         </v-col>
       </v-row>
     </v-container>
-    <v-snackbar v-model="showError" multi-line>
-      {{ errorMessage }}
-
-      <template v-slot:action="{ attrs }">
-        <v-btn color="red" text v-bind="attrs" @click="errorMessage = false">
-          Close
-        </v-btn>
-      </template>
-    </v-snackbar>
   </v-main>
 </template>
 
 <script>
 import { mapState } from "vuex";
-import PasswordReset from "@/components/PasswordReset";
 import SvgImg from "@/components/Svg-img";
 
 export default {
-  data() {
-    return {
-      showLoginForm: true,
-      showPasswordReset: false,
-      showError: false,
-    };
-  },
   mounted() {
     this.$store.dispatch("socialLogin", {});
   },
   components: {
-    PasswordReset,
     "svg-img": SvgImg,
-  },
-  methods: {
-    toggleForm() {
-      this.showLoginForm = !this.showLoginForm;
-    },
-    togglePasswordReset() {
-      this.showPasswordReset = !this.showPasswordReset;
-    },
-  },
-  watch: {
-    errorMessage() {
-      if (this.errorMessage.length) {
-        this.showError = true;
-      }
-    },
-  },
-  computed: {
-    ...mapState(["rules", "errorMessage"]),
   },
 };
 </script>
