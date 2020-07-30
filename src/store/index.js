@@ -9,19 +9,6 @@ import { getField, updateField } from 'vuex-map-fields';
 
 Vue.use(Vuex);
 
-fb.postsCollection.orderBy("createdOn", "desc").onSnapshot((snapshot) => {
-  let postsArray = [];
-
-  snapshot.forEach((doc) => {
-    let post = doc.data();
-    post.id = doc.id;
-
-    postsArray.push(post);
-  });
-
-  store.commit("setPosts", postsArray);
-});
-
 const store = new Vuex.Store({
   state: {
     user: {},
@@ -32,7 +19,6 @@ const store = new Vuex.Store({
     place: {},
     rating: 0,
     reviews: [],
-    posts: [],
     showSearch: true,
     masks: {
       employees: [
@@ -336,9 +322,6 @@ const store = new Vuex.Store({
     },
     setReviews(state, val) {
       state.reviews = val;
-    },
-    setPosts(state, val) {
-      state.posts = val;
     },
     setComplianceRating(state, ratings) {
       var averageRating = ratings.reduce(function(a, b) {
