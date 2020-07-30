@@ -305,9 +305,9 @@ const store = new Vuex.Store({
       },
     ],
     ratings: [
-      { id: 0, icon: "mdi-shield-check", label: "Compliance", value: 0 },
-      { id: 1, icon: "mdi-alarm-light", label: "Notification", value: 0 },
-      { id: 2, icon: "mdi-police-badge", label: "Enforcement", value: 0 },
+      { id: 0, icon: "mdi-shield-check", label: "Compliance", description: "How well did they comply with official health regulations?", value: 0 },
+      { id: 1, icon: "mdi-alarm-light", label: "Notification", description: "Did they effectively notify customers about store policies?", value: 0 },
+      { id: 2, icon: "mdi-police-badge", label: "Enforcement", description: "How would you rate the enforcement of their in-store policies?", value: 0 },
     ],
     rules: {
       required: (value) => !!value || "This is a required field",

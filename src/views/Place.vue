@@ -124,6 +124,16 @@
                     readonly
                   ></v-rating>
                 </v-list-item-content>
+                <v-list-item-icon class="mr-2">
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-icon v-bind="attrs" v-on="on" small
+                        >mdi-information</v-icon
+                      >
+                    </template>
+                    <span>{{ rating.description }}</span>
+                  </v-tooltip>
+                </v-list-item-icon>
               </v-list-item>
             </v-list>
           </v-card>
@@ -305,7 +315,7 @@ export default {
   watch: {
     place(newValue, oldValue) {
       this.showLocation(this.place.location.lat, this.place.location.lng);
-      
+
       if (!newValue.open_hours) {
         this.showDetails = false;
       } else {
@@ -320,11 +330,11 @@ export default {
     ...mapState([["userProfile"], "place", ["reviews"], "rating", ["ratings"]]),
     columnWidth() {
       if (this.showDetails) {
-        return 4
+        return 4;
       } else {
-        return 6
+        return 6;
       }
-    }
+    },
   },
   methods: {
     showLocation(latitude, longitude) {

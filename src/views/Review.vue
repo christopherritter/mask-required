@@ -108,6 +108,16 @@
                     dark
                     size="25"
                   ></v-rating>
+                  <v-list-item-icon class="mr-2">
+                    <v-tooltip right>
+                      <template v-slot:activator="{ on, attrs }">
+                        <v-icon v-bind="attrs" v-on="on" small
+                          >mdi-information</v-icon
+                        >
+                      </template>
+                      <span>{{ rating.description }}</span>
+                    </v-tooltip>
+                  </v-list-item-icon>
                 </v-col>
               </v-row>
 
@@ -117,7 +127,7 @@
 
               <v-checkbox
                 v-model="review.agreement"
-                label="I certify that this review is based on my own experience and is my genuine opinion of this restaurant, and that I have no personal or business relationship with this establishment, and have not been offered any incentive or payment originating from the establishment to write this review. I understand that Tripadvisor has a zero-tolerance policy on fake reviews."
+                label="I certify that this review is based on my own experience and is my genuine opinion of this restaurant, and that I have no personal or business relationship with this establishment, and have not been offered any incentive or payment originating from the establishment to write this review."
               ></v-checkbox>
 
               <!-- Create Post button -->
