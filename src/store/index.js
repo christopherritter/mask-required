@@ -5,6 +5,7 @@ import * as fb from "../firebase";
 import router from "../router/index";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
+import { getField, updateField } from 'vuex-map-fields';
 
 Vue.use(Vuex);
 
@@ -24,7 +25,10 @@ fb.postsCollection.orderBy("createdOn", "desc").onSnapshot((snapshot) => {
 const store = new Vuex.Store({
   state: {
     user: {},
-    userProfile: {},
+    userProfile: {
+      name: "",
+      nickname: ""
+    },
     place: {},
     rating: 0,
     reviews: [],
@@ -316,7 +320,11 @@ const store = new Vuex.Store({
     },
     errorMessage: "",
   },
+  getters: {
+    getField
+  },
   mutations: {
+    updateField,
     setUser(state, val) {
       state.user = val;
     },
@@ -468,7 +476,7 @@ const store = new Vuex.Store({
           // create user profile
           await fb.usersCollection.doc(user.uid).set({
             name: user.displayName,
-            title: "",
+            nickname: "",
             userId: user.uid,
           });
 
@@ -486,7 +494,7 @@ const store = new Vuex.Store({
       // create user profile object in userCollections
       await fb.usersCollection.doc(user.uid).set({
         name: form.name,
-        title: form.title,
+        nickname: form.nickname,
         userId: user.uid,
       });
 
@@ -638,7 +646,7 @@ const store = new Vuex.Store({
       // update user object
       const userRef = await fb.usersCollection.doc(userId).update({
         name: user.name,
-        title: user.title,
+        nickname: user.nickname,
       });
 
       dispatch("fetchUserProfile", { uid: userId });

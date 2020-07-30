@@ -17,19 +17,18 @@
               <form @submit.prevent>
                 <v-text-field
                   label="Name"
-                  v-model.trim="name"
+                  v-model="name"
                   type="text"
-                  :placeholder="userProfile.name"
                   id="name"
                   outlined
+                  readonly
                 ></v-text-field>
 
                 <v-text-field
-                  label="Job Title"
-                  v-model.trim="title"
+                  label="Nickname"
+                  v-model.trim="nickname"
                   type="text"
-                  :placeholder="userProfile.title"
-                  id="title"
+                  id="nickname"
                   outlined
                 ></v-text-field>
 
@@ -47,28 +46,24 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapFields } from "vuex-map-fields";
 
 export default {
   data() {
     return {
-      name: "",
-      title: "",
       showSuccess: false,
     };
   },
   computed: {
-    ...mapState(["userProfile"]),
+    ...mapFields(["userProfile.name", "userProfile.nickname"]),
   },
   methods: {
     updateProfile() {
       this.$store.dispatch("updateProfile", {
         name: this.name !== "" ? this.name : this.userProfile.name,
-        title: this.title !== "" ? this.title : this.userProfile.title,
+        nickname:
+          this.nickname !== "" ? this.nickname : this.userProfile.nickname,
       });
-
-      this.name = "";
-      this.title = "";
 
       this.showSuccess = true;
 
