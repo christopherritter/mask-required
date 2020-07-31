@@ -10,7 +10,7 @@
         width="100%"
         @mouseover.native="highlightedCard = index"
         @mouseleave.native="highlightedCard = null"
-        @click="$router.push('nearby')"
+        @click="$router.push('nearby/' + type.name)"
         style="cursor: pointer"
         class="type-card"
         :class="{ 'primary white--text': highlightedCard == index }"

@@ -106,6 +106,7 @@ export default {
   font-size: 25rem;
   float: left;
   margin-bottom: -15rem;
+  margin-top: -3.15rem;
 }
 .jumbotron .jumbotron-text {
   padding-top: 3em;

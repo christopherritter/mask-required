@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import Nearby from "../views/Nearby.vue";
 import { auth } from "../firebase";
 import store from "../store";
 
@@ -59,7 +60,7 @@ const routes = [
     },
   },
   {
-    path: "/nearby",
+    path: "/nearby/:name",
     name: "nearby",
     component: () =>
       import(/* webpackChunkName: "nearby" */ "../views/Nearby.vue"),
