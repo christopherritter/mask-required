@@ -5,7 +5,7 @@ import * as fb from "../firebase";
 import router from "../router/index";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
-import { getField, updateField } from 'vuex-map-fields';
+import { getField, updateField } from "vuex-map-fields";
 
 Vue.use(Vuex);
 
@@ -14,11 +14,12 @@ const store = new Vuex.Store({
     user: {},
     userProfile: {
       name: "",
-      nickname: ""
+      nickname: "",
     },
     place: {},
     rating: 0,
     reviews: [],
+    types: [],
     showSearch: true,
     masks: {
       employees: [
@@ -291,9 +292,30 @@ const store = new Vuex.Store({
       },
     ],
     ratings: [
-      { id: 0, icon: "mdi-shield-check", label: "Compliance", description: "How well did they comply with official health regulations?", value: 0 },
-      { id: 1, icon: "mdi-alarm-light", label: "Notification", description: "Did they effectively notify customers about store policies?", value: 0 },
-      { id: 2, icon: "mdi-police-badge", label: "Enforcement", description: "How would you rate the enforcement of their in-store policies?", value: 0 },
+      {
+        id: 0,
+        icon: "mdi-shield-check",
+        label: "Compliance",
+        description:
+          "How well did they comply with official health regulations?",
+        value: 0,
+      },
+      {
+        id: 1,
+        icon: "mdi-alarm-light",
+        label: "Notification",
+        description:
+          "Did they effectively notify customers about store policies?",
+        value: 0,
+      },
+      {
+        id: 2,
+        icon: "mdi-police-badge",
+        label: "Enforcement",
+        description:
+          "How would you rate the enforcement of their in-store policies?",
+        value: 0,
+      },
     ],
     rules: {
       required: (value) => !!value || "This is a required field",
@@ -307,7 +329,7 @@ const store = new Vuex.Store({
     errorMessage: "",
   },
   getters: {
-    getField
+    getField,
   },
   mutations: {
     updateField,
@@ -322,6 +344,9 @@ const store = new Vuex.Store({
     },
     setReviews(state, val) {
       state.reviews = val;
+    },
+    setTypes(state, val) {
+      state.types = val;
     },
     setComplianceRating(state, ratings) {
       var averageRating = ratings.reduce(function(a, b) {
@@ -356,6 +381,9 @@ const store = new Vuex.Store({
     setErrorMessage(state, val) {
       state.errorMessage = val;
     },
+    // increaseTypeCounter(state, val) {
+    //   state.types[val]++;
+    // }
   },
   actions: {
     async login({ dispatch }, form) {
@@ -528,7 +556,7 @@ const store = new Vuex.Store({
           createdOn: new Date(),
           place: {
             place_id: state.place.place_id,
-            types: state.place.types
+            types: state.place.types,
           },
           rating: review.rating,
           title: review.title,
@@ -627,6 +655,52 @@ const store = new Vuex.Store({
     async deleteReview({ commit }, review) {
       fb.reviewsCollection.doc(review.id).delete();
     },
+    async fetchTypes({ state }) {
+      // const citiesRef = db.collection("cities");
+      const reviews = await fb.reviewsCollection.get();
+      let typesArray = [];
+
+      if (reviews.empty) {
+        console.log("No matching documents.");
+        return;
+      }
+
+      reviews.forEach((doc) => {
+        let review = doc.data();
+        review.id = doc.id;
+
+        if (review.place.types) {
+          for (let t = 0; t < review.place.types.length; t++) {
+            let type = {
+              name: review.place.types[t],
+              counter: 0,
+            };
+            
+            let result = containsType(type, typesArray);
+            if (!result) {
+              typesArray.push(type);
+            } else {
+              typesArray.filter(obj => {
+                obj.counter++;
+              })
+            }
+          }
+        }
+      });
+
+      store.commit("setTypes", typesArray);
+
+      function containsType(type, list) {
+        var i;
+        for (i = 0; i < list.length; i++) {
+          if (list[i].name == type.name) {
+            return true;
+          }
+        }
+        
+        return false;
+      }
+    },
     async updateProfile({ dispatch }, user) {
       const userId = fb.auth.currentUser.uid;
       // update user object
@@ -647,6 +721,7 @@ const store = new Vuex.Store({
         });
       });
     },
+    
   },
 });
 

@@ -1,8 +1,8 @@
 <template>
   <v-row>
     <v-col
-      v-for="type in typesToDisplay"
-      :key="type"
+      v-for="type in types"
+      :key="type.name"
       class="d-flex align-stretch"
     >
       <v-card
@@ -11,13 +11,15 @@
         @mouseover="hover = true"
         @mouseleave="hover = false"
       >
-        <v-card-text>{{ type }}</v-card-text>
+        <v-card-text>{{ type.name }} ({{ type.counter }})</v-card-text>
       </v-card>
     </v-col>
   </v-row>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data() {
     return {
@@ -27,22 +29,17 @@ export default {
     };
   },
   computed: {
-    typesToDisplay: function() {
-      if (this.showLessTypes) {
-        return this.types.slice(0, 7);
-      } else {
-        return this.types;
-      }
-    },
-  },
-  props: ["types"],
-  methods: {
-    getTypes: function() {
-      return this.types;
-    },
+    ...mapState([["types"]]),
+    // typesToDisplay: function() {
+    //   if (this.showLessTypes) {
+    //     return this.types.slice(0, 7);
+    //   } else {
+    //     return this.types;
+    //   }
+    // },
   },
   created: function() {
-    this.getTypes();
+    this.$store.dispatch("fetchTypes");
   },
 };
 </script>
