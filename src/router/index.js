@@ -6,7 +6,7 @@ import store from "../store";
 
 Vue.use(VueRouter);
 
-const DEFAULT_TITLE = 'Some Default Title';
+const DEFAULT_TITLE = 'MaskRequired.US';
 
 const routes = [
   {
@@ -64,13 +64,13 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "nearby" */ "../views/Nearby.vue"),
     meta: {
-      title: "This is future enhancement for MaskRequired.US.",
+      title: "Find nearby places to shop safely on MaskRequired.US.",
       requiresAuth: true,
     },
-    beforeEnter: (to, from, next) => {
-      if (store.state.place.name) next();
-      else next({ name: "home" });
-    },
+    // beforeEnter: (to, from, next) => {
+    //   if (store.state.place.name) next();
+    //   else next({ name: "home" });
+    // },
   },
   {
     path: "/search",
