@@ -526,7 +526,10 @@ const store = new Vuex.Store({
       const newReview = await fb.reviewsCollection
         .add({
           createdOn: new Date(),
-          place: state.place,
+          place: {
+            place_id: state.place.place_id,
+            types: state.place.types
+          },
           rating: review.rating,
           title: review.title,
           content: review.content,
@@ -634,12 +637,12 @@ const store = new Vuex.Store({
 
       dispatch("fetchUserProfile", { uid: userId });
 
-      // update all posts by user
-      const postDocs = await fb.postsCollection
+      // update all reviews by user
+      const reviewDocs = await fb.reviewsCollection
         .where("userId", "==", userId)
         .get();
-      postDocs.forEach((doc) => {
-        fb.postsCollection.doc(doc.id).update({
+      reviewDocs.forEach((doc) => {
+        fb.reviewsCollection.doc(doc.id).update({
           userName: user.name,
         });
       });

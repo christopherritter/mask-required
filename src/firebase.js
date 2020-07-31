@@ -21,7 +21,6 @@ const auth = firebase.auth();
 // collection references
 // const commentsCollection = db.collection("comments");
 const likesCollection = db.collection("likes");
-const postsCollection = db.collection("posts");
 const reviewsCollection = db.collection("reviews");
 const usersCollection = db.collection("users");
 
@@ -33,7 +32,6 @@ export {
   db,
   auth,
   likesCollection,
-  postsCollection,
   reviewsCollection,
   usersCollection,
 };
