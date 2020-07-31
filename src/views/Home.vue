@@ -1,6 +1,7 @@
 <template>
-  <v-main class="mt-10">
+  <v-main class="mt-0">
     <v-container>
+      <review-types></review-types>
       <v-row>
         <v-col>
           <v-card class="p-4 jumbotron text-center" color="#c5f9da">
@@ -34,6 +35,7 @@
 
 <script>
 import SvgImg from "@/components/Svg-img";
+import ReviewTypes from "@/components/ReviewTypes";
 
 export default {
   name: "Home",
@@ -94,6 +96,7 @@ export default {
   },
   components: {
     "svg-img": SvgImg,
+    "review-types": ReviewTypes
   },
 };
 </script>

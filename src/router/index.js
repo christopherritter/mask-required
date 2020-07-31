@@ -126,6 +126,15 @@ const routes = [
       title: "Social Login Experiment",
     },
   },
+  {
+    path: "/view-types",
+    name: "view-types",
+    component: () =>
+      import(/* webpackChunkName: "view-types" */ "../views/ViewTypes.vue"),
+    meta: {
+      title: "View Types Experiment",
+    },
+  },
 ];
 
 const router = new VueRouter({
