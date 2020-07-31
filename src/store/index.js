@@ -475,7 +475,6 @@ const store = new Vuex.Store({
       const currentUser = await firebase.auth().currentUser;
 
       if (currentUser) {
-        console.log("Current user found:");
         // commit("setUser", currentUser);
 
         const userProfile = await fb.usersCollection.doc(currentUser.uid).get();
@@ -671,22 +670,39 @@ const store = new Vuex.Store({
 
         if (review.place.types) {
           for (let t = 0; t < review.place.types.length; t++) {
+            let name = replaceUnderscore(review.place.types[t]);
             let type = {
-              name: review.place.types[t],
-              counter: 0,
+              name: name,
+              counter: 1,
             };
-            
+            if (name == "Establishment" || name == "Point of Interest") {
+              return
+            }
             let result = containsType(type, typesArray);
             if (!result) {
               typesArray.push(type);
             } else {
-              typesArray.filter(obj => {
-                obj.counter++;
-              })
+              typesArray.filter((obj) => {
+                if (obj.name == type.name) {
+                  obj.counter++;
+                }
+              });
             }
           }
         }
       });
+
+      // sort array by counter then name
+
+      typesArray.sort((a, b) =>
+        a.counter > b.counter
+          ? -1
+          : a.counter === b.counter
+          ? a.name > b.name
+            ? 1
+            : -1
+          : 1
+      );
 
       store.commit("setTypes", typesArray);
 
@@ -697,8 +713,19 @@ const store = new Vuex.Store({
             return true;
           }
         }
-        
+
         return false;
+      }
+
+      function replaceUnderscore(val) {
+        var i,
+          frags = val.split("_");
+        for (i = 0; i < frags.length; i++) {
+          if (frags[i] != "of" && frags[i] != "or") {
+            frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+          }
+        }
+        return frags.join(" ");
       }
     },
     async updateProfile({ dispatch }, user) {
@@ -721,7 +748,6 @@ const store = new Vuex.Store({
         });
       });
     },
-    
   },
 });
 
