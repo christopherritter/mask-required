@@ -55,12 +55,14 @@
                     <v-card-title class="pa-3">{{ place.name }}</v-card-title>
                     <v-card-text class="pa-3">{{ place.vicinity }}</v-card-text>
                     <v-card-text class="pa-3">
-                      <v-chip-group
+                      <v-chip-group show-arrows
                         active-class="deep-purple--text text--accent-4"
                       >
-                        <v-chip v-for="type in place.types" :key="type.index">{{
-                          type
-                        }}</v-chip>
+                        <v-chip
+                          v-for="type in filteredTypes(place.types)"
+                          :key="type.index"
+                          >{{ type | replaceUnderscore }}</v-chip
+                        >
                       </v-chip-group>
                     </v-card-text>
                   </v-row>
@@ -90,6 +92,104 @@ export default {
       lng: -84.23327,
       type: this.formattedType(),
       places: [],
+      validTypes: [
+        "accounting",
+        "airport",
+        "amusement_park",
+        "aquarium",
+        "art_gallery",
+        "atm",
+        "bakery",
+        "bank",
+        "bar",
+        "beauty_salon",
+        "bicycle_store",
+        "book_store",
+        "bowling_alley",
+        "bus_station",
+        "cafe",
+        "campground",
+        "car_dealer",
+        "car_rental",
+        "car_repair",
+        "car_wash",
+        "casino",
+        "cemetery",
+        "church",
+        "city_hall",
+        "clothing_store",
+        "convenience_store",
+        "courthouse",
+        "dentist",
+        "department_store",
+        "doctor",
+        "drugstore",
+        "electrician",
+        "electronics_store",
+        "embassy",
+        "fire_station",
+        "florist",
+        "funeral_home",
+        "furniture_store",
+        "gas_station",
+        "gym",
+        "hair_care",
+        "hardware_store",
+        "hindu_temple",
+        "home_goods_store",
+        "hospital",
+        "insurance_agency",
+        "jewelry_store",
+        "laundry",
+        "lawyer",
+        "library",
+        "light_rail_station",
+        "liquor_store",
+        "local_government_office",
+        "locksmith",
+        "lodging",
+        "meal_delivery",
+        "meal_takeaway",
+        "mosque",
+        "movie_rental",
+        "movie_theater",
+        "moving_company",
+        "museum",
+        "night_club",
+        "painter",
+        "park",
+        "parking",
+        "pet_store",
+        "pharmacy",
+        "physiotherapist",
+        "plumber",
+        "police",
+        "post_office",
+        "primary_school",
+        "real_estate_agency",
+        "restaurant",
+        "roofing_contractor",
+        "rv_park",
+        "school",
+        "secondary_school",
+        "shoe_store",
+        "shopping_mall",
+        "spa",
+        "stadium",
+        "storage",
+        "store",
+        "subway_station",
+        "supermarket",
+        "synagogue",
+        "taxi_stand",
+        "tourist_attraction",
+        "train_station",
+        "transit_station",
+        "travel_agency",
+        "university",
+        "veterinary_care",
+        "zoo",
+      ]
     };
   },
   created() {
@@ -115,6 +215,17 @@ export default {
       var type = this.$route.params.name.toLowerCase();
       type = type.replace(" ", "_");
       return type;
+    },
+    filteredTypes(types) {
+      let filteredTypes = []
+
+      for (let t = 0; t < types.length; t++) {
+        if (this.validTypes.includes(types[t])) {
+          filteredTypes.push(types[t])
+        }
+      }
+
+      return filteredTypes;
     },
   },
   filters: {
