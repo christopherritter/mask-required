@@ -14,11 +14,19 @@
             <v-container class="pa-0">
               <v-row no-gutters style="flex-wrap: nowrap;">
                 <v-col
+                  @click="selectPlace(place)"
                   cols="1"
-                  style="min-width: 200px;"
-                  class="flex-grow-0 flex-shrink-0 mr-4"
+                  style="min-width: 125px; cursor: pointer"
+                  class="grey lighten-3 flex-grow-0 flex-shrink-0 mr-5"
                 >
-                  <v-card
+                  <v-img
+                    :src="place.icon"
+                    class="rounded-l d-flex justify-center"
+                    style="margin: 55px auto;"
+                    height="50"
+                    width="50"
+                  ></v-img>
+                  <!-- <v-card
                     color="grey lighten-3"
                     class="rounded-l d-flex justify-center"
                     flat
@@ -28,7 +36,7 @@
                     <v-icon size="70" color="grey lighten-1"
                       >mdi-image-off-outline</v-icon
                     >
-                  </v-card>
+                  </v-card> -->
                 </v-col>
                 <v-col
                   cols="1"
@@ -43,7 +51,7 @@
                         show-arrows
                         v-model="type"
                         mandatory
-                        active-class="blue--text darken-4 text--accent-4"
+                        active-class="light-blue--text darken-2 text--accent-4"
                       >
                         <v-chip
                           v-for="type in filteredTypes(place.types)"
@@ -202,9 +210,14 @@ export default {
   watch: {
     $route(to, from) {
       this.findNearbyPlaces();
-    }
+      this.type = this.formattedType();
+    },
   },
   methods: {
+    selectPlace(place) {
+      this.$store.dispatch("selectPlace", place);
+      this.$router.push({ name: "place" });
+    },
     findNearbyPlaces() {
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.lat},${this.lng}&type=${this.type}&radius=4800&key=${this.apiKey}`;
 
