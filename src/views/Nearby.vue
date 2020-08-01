@@ -55,12 +55,12 @@
                     <v-card-title class="pa-3">{{ place.name }}</v-card-title>
                     <v-card-text class="pa-3">{{ place.vicinity }}</v-card-text>
                     <v-card-text class="pa-3">
-                      <v-chip-group show-arrows
-                        active-class="deep-purple--text text--accent-4"
+                      <v-chip-group show-arrows v-model="type" mandatory
+                        active-class="blue--text darken-4 text--accent-4"
                       >
-                        <v-chip
+                        <v-chip 
                           v-for="type in filteredTypes(place.types)"
-                          :key="type.index"
+                          :key="type.index" :value="type"
                           >{{ type | replaceUnderscore }}</v-chip
                         >
                       </v-chip-group>
@@ -189,7 +189,8 @@ export default {
         "university",
         "veterinary_care",
         "zoo",
-      ]
+      ],
+      selected: "restaurant"
     };
   },
   created() {
