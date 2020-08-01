@@ -670,13 +670,54 @@ const store = new Vuex.Store({
 
         if (review.place.types) {
           for (let t = 0; t < review.place.types.length; t++) {
-            let name = replaceUnderscore(review.place.types[t]);
+            let name = review.place.types[t];
             let type = {
               name: name,
               counter: 1,
             };
-            if (name == "Establishment" || name == "Point of Interest") {
-              return
+            if (
+              name == "administrative_area_level_1" ||
+              name == "administrative_area_level_2" ||
+              name == "administrative_area_level_3" ||
+              name == "administrative_area_level_4" ||
+              name == "administrative_area_level_5" ||
+              name == "archipelago" ||
+              name == "colloquial_area" ||
+              name == "continent" ||
+              name == "country" ||
+              name == "establishment" ||
+              name == "finance" ||
+              name == "floor" ||
+              name == "food" ||
+              name == "general_contractor" ||
+              name == "geocode" ||
+              name == "health" ||
+              name == "intersection" ||
+              name == "locality" ||
+              name == "natural_feature" ||
+              name == "place_of_worship" ||
+              name == "plus_code" ||
+              name == "point_of_interest" ||
+              name == "political" ||
+              name == "post_box" ||
+              name == "postal_code" ||
+              name == "postal_code_prefix" ||
+              name == "postal_code_suffix" ||
+              name == "postal_town" ||
+              name == "premise" ||
+              name == "room" ||
+              name == "route" ||
+              name == "street_address" ||
+              name == "sublocality" ||
+              name == "sublocality_level_1" ||
+              name == "sublocality_level_2" ||
+              name == "sublocality_level_3" ||
+              name == "sublocality_level_4" ||
+              name == "sublocality_level_5" ||
+              name == "subpremise" ||
+              name == "town_square"
+            ) {
+              return;
             }
             let result = containsType(type, typesArray);
             if (!result) {
@@ -715,17 +756,6 @@ const store = new Vuex.Store({
         }
 
         return false;
-      }
-
-      function replaceUnderscore(val) {
-        var i,
-          frags = val.split("_");
-        for (i = 0; i < frags.length; i++) {
-          if (frags[i] != "of" && frags[i] != "or") {
-            frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
-          }
-        }
-        return frags.join(" ");
       }
     },
     async updateProfile({ dispatch }, user) {

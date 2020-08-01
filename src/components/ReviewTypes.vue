@@ -20,7 +20,7 @@
           :class="{
             'white--text': highlightedCard == index,
           }"
-          >{{ type.name }}</v-card-text
+          >{{ type.name | replaceUnderscore }}</v-card-text
         >
       </v-card>
     </v-col>
@@ -62,6 +62,18 @@ export default {
       this.thirdColor = "";
     },
   },
+  filters: {
+    replaceUnderscore(val) {
+      var i,
+        frags = val.split("_");
+      for (i = 0; i < frags.length; i++) {
+        if (frags[i] != "of" && frags[i] != "or") {
+          frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+        }
+      }
+      return frags.join(" ");
+    },
+  }
 };
 </script>
 
