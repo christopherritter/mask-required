@@ -17,22 +17,6 @@
                   cols="1"
                   style="min-width: 200px;"
                   class="flex-grow-0 flex-shrink-0 mr-4"
-                  v-if="place.photos"
-                >
-                  <v-img
-                    height="200"
-                    width="200"
-                    class="rounded-l"
-                    :src="
-                      `https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${place.photos[0].photo_reference}&key=${apiKey}`
-                    "
-                  ></v-img>
-                </v-col>
-                <v-col
-                  v-else
-                  cols="1"
-                  style="min-width: 200px;"
-                  class="flex-grow-0 flex-shrink-0 mr-4"
                 >
                   <v-card
                     color="grey lighten-3"
@@ -55,12 +39,17 @@
                     <v-card-title class="pa-3">{{ place.name }}</v-card-title>
                     <v-card-text class="pa-3">{{ place.vicinity }}</v-card-text>
                     <v-card-text class="pa-3">
-                      <v-chip-group show-arrows v-model="type" mandatory
+                      <v-chip-group
+                        show-arrows
+                        v-model="type"
+                        mandatory
                         active-class="blue--text darken-4 text--accent-4"
                       >
-                        <v-chip 
+                        <v-chip
                           v-for="type in filteredTypes(place.types)"
-                          :key="type.index" :value="type"
+                          :key="type.index"
+                          :value="type"
+                          @click="$router.push(type)"
                           >{{ type | replaceUnderscore }}</v-chip
                         >
                       </v-chip-group>
@@ -190,7 +179,18 @@ export default {
         "veterinary_care",
         "zoo",
       ],
-      selected: "restaurant"
+      selected: "",
+      fields: [
+        "business_status",
+        "formatted_address",
+        "geometry",
+        "icon",
+        "name",
+        "photos",
+        "place_id",
+        "plus_code",
+        "types",
+      ],
     };
   },
   created() {
@@ -198,6 +198,11 @@ export default {
   },
   computed: {
     ...mapState([["reviews"]]),
+  },
+  watch: {
+    $route(to, from) {
+      this.findNearbyPlaces();
+    }
   },
   methods: {
     findNearbyPlaces() {
@@ -218,11 +223,11 @@ export default {
       return type;
     },
     filteredTypes(types) {
-      let filteredTypes = []
+      let filteredTypes = [];
 
       for (let t = 0; t < types.length; t++) {
         if (this.validTypes.includes(types[t])) {
-          filteredTypes.push(types[t])
+          filteredTypes.push(types[t]);
         }
       }
 
