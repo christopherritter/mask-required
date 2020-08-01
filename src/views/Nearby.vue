@@ -12,8 +12,13 @@
         <v-col>
           <v-card>
             <v-container class="pa-0">
-              <v-row>
-                <v-col cols="auto" v-if="place.photos" class="py-0">
+              <v-row no-gutters style="flex-wrap: nowrap;">
+                <v-col
+                  cols="1"
+                  style="min-width: 200px;"
+                  class="flex-grow-0 flex-shrink-0 mr-4"
+                  v-if="place.photos"
+                >
                   <v-img
                     height="200"
                     width="200"
@@ -23,14 +28,41 @@
                     "
                   ></v-img>
                 </v-col>
-                <v-col v-else class="py-0" cols="auto">
-                  <v-card color="grey lighten-3" class="rounded-l d-flex justify-center" flat height="200" width="200">
-                    <v-icon size="70" color="grey lighten-1">mdi-image-off-outline</v-icon>
+                <v-col
+                  v-else
+                  cols="1"
+                  style="min-width: 200px;"
+                  class="flex-grow-0 flex-shrink-0 mr-4"
+                >
+                  <v-card
+                    color="grey lighten-3"
+                    class="rounded-l d-flex justify-center"
+                    flat
+                    height="200"
+                    width="200"
+                  >
+                    <v-icon size="70" color="grey lighten-1"
+                      >mdi-image-off-outline</v-icon
+                    >
                   </v-card>
                 </v-col>
-                <v-col>
+                <v-col
+                  cols="1"
+                  style="min-width: 100px; max-width: 100%;"
+                  class="flex-grow-1 flex-shrink-0"
+                >
                   <v-row>
-                    <v-card-title>{{ place.name }}</v-card-title>
+                    <v-card-title class="pa-3">{{ place.name }}</v-card-title>
+                    <v-card-text class="pa-3">{{ place.vicinity }}</v-card-text>
+                    <v-card-text class="pa-3">
+                      <v-chip-group
+                        active-class="deep-purple--text text--accent-4"
+                      >
+                        <v-chip v-for="type in place.types" :key="type.index">{{
+                          type
+                        }}</v-chip>
+                      </v-chip-group>
+                    </v-card-text>
                   </v-row>
                 </v-col>
               </v-row>

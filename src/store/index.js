@@ -655,7 +655,6 @@ const store = new Vuex.Store({
       fb.reviewsCollection.doc(review.id).delete();
     },
     async fetchTypes({ state }) {
-      // const citiesRef = db.collection("cities");
       const reviews = await fb.reviewsCollection.get();
       let typesArray = [];
 
