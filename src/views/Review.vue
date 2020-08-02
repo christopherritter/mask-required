@@ -152,18 +152,17 @@
               v-for="review in reviews"
               :key="'review-' + review.id"
               class="review"
-              @click="viewReview(review)"
             >
               <v-card-text
-                ><h6>{{ review.title }}</h6>
+                ><h4>{{ review.title }}</h4>
                 {{ review.createdOn | formatDate }}</v-card-text
               >
               <v-card-text>{{ review.content | trimLength }}</v-card-text>
-              <v-card-actions>
+              <!-- <v-card-actions>
                 <v-btn text @click="likeReview(review.id, review.likes)"
                   >likes {{ review.likes }}</v-btn
                 >
-              </v-card-actions>
+              </v-card-actions> -->
               <v-divider></v-divider>
             </div>
           </v-card>
