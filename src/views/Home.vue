@@ -1,7 +1,7 @@
 <template>
   <v-main class="mt-0">
     <v-container>
-      <review-types></review-types>
+      <!-- <review-types></review-types> -->
       <v-row>
         <v-col>
           <v-card class="p-4 jumbotron text-center" color="#c5f9da">
@@ -22,10 +22,6 @@
                     solo
                     prepend-inner-icon="mdi-magnify"
                     placeholder="Enter business name or category"
-                    :append-icon="
-                      target ? 'mdi-crosshairs-gps' : 'mdi-crosshairs'
-                    "
-                    @click:append="locatorButtonPressed"
                   ></v-text-field>
                 </div>
               </v-col>
@@ -40,7 +36,7 @@
 <script>
 import axios from "axios";
 import SvgImg from "@/components/Svg-img";
-import ReviewTypes from "@/components/ReviewTypes";
+// import ReviewTypes from "@/components/ReviewTypes";
 
 export default {
   name: "Home",
@@ -84,6 +80,7 @@ export default {
       }
     },
     getAddressFrom(lat, long) {
+      console.log("Getting address")
       axios
         .get(
           "https://cors-anywhere.herokuapp.com/" +
@@ -96,7 +93,7 @@ export default {
         .then((response) => {
           if (response.data.error_message) {
             this.error = response.data.error_message;
-            // console.log(response.data.error_message)
+            console.log(response.data.error_message)
           } else {
             this.address = response.data.results[0].formatted_address;
             console.log(response.data.results[0].formatted_address);
@@ -161,7 +158,7 @@ export default {
   },
   components: {
     "svg-img": SvgImg,
-    "review-types": ReviewTypes,
+    // "review-types": ReviewTypes,
   },
 };
 </script>
