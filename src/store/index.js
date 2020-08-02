@@ -522,20 +522,38 @@ const store = new Vuex.Store({
       router.push("/login");
     },
     async fetchPlace({ state, dispatch }, place) {
+      const snapshot = await fb.placesCollection.where('place_id', '==', place.place_id).get();
+    
+      if (snapshot.empty) {
+        // console.log('No matching documents.');
+        dispatch("createPlace", place);
+        return;
+      }
+
+      snapshot.forEach(doc => {
+        // console.log(doc.id, '=>', doc.data());
+        store.commit("setPlace", doc.data());
+        dispatch("fetchReviews");
+        router.push({ name: "place" });
+      });
+      
+    },
+    async createPlace({ state, dispatch }, place) {
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU`;
-
+      
       axios
-        .get(URL)
-        .then((response) => {
-          let newPlace = response.data.result;
-          store.commit("setPlace", newPlace);
-          dispatch("fetchReviews");
-          router.push({ name: "place" });
-        })
-        .catch((error) => {
-          this.error = error.message;
-        });
-
+      .get(URL)
+      .then((response) => {
+        let newPlace = response.data.result;
+        newPlace.createdOn = new Date();
+        fb.placesCollection.add(newPlace);
+        store.commit("setPlace", newPlace);
+        dispatch("fetchReviews");
+        router.push({ name: "place" });
+      })
+      .catch((error) => {
+        this.error = error.message;
+      });
     },
     async createReview({ state, commit }, review) {
       // create review in firebase

@@ -28,12 +28,12 @@
                 <v-chip medium color="white">{{
                   place.formatted_address
                 }}</v-chip>
-                <v-chip medium color="white">|</v-chip>
+                <!-- <v-chip medium color="white">|</v-chip>
                 <v-chip medium color="white">{{
                   place.formatted_phone_number
-                }}</v-chip>
-                <v-chip medium color="white">|</v-chip>
-                <v-chip medium color="white">{{ place.website }}</v-chip>
+                }}</v-chip> -->
+                <!-- <v-chip medium color="white">|</v-chip>
+                <v-chip medium color="white">{{ place.website }}</v-chip> -->
                 <!-- <v-chip v-if="place.isOpen" medium color="success">
                   Currently Open
                 </v-chip>
@@ -165,31 +165,25 @@
         </v-col>
         <v-col cols="12" sm="12" :md="columnWidth">
           <v-card>
-            <v-card-title>Location and contact</v-card-title>
+            <v-card-title>Location and address</v-card-title>
             <div id="map"></div>
             <v-list dense>
-              <v-list-item v-if="place.formatted_phone_number" two-line>
+              <v-list-item two-line v-if="place.formatted_address">
                 <v-list-item-content>
-                  <v-list-item-title>Phone</v-list-item-title>
+                  <v-list-item-title>Address</v-list-item-title>
                   <v-list-item-subtitle>{{
-                    place.formatted_phone_number
+                    place.formatted_address
                   }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-              <v-list-item v-if="place.website" two-line>
+              <v-list-item two-line v-if="place.plus_code">
                 <v-list-item-content>
-                  <v-list-item-title>Website</v-list-item-title>
+                  <v-list-item-title>Plus code</v-list-item-title>
                   <v-list-item-subtitle>{{
-                    place.website
+                    place.plus_code.compound_code
                   }}</v-list-item-subtitle>
                 </v-list-item-content>
               </v-list-item>
-              <!-- <v-list-item v-if="place.url" two-line>
-                <v-list-item-content>
-                  <v-list-item-title>Location</v-list-item-title>
-                  <v-list-item-subtitle>{{ place.url }}</v-list-item-subtitle>
-                </v-list-item-content>
-              </v-list-item> -->
             </v-list>
           </v-card>
         </v-col>
@@ -302,7 +296,10 @@ export default {
   mounted() {
     this.$store.state.showSearch = true;
     this.$store.dispatch("fetchReviews");
-    this.showLocation(this.place.geometry.location.lat, this.place.geometry.location.lng);
+    this.showLocation(
+      this.place.geometry.location.lat,
+      this.place.geometry.location.lng
+    );
     if (this.place.isOpen) {
       this.showDetails = true;
     }
@@ -314,7 +311,10 @@ export default {
   },
   watch: {
     place(newValue, oldValue) {
-      this.showLocation(this.place.geometry.location.lat, this.place.geometry.location.lng);
+      this.showLocation(
+        this.place.geometry.location.lat,
+        this.place.geometry.location.lng
+      );
 
       if (!newValue.open_hours) {
         this.showDetails = false;
