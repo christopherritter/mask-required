@@ -19,6 +19,7 @@ const store = new Vuex.Store({
       nickname: "",
     },
     place: {},
+    places: [],
     rating: 0,
     reviews: [],
     types: [],
@@ -346,6 +347,9 @@ const store = new Vuex.Store({
     setPlace(state, val) {
       state.place = val;
     },
+    setPlaces(state, val) {
+      state.places = val;
+    },
     setReviews(state, val) {
       state.reviews = val;
     },
@@ -523,44 +527,45 @@ const store = new Vuex.Store({
       router.push("/login");
     },
     async fetchPlace({ state, dispatch }, place) {
-      const snapshot = await fb.placesCollection.where('place_id', '==', place.place_id).get();
-    
+      const snapshot = await fb.placesCollection
+        .where("place_id", "==", place.place_id)
+        .get();
+
       if (snapshot.empty) {
         // console.log('No matching documents.');
         dispatch("createPlace", place);
         return;
       }
 
-      snapshot.forEach(doc => {
+      snapshot.forEach((doc) => {
         // console.log(doc.id, '=>', doc.data());
         store.commit("setPlace", doc.data());
         dispatch("fetchReviews");
         router.push({ name: "place" });
       });
-      
     },
     async createPlace({ state, dispatch }, place) {
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU`;
-      
+
       axios
-      .get(URL)
-      .then((response) => {
-        let newPlace = response.data.result;
-        let latitude = newPlace.geometry.location.lat;
-        let longitude = newPlace.geometry.location.lng;
-        let newGeohash = geohash.encode(latitude, longitude);
+        .get(URL)
+        .then((response) => {
+          let newPlace = response.data.result;
+          let latitude = newPlace.geometry.location.lat;
+          let longitude = newPlace.geometry.location.lng;
+          let newGeohash = geohash.encode(latitude, longitude);
 
-        newPlace.createdOn = new Date();
-        newPlace.geohash = newGeohash;
+          newPlace.createdOn = new Date();
+          newPlace.geohash = newGeohash;
 
-        fb.placesCollection.add(newPlace);
-        store.commit("setPlace", newPlace);
-        dispatch("fetchReviews");
-        router.push({ name: "place" });
-      })
-      .catch((error) => {
-        this.error = error.message;
-      });
+          fb.placesCollection.add(newPlace);
+          store.commit("setPlace", newPlace);
+          dispatch("fetchReviews");
+          router.push({ name: "place" });
+        })
+        .catch((error) => {
+          this.error = error.message;
+        });
     },
     async createReview({ state, commit }, review) {
       // create review in firebase
@@ -789,6 +794,65 @@ const store = new Vuex.Store({
         fb.reviewsCollection.doc(doc.id).update({
           userName: user.name,
         });
+      });
+    },
+    async findNearbyPlaces({ state }) {
+      const nearbyPlaces = [];
+      const getGeohashRange = (
+        latitude,
+        longitude,
+        distance // miles
+      ) => {
+        const lat = 0.0144927536231884; // degrees latitude per mile
+        const lon = 0.0181818181818182; // degrees longitude per mile
+
+        const lowerLat = latitude - lat * distance;
+        const lowerLon = longitude - lon * distance;
+
+        const upperLat = latitude + lat * distance;
+        const upperLon = longitude + lon * distance;
+
+        const lower = geohash.encode(lowerLat, lowerLon);
+        const upper = geohash.encode(upperLat, upperLon);
+
+        return {
+          lower,
+          upper,
+        };
+      };
+
+      // Retrieve the current coordinates using the navigator API
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        const range = getGeohashRange(latitude, longitude, 10);
+        fb.placesFirestore
+          .where("geohash", ">=", range.lower)
+          .where("geohash", "<=", range.upper)
+          .onSnapshot((snapshot) => {
+            if (snapshot.empty) {
+              console.log("No matching documents.");
+              return;
+            }
+
+            snapshot.forEach((doc) => {
+              if (
+                nearbyPlaces.filter((e) => e.place_id === doc.place_id).length >
+                0
+              ) {
+                return;
+              }
+
+              // console.log(doc.id, '=>', doc.data());
+              nearbyPlaces.push(doc.data());
+            });
+          });
+
+        // NEARBY PLACES IS EMPTY!!!
+        console.log("Nearby places found:" + nearbyPlaces);
+        if (nearbyPlaces.length > 0) {
+          store.commit("setPlaces", nearbyPlaces);
+        }
+
       });
     },
   },

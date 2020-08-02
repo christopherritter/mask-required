@@ -45,7 +45,9 @@
                 >
                   <v-row>
                     <v-card-title class="pa-3">{{ place.name }}</v-card-title>
-                    <v-card-text class="pa-3">{{ place.formatted_address }}</v-card-text>
+                    <v-card-text class="pa-3">{{
+                      place.formatted_address
+                    }}</v-card-text>
                     <v-card-text class="pa-3">
                       <v-chip-group
                         show-arrows
@@ -85,11 +87,9 @@ export default {
       address: "",
       error: "",
       spinner: false,
-      apiKey: "AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU",
       lat: 39.55228,
       lng: -84.23327,
       type: "",
-      places: [],
       validTypes: [
         "accounting",
         "airport",
@@ -194,52 +194,9 @@ export default {
   created() {
     this.type = this.$route.params.name;
     this.findNearbyPlaces();
-
-    const getGeohashRange = (
-      latitude,
-      longitude,
-      distance // miles
-    ) => {
-      const lat = 0.0144927536231884; // degrees latitude per mile
-      const lon = 0.0181818181818182; // degrees longitude per mile
-
-      const lowerLat = latitude - lat * distance;
-      const lowerLon = longitude - lon * distance;
-
-      const upperLat = latitude + lat * distance;
-      const upperLon = longitude + lon * distance;
-
-      const lower = geohash.encode(lowerLat, lowerLon);
-      const upper = geohash.encode(upperLat, upperLon);
-
-      return {
-        lower,
-        upper,
-      };
-    };
-
-    // Retrieve the current coordinates using the navigator API
-    navigator.geolocation.getCurrentPosition((position) => {
-      const { latitude, longitude } = position.coords;
-      const range = getGeohashRange(this.lat, this.lng, 1);
-      fb.placesFirestore
-        .where("geohash", ">=", range.lower)
-        .where("geohash", "<=", range.upper)
-        .onSnapshot((snapshot) => {
-          if (snapshot.empty) {
-            console.log('No matching documents.');
-            return;
-          }
-
-          snapshot.forEach((doc) => {
-            // console.log(doc.id, '=>', doc.data());
-            this.places.push(doc.data());
-          });
-        });
-    });
   },
   computed: {
-    ...mapState([["reviews"]]),
+    ...mapState([["places"], ["reviews"]]),
   },
   watch: {
     $route(to, from) {
@@ -255,8 +212,8 @@ export default {
       this.$store.dispatch("fetchPlace", place);
       // this.$router.push({ name: "place" });
     },
-    findNearbyPlaces() {
-
+    findNearbyPlaces(location) {
+      this.$store.dispatch("findNearbyPlaces")      
     },
     filteredTypes(types) {
       let filteredTypes = [];
