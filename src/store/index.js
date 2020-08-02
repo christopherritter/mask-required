@@ -544,14 +544,12 @@ const store = new Vuex.Store({
         newPlace.location.lat = place.geometry.location.lng();
       }
 
-      if (place.opening_hours) {
-        if (place.opening_hours.open_now) {
-          newPlace.isOpen = place.opening_hours.open_now;
-        } else {
-          newPlace.isOpen = place.opening_hours.isOpen();
-        }
-        newPlace.open_hours = place.opening_hours.weekday_text;
-      }
+      // if (place.opening_hours) {
+      //   if (place.opening_hours.isOpen()) {
+      //     newPlace.isOpen = place.opening_hours.isOpen();
+      //   } 
+      //   newPlace.open_hours = place.opening_hours.weekday_text;
+      // }
 
       store.commit("setPlace", newPlace);
       dispatch("fetchReviews");

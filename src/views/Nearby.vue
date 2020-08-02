@@ -57,7 +57,7 @@
                           v-for="type in filteredTypes(place.types)"
                           :key="type.index"
                           :value="type"
-                          @click="$router.push(type)"
+                          @click="selectType(type)"
                           >{{ type | replaceUnderscore }}</v-chip
                         >
                       </v-chip-group>
@@ -214,9 +214,8 @@ export default {
     },
   },
   methods: {
-    selectPlace(place) {
-      this.$store.dispatch("selectPlace", place);
-      this.$router.push({ name: "place" });
+    selectType(type) {
+      this.$router.push(type)
     },
     findNearbyPlaces() {
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.lat},${this.lng}&type=${this.type}&radius=4800&key=${this.apiKey}`;
