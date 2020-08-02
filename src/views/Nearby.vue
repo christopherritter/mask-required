@@ -212,16 +212,16 @@ export default {
       // this.$router.push({ name: "place" });
     },
     findNearbyPlaces() {
-      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.lat},${this.lng}&type=${this.type}&radius=4800&key=${this.apiKey}`;
+      // const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.lat},${this.lng}&type=${this.type}&radius=4800&key=${this.apiKey}`;
 
-      axios
-        .get(URL)
-        .then((response) => {
-          this.places = response.data.results;
-        })
-        .catch((error) => {
-          this.error = error.message;
-        });
+      // axios
+      //   .get(URL)
+      //   .then((response) => {
+      //     this.places = response.data.results;
+      //   })
+      //   .catch((error) => {
+      //     this.error = error.message;
+      //   });
     },
     filteredTypes(types) {
       let filteredTypes = [];

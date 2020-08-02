@@ -31,6 +31,7 @@
 import { mapState } from "vuex";
 
 export default {
+  name: "place-types",
   data() {
     return {
       isLoadingTypes: false,
@@ -51,16 +52,6 @@ export default {
   },
   created: function() {
     this.$store.dispatch("fetchTypes");
-  },
-  methods: {
-    mouseIn(e) {
-      this.hover = true;
-      this.thirdColor = e.target.classList[3];
-    },
-    mouseOut() {
-      this.hover = false;
-      this.thirdColor = "";
-    },
   },
   filters: {
     replaceUnderscore(val) {
