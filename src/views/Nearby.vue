@@ -87,7 +87,7 @@ export default {
       apiKey: "AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU",
       lat: 39.55228,
       lng: -84.23327,
-      type: this.formattedType(),
+      type: "",
       places: [],
       validTypes: [
         "accounting",
@@ -202,6 +202,7 @@ export default {
     };
   },
   created() {
+    this.type = this.$route.params.name;
     this.findNearbyPlaces();
   },
   computed: {
@@ -209,8 +210,8 @@ export default {
   },
   watch: {
     $route(to, from) {
-      this.findNearbyPlaces();
       this.type = this.$route.params.name;
+      this.findNearbyPlaces();
     },
   },
   methods: {
