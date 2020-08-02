@@ -76,15 +76,15 @@ export default {
       let place = autocomplete.getPlace();
       this.selectPlace(place);
 
-      if (place.business_status) {
-        if (this.$router.currentRoute.name != "place") {
-          this.$router.push("place");
-        }
-      } else {
-        if (this.$router.currentRoute.name != "search") {
-          this.$router.push("search");
-        }
-      }
+      // if (place.business_status) {
+      //   if (this.$router.currentRoute.name != "place") {
+      //     this.$router.push("place");
+      //   }
+      // } else {
+      //   if (this.$router.currentRoute.name != "search") {
+      //     this.$router.push("search");
+      //   }
+      // }
 
       // this.showUserLocationOnTheMap(
       //   place.geometry.location.lat(),

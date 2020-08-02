@@ -6,6 +6,7 @@ import router from "../router/index";
 import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 import { getField, updateField } from "vuex-map-fields";
+import axios from "axios";
 
 Vue.use(Vuex);
 
@@ -327,6 +328,8 @@ const store = new Vuex.Store({
       minLength: (value) => value.length >= 100 || "Min 100 characters",
     },
     errorMessage: "",
+    fields: "business_status,formatted_address,geometry,icon,name,photos,place_id,plus_code,types",
+    apiKey: "",
   },
   getters: {
     getField,
@@ -519,27 +522,41 @@ const store = new Vuex.Store({
       router.push("/login");
     },
     async selectPlace({ state, dispatch }, place) {
-      // console.log(place);
-      let newPlace = {
-        formatted_address: place.formatted_address,
-        formatted_phone_number: place.formatted_phone_number || "",
-        location: {},
-        name: place.name,
-        place_id: place.place_id,
-        types: place.types || [],
-        url: place.url,
-        vicinity: place.vicinity,
-        website: place.website || "",
-        rating: 0,
-      };
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&key=AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU`;
 
-      if (place.geometry.location.lat) {
-        newPlace.location.lat = place.geometry.location.lat;
-        newPlace.location.lng = place.geometry.location.lng;
-      } else {
-        newPlace.location.lat = place.geometry.location.lat();
-        newPlace.location.lng = place.geometry.location.lng();
-      }
+      axios
+        .get(URL)
+        .then((response) => {
+          let newPlace = response.data.result;
+          store.commit("setPlace", newPlace);
+          dispatch("fetchReviews");
+          router.push({ name: "place" });
+        })
+        .catch((error) => {
+          this.error = error.message;
+        });
+
+      // console.log(place);
+      // let newPlace = {
+      //   formatted_address: place.formatted_address,
+      //   formatted_phone_number: place.formatted_phone_number || "",
+      //   location: {},
+      //   name: place.name,
+      //   place_id: place.place_id,
+      //   types: place.types || [],
+      //   url: place.url,
+      //   vicinity: place.vicinity,
+      //   website: place.website || "",
+      //   rating: 0,
+      // };
+
+      // if (place.geometry.location.lat) {
+      //   newPlace.location.lat = place.geometry.location.lat;
+      //   newPlace.location.lng = place.geometry.location.lng;
+      // } else {
+      //   newPlace.location.lat = place.geometry.location.lat();
+      //   newPlace.location.lng = place.geometry.location.lng();
+      // }
 
       // if (place.opening_hours) {
       //   if (place.opening_hours.isOpen()) {
@@ -548,8 +565,6 @@ const store = new Vuex.Store({
       //   newPlace.open_hours = place.opening_hours.weekday_text;
       // }
 
-      store.commit("setPlace", newPlace);
-      dispatch("fetchReviews");
     },
     async createReview({ state, commit }, review) {
       // create review in firebase

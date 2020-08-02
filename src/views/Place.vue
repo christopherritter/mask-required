@@ -302,7 +302,7 @@ export default {
   mounted() {
     this.$store.state.showSearch = true;
     this.$store.dispatch("fetchReviews");
-    this.showLocation(this.place.location.lat, this.place.location.lng);
+    this.showLocation(this.place.geometry.location.lat, this.place.geometry.location.lng);
     if (this.place.isOpen) {
       this.showDetails = true;
     }
@@ -314,7 +314,7 @@ export default {
   },
   watch: {
     place(newValue, oldValue) {
-      this.showLocation(this.place.location.lat, this.place.location.lng);
+      this.showLocation(this.place.geometry.location.lat, this.place.geometry.location.lng);
 
       if (!newValue.open_hours) {
         this.showDetails = false;

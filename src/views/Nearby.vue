@@ -188,17 +188,6 @@ export default {
         "zoo",
       ],
       selected: "",
-      fields: [
-        "business_status",
-        "formatted_address",
-        "geometry",
-        "icon",
-        "name",
-        "photos",
-        "place_id",
-        "plus_code",
-        "types",
-      ],
     };
   },
   created() {
@@ -220,7 +209,7 @@ export default {
     },
     viewPlace(place) {
       this.$store.dispatch("selectPlace", place);
-      this.$router.push({ name: "place" });
+      // this.$router.push({ name: "place" });
     },
     findNearbyPlaces() {
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.lat},${this.lng}&type=${this.type}&radius=4800&key=${this.apiKey}`;
