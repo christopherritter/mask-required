@@ -523,10 +523,7 @@ const store = new Vuex.Store({
       let newPlace = {
         formatted_address: place.formatted_address,
         formatted_phone_number: place.formatted_phone_number || "",
-        location: {
-          lat: null,
-          lng: null,
-        },
+        location: {},
         name: place.name,
         place_id: place.place_id,
         types: place.types || [],
@@ -536,13 +533,13 @@ const store = new Vuex.Store({
         rating: 0,
       };
 
-      // if (place.geometry.location.lat && place.geometry.location.lng) {
-      //   newPlace.location.lat = place.geometry.location.lat;
-      //   newPlace.location.lng = place.geometry.location.lng;
-      // } else {
-      //   newPlace.location.lat = place.geometry.location.lat();
-      //   newPlace.location.lng = place.geometry.location.lng();
-      // }
+      if (place.geometry.location.lat) {
+        newPlace.location.lat = place.geometry.location.lat;
+        newPlace.location.lng = place.geometry.location.lng;
+      } else {
+        newPlace.location.lat = place.geometry.location.lat();
+        newPlace.location.lng = place.geometry.location.lng();
+      }
 
       // if (place.opening_hours) {
       //   if (place.opening_hours.isOpen()) {
