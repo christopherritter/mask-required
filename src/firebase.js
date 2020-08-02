@@ -25,6 +25,8 @@ const likesCollection = db.collection("likes");
 const reviewsCollection = db.collection("reviews");
 const usersCollection = db.collection("users");
 
+const placesFirestore = firebase.firestore().collection('places');
+
 // export default
 export default firebase;
 
@@ -36,4 +38,5 @@ export {
   likesCollection,
   reviewsCollection,
   usersCollection,
+  placesFirestore
 };

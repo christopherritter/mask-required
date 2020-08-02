@@ -45,7 +45,7 @@
                 >
                   <v-row>
                     <v-card-title class="pa-3">{{ place.name }}</v-card-title>
-                    <v-card-text class="pa-3">{{ place.vicinity }}</v-card-text>
+                    <v-card-text class="pa-3">{{ place.formatted_address }}</v-card-text>
                     <v-card-text class="pa-3">
                       <v-chip-group
                         show-arrows
@@ -74,7 +74,8 @@
 </template>
 
 <script>
-import axios from "axios";
+import geohash from "ngeohash";
+import * as fb from "../firebase";
 import { mapState } from "vuex";
 
 export default {
@@ -193,6 +194,49 @@ export default {
   created() {
     this.type = this.$route.params.name;
     this.findNearbyPlaces();
+
+    const getGeohashRange = (
+      latitude,
+      longitude,
+      distance // miles
+    ) => {
+      const lat = 0.0144927536231884; // degrees latitude per mile
+      const lon = 0.0181818181818182; // degrees longitude per mile
+
+      const lowerLat = latitude - lat * distance;
+      const lowerLon = longitude - lon * distance;
+
+      const upperLat = latitude + lat * distance;
+      const upperLon = longitude + lon * distance;
+
+      const lower = geohash.encode(lowerLat, lowerLon);
+      const upper = geohash.encode(upperLat, upperLon);
+
+      return {
+        lower,
+        upper,
+      };
+    };
+
+    // Retrieve the current coordinates using the navigator API
+    navigator.geolocation.getCurrentPosition((position) => {
+      const { latitude, longitude } = position.coords;
+      const range = getGeohashRange(this.lat, this.lng, 1);
+      fb.placesFirestore
+        .where("geohash", ">=", range.lower)
+        .where("geohash", "<=", range.upper)
+        .onSnapshot((snapshot) => {
+          if (snapshot.empty) {
+            console.log('No matching documents.');
+            return;
+          }
+
+          snapshot.forEach((doc) => {
+            // console.log(doc.id, '=>', doc.data());
+            this.places.push(doc.data());
+          });
+        });
+    });
   },
   computed: {
     ...mapState([["reviews"]]),
@@ -212,16 +256,7 @@ export default {
       // this.$router.push({ name: "place" });
     },
     findNearbyPlaces() {
-      // const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.lat},${this.lng}&type=${this.type}&radius=4800&key=${this.apiKey}`;
 
-      // axios
-      //   .get(URL)
-      //   .then((response) => {
-      //     this.places = response.data.results;
-      //   })
-      //   .catch((error) => {
-      //     this.error = error.message;
-      //   });
     },
     filteredTypes(types) {
       let filteredTypes = [];

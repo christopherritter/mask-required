@@ -61,10 +61,6 @@ export default {
               position.coords.latitude,
               position.coords.longitude
             );
-            // this.showUserLocationOnTheMap(
-            //   position.coords.latitude,
-            //   position.coords.longitude
-            // );
           },
           (error) => {
             this.error = "Can't find your address. Please enter it manually.";

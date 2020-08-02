@@ -7,6 +7,7 @@ import * as firebaseui from "firebaseui";
 import "firebaseui/dist/firebaseui.css";
 import { getField, updateField } from "vuex-map-fields";
 import axios from "axios";
+import geohash from "ngeohash";
 
 Vue.use(Vuex);
 
@@ -545,7 +546,13 @@ const store = new Vuex.Store({
       .get(URL)
       .then((response) => {
         let newPlace = response.data.result;
+        let latitude = newPlace.geometry.location.lat;
+        let longitude = newPlace.geometry.location.lng;
+        let newGeohash = geohash.encode(latitude, longitude);
+
         newPlace.createdOn = new Date();
+        newPlace.geohash = newGeohash;
+
         fb.placesCollection.add(newPlace);
         store.commit("setPlace", newPlace);
         dispatch("fetchReviews");
