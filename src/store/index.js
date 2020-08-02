@@ -536,13 +536,13 @@ const store = new Vuex.Store({
         rating: 0,
       };
 
-      if (place.geometry.location.lat && place.geometry.location.lat) {
-        newPlace.location.lat = place.geometry.location.lat;
-        newPlace.location.lat = place.geometry.location.lng;
-      } else {
-        newPlace.location.lat = place.geometry.location.lat();
-        newPlace.location.lat = place.geometry.location.lng();
-      }
+      // if (place.geometry.location.lat && place.geometry.location.lng) {
+      //   newPlace.location.lat = place.geometry.location.lat;
+      //   newPlace.location.lng = place.geometry.location.lng;
+      // } else {
+      //   newPlace.location.lat = place.geometry.location.lat();
+      //   newPlace.location.lng = place.geometry.location.lng();
+      // }
 
       // if (place.opening_hours) {
       //   if (place.opening_hours.isOpen()) {

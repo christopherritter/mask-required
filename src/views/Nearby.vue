@@ -14,7 +14,7 @@
             <v-container class="pa-0">
               <v-row no-gutters style="flex-wrap: nowrap;">
                 <v-col
-                  @click="selectPlace(place)"
+                  @click="viewPlace(place)"
                   cols="1"
                   style="min-width: 125px; cursor: pointer"
                   class="grey lighten-3 flex-grow-0 flex-shrink-0 mr-5"
@@ -210,12 +210,16 @@ export default {
   watch: {
     $route(to, from) {
       this.findNearbyPlaces();
-      this.type = this.formattedType();
+      this.type = this.$route.params.name;
     },
   },
   methods: {
     selectType(type) {
-      this.$router.push(type)
+      this.$router.push(type);
+    },
+    viewPlace(place) {
+      this.$store.dispatch("selectPlace", place);
+      this.$router.push({ name: "place" });
     },
     findNearbyPlaces() {
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=${this.lat},${this.lng}&type=${this.type}&radius=4800&key=${this.apiKey}`;
@@ -228,11 +232,6 @@ export default {
         .catch((error) => {
           this.error = error.message;
         });
-    },
-    formattedType() {
-      var type = this.$route.params.name.toLowerCase();
-      type = type.replace(" ", "_");
-      return type;
     },
     filteredTypes(types) {
       let filteredTypes = [];
