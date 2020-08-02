@@ -22,6 +22,10 @@
                     solo
                     prepend-inner-icon="mdi-magnify"
                     placeholder="Enter business name or category"
+                    :append-icon="
+                      target ? 'mdi-crosshairs-gps' : 'mdi-crosshairs'
+                    "
+                    @click:append="locatorButtonPressed"
                   ></v-text-field>
                 </div>
               </v-col>
@@ -34,6 +38,7 @@
 </template>
 
 <script>
+import axios from "axios";
 import SvgImg from "@/components/Svg-img";
 import ReviewTypes from "@/components/ReviewTypes";
 
@@ -41,10 +46,70 @@ export default {
   name: "Home",
   data: () => ({
     address: null,
+    target: false,
+    spinner: false,
   }),
   methods: {
     selectPlace(place) {
       this.$store.dispatch("selectPlace", place);
+    },
+    locatorButtonPressed() {
+      this.spinner = true;
+      this.target = true;
+      console.log("Locator button pressed!")
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (position) => {
+            this.getAddressFrom(
+              position.coords.latitude,
+              position.coords.longitude
+            );
+            // this.showUserLocationOnTheMap(
+            //   position.coords.latitude,
+            //   position.coords.longitude
+            // );
+          },
+          (error) => {
+            this.error = "Can't find your address. Please enter it manually.";
+            this.spinner = false;
+            this.target = false;
+            console.log(error.message);
+          }
+        );
+      } else {
+        this.error = "Your browser does not support Geolocation API";
+        this.spinner = false;
+        this.target = false;
+      }
+    },
+    getAddressFrom(lat, long) {
+      axios
+        .get(
+          "https://cors-anywhere.herokuapp.com/" +
+            "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
+            lat +
+            "," +
+            long +
+            "&key=AIzaSyCHzVbXJqB_-tUwT2AeUGZ_-HRkvJOHjqI"
+        )
+        .then((response) => {
+          if (response.data.error_message) {
+            this.error = response.data.error_message;
+            // console.log(response.data.error_message)
+          } else {
+            this.address = response.data.results[0].formatted_address;
+            console.log(response.data.results[0].formatted_address);
+          }
+          this.spinner = false;
+          this.target = false;
+        })
+        .catch((error) => {
+          this.error = error.message;
+          this.spinner = false;
+          this.target = false;
+          // console.log(error.message);
+        });
     },
   },
   mounted() {
@@ -96,7 +161,7 @@ export default {
   },
   components: {
     "svg-img": SvgImg,
-    "review-types": ReviewTypes
+    "review-types": ReviewTypes,
   },
 };
 </script>
