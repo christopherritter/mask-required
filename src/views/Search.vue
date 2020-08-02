@@ -52,9 +52,9 @@ export default {
     address: null,
   }),
   methods: {
-    selectPlace(place) {
+    fetchPlace(place) {
       this.$set(this.place, "vicinity", place.vicinity);
-      this.$store.dispatch("selectPlace", place);
+      this.$store.dispatch("fetchPlace", place);
     },
   },
   mounted() {
@@ -84,7 +84,7 @@ export default {
 
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
-      this.selectPlace(place);
+      this.fetchPlace(place);
 
       // if (place.business_status) {
       //   if (this.$router.currentRoute.name != "place") {

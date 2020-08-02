@@ -208,7 +208,7 @@ export default {
       this.$router.push(type);
     },
     viewPlace(place) {
-      this.$store.dispatch("selectPlace", place);
+      this.$store.dispatch("fetchPlace", place);
       // this.$router.push({ name: "place" });
     },
     findNearbyPlaces() {

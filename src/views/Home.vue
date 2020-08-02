@@ -46,8 +46,8 @@ export default {
     spinner: false,
   }),
   methods: {
-    selectPlace(place) {
-      this.$store.dispatch("selectPlace", place);
+    fetchPlace(place) {
+      this.$store.dispatch("fetchPlace", place);
     },
     locatorButtonPressed() {
       this.spinner = true;
@@ -136,7 +136,7 @@ export default {
 
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
-      this.selectPlace(place);
+      this.fetchPlace(place);
 
       // if (place.business_status) {
       //   if (this.$router.currentRoute.name != "place") {

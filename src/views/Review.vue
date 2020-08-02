@@ -233,8 +233,8 @@ export default {
     ]),
   },
   methods: {
-    selectPlace(place) {
-      this.$store.dispatch("selectPlace", place);
+    fetchPlace(place) {
+      this.$store.dispatch("fetchPlace", place);
     },
     createReview() {
       this.$store.dispatch("createReview", {

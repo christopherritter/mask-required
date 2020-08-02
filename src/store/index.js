@@ -328,7 +328,7 @@ const store = new Vuex.Store({
       minLength: (value) => value.length >= 100 || "Min 100 characters",
     },
     errorMessage: "",
-    fields: "business_status,formatted_address,geometry,icon,name,photos,place_id,plus_code,types",
+    fields: "",
     apiKey: "",
   },
   getters: {
@@ -521,8 +521,8 @@ const store = new Vuex.Store({
       commit("setUserProfile", {});
       router.push("/login");
     },
-    async selectPlace({ state, dispatch }, place) {
-      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&key=AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU`;
+    async fetchPlace({ state, dispatch }, place) {
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU`;
 
       axios
         .get(URL)
@@ -535,35 +535,6 @@ const store = new Vuex.Store({
         .catch((error) => {
           this.error = error.message;
         });
-
-      // console.log(place);
-      // let newPlace = {
-      //   formatted_address: place.formatted_address,
-      //   formatted_phone_number: place.formatted_phone_number || "",
-      //   location: {},
-      //   name: place.name,
-      //   place_id: place.place_id,
-      //   types: place.types || [],
-      //   url: place.url,
-      //   vicinity: place.vicinity,
-      //   website: place.website || "",
-      //   rating: 0,
-      // };
-
-      // if (place.geometry.location.lat) {
-      //   newPlace.location.lat = place.geometry.location.lat;
-      //   newPlace.location.lng = place.geometry.location.lng;
-      // } else {
-      //   newPlace.location.lat = place.geometry.location.lat();
-      //   newPlace.location.lng = place.geometry.location.lng();
-      // }
-
-      // if (place.opening_hours) {
-      //   if (place.opening_hours.isOpen()) {
-      //     newPlace.isOpen = place.opening_hours.isOpen();
-      //   } 
-      //   newPlace.open_hours = place.opening_hours.weekday_text;
-      // }
 
     },
     async createReview({ state, commit }, review) {
