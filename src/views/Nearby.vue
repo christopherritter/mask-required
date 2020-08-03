@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col>
-          <h1>Nearby {{ $route.params.name | replaceUnderscore }}</h1>
+          <h1>{{ $route.params.name | replaceUnderscore }} Reviews</h1>
           <!-- <p>{{ $route.params.location }}</p>
           <p>{{ $route.params.type }}</p> -->
         </v-col>
@@ -51,16 +51,16 @@
                     <v-card-text class="pa-3">
                       <v-chip-group
                         show-arrows
-                        v-model="type"
                         mandatory
                         active-class="light-blue--text darken-2 text--accent-4"
+                        
                       >
                         <v-chip
-                          v-for="type in filteredTypes(place.types)"
-                          :key="type.index"
-                          :value="type"
-                          @click="selectType(type)"
-                          >{{ type | replaceUnderscore }}</v-chip
+                          v-for="(t, index) in place.types"
+                          :key="index"
+                          @click="selectType(t)"
+                          :value="t"
+                          >{{ t | replaceUnderscore }}</v-chip
                         >
                       </v-chip-group>
                     </v-card-text>
@@ -89,7 +89,6 @@ export default {
       spinner: false,
       lat: 39.55228,
       lng: -84.23327,
-      type: "",
       validTypes: [
         "accounting",
         "airport",
@@ -189,19 +188,24 @@ export default {
         "zoo",
       ],
       selected: "",
+      type: ""
     };
   },
   created() {
-    this.type = this.$route.params.name;
-    this.findNearbyPlaces();
+    let currentType = this.$route.params.name;
+    this.type = currentType;
+    this.findNearbyPlaces(currentType);
+    console.log("Created on Nearby");
+    console.log(this.type);
   },
   computed: {
     ...mapState([["places"], ["reviews"]]),
   },
   watch: {
     $route(to, from) {
-      this.type = this.$route.params.name;
-      this.findNearbyPlaces();
+      let currentType = this.$route.params.name;
+      this.type = currentType;
+      this.findNearbyPlaces(currentType);
     },
   },
   methods: {
@@ -212,19 +216,8 @@ export default {
       this.$store.dispatch("fetchPlace", place);
       // this.$router.push({ name: "place" });
     },
-    findNearbyPlaces(location) {
-      this.$store.dispatch("findNearbyPlaces")      
-    },
-    filteredTypes(types) {
-      let filteredTypes = [];
-
-      for (let t = 0; t < types.length; t++) {
-        if (this.validTypes.includes(types[t])) {
-          filteredTypes.push(types[t]);
-        }
-      }
-
-      return filteredTypes;
+    findNearbyPlaces(type) {
+      this.$store.dispatch("findNearbyPlaces", type);      
     },
   },
   filters: {
