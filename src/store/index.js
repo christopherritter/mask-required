@@ -797,8 +797,6 @@ const store = new Vuex.Store({
       });
     },
     async findNearbyPlaces({ state }, type) {
-      console.log("Created in Store");
-      console.log(type);
       const getGeohashRange = (
         latitude,
         longitude,
@@ -824,12 +822,14 @@ const store = new Vuex.Store({
 
       // Retrieve the current coordinates using the navigator API
       navigator.geolocation.getCurrentPosition((position) => {
-        const nearbyPlaces = [];
         const { latitude, longitude } = position.coords;
-        const range = getGeohashRange(latitude, longitude, 3);
+        const range = getGeohashRange(latitude, longitude, 20);
+        const nearbyPlaces = [];
+
         fb.placesFirestore
-          .where("geohash", ">=", range.lower)
-          .where("geohash", "<=", range.upper)
+          // .where("geohash", ">=", range.lower)
+          // .where("geohash", "<=", range.upper)
+          .where('types', 'array-contains-any', [type])
           .onSnapshot((snapshot) => {
             if (snapshot.empty) {
               console.log("No matching documents.");
@@ -838,29 +838,11 @@ const store = new Vuex.Store({
 
             snapshot.forEach((doc) => {
               let searchResult = doc.data();
-
-              // console.log(searchResult);
-
-              if (
-                nearbyPlaces.filter((e) => e.place_id === doc.place_id).length >
-                0
-              ) {
-                return;
-              }
-
               nearbyPlaces.push(searchResult);
             });
 
-            // console.log(nearbyPlaces);
-            if (nearbyPlaces.length > 0) {
-              store.commit("setPlaces", nearbyPlaces);
-            }
+            store.commit("setPlaces", nearbyPlaces);
           });
-
-        // console.log("Nearby places found:" + nearbyPlaces);
-        if (nearbyPlaces.length > 0) {
-          store.commit("setPlaces", nearbyPlaces);
-        }
       });
     },
   },

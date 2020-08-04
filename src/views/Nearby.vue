@@ -51,9 +51,8 @@
                     <v-card-text class="pa-3">
                       <v-chip-group
                         show-arrows
-                        mandatory
                         active-class="light-blue--text darken-2 text--accent-4"
-                        
+                        v-model="type"
                       >
                         <v-chip
                           v-for="(t, index) in place.types"
@@ -195,8 +194,6 @@ export default {
     let currentType = this.$route.params.name;
     this.type = currentType;
     this.findNearbyPlaces(currentType);
-    console.log("Created on Nearby");
-    console.log(this.type);
   },
   computed: {
     ...mapState([["places"], ["reviews"]]),
