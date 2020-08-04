@@ -332,6 +332,105 @@ const store = new Vuex.Store({
     errorMessage: "",
     fields: "",
     apiKey: "",
+    validTypes: [
+      "accounting",
+      "airport",
+      "amusement_park",
+      "aquarium",
+      "art_gallery",
+      "atm",
+      "bakery",
+      "bank",
+      "bar",
+      "beauty_salon",
+      "bicycle_store",
+      "book_store",
+      "bowling_alley",
+      "bus_station",
+      "cafe",
+      "campground",
+      "car_dealer",
+      "car_rental",
+      "car_repair",
+      "car_wash",
+      "casino",
+      "cemetery",
+      "church",
+      "city_hall",
+      "clothing_store",
+      "convenience_store",
+      "courthouse",
+      "dentist",
+      "department_store",
+      "doctor",
+      "drugstore",
+      "electrician",
+      "electronics_store",
+      "embassy",
+      "fire_station",
+      "florist",
+      "funeral_home",
+      "furniture_store",
+      "gas_station",
+      "gym",
+      "hair_care",
+      "hardware_store",
+      "hindu_temple",
+      "home_goods_store",
+      "hospital",
+      "insurance_agency",
+      "jewelry_store",
+      "laundry",
+      "lawyer",
+      "library",
+      "light_rail_station",
+      "liquor_store",
+      "local_government_office",
+      "locksmith",
+      "lodging",
+      "meal_delivery",
+      "meal_takeaway",
+      "mosque",
+      "movie_rental",
+      "movie_theater",
+      "moving_company",
+      "museum",
+      "night_club",
+      "painter",
+      "park",
+      "parking",
+      "pet_store",
+      "pharmacy",
+      "physiotherapist",
+      "plumber",
+      "police",
+      "post_office",
+      "primary_school",
+      "real_estate_agency",
+      "restaurant",
+      "roofing_contractor",
+      "rv_park",
+      "school",
+      "secondary_school",
+      "shoe_store",
+      "shopping_mall",
+      "spa",
+      "stadium",
+      "storage",
+      "store",
+      "subway_station",
+      "supermarket",
+      "synagogue",
+      "taxi_stand",
+      "tourist_attraction",
+      "train_station",
+      "transit_station",
+      "travel_agency",
+      "university",
+      "veterinary_care",
+      "zoo",
+    ],
+    geohashRange: 20
   },
   getters: {
     getField,
@@ -526,6 +625,46 @@ const store = new Vuex.Store({
       commit("setUserProfile", {});
       router.push("/login");
     },
+    async createPlace({ state, dispatch }, place) {
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU`;
+
+      axios
+        .get(URL)
+        .then((response) => {
+          let newPlace = response.data.result;
+          let latitude = newPlace.geometry.location.lat;
+          let longitude = newPlace.geometry.location.lng;
+          let newGeohash = geohash.encode(latitude, longitude);
+          let newTypes = [];
+
+          newPlace.createdOn = new Date();
+          newPlace.geohash = newGeohash;
+
+          // console.log("New place types array")
+          // console.log(newPlace.types)
+
+          for (let i = 0; i < newPlace.types.length; i++ ) {
+              // console.log("New type no. " + i)
+              // console.log(newPlace.types[i])
+              if (state.validTypes.includes(newPlace.types[i])) {
+                newTypes.push(newPlace.types[i]);
+              }
+              
+          }
+
+          // console.log("New types array.")
+          // console.log(newTypes)
+          newPlace.types = newTypes;
+
+          fb.placesCollection.add(newPlace);
+          store.commit("setPlace", newPlace);
+          dispatch("fetchReviews");
+          router.push({ name: "place" });
+        })
+        .catch((error) => {
+          this.error = error.message;
+        });
+    },
     async fetchPlace({ state, dispatch }, place) {
       const snapshot = await fb.placesCollection
         .where("place_id", "==", place.place_id)
@@ -544,28 +683,108 @@ const store = new Vuex.Store({
         router.push({ name: "place" });
       });
     },
-    async createPlace({ state, dispatch }, place) {
-      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU`;
+    async fetchTypes({ state }) {
+      const reviews = await fb.reviewsCollection.get();
+      let typesArray = [];
 
-      axios
-        .get(URL)
-        .then((response) => {
-          let newPlace = response.data.result;
-          let latitude = newPlace.geometry.location.lat;
-          let longitude = newPlace.geometry.location.lng;
-          let newGeohash = geohash.encode(latitude, longitude);
+      if (reviews.empty) {
+        console.log("No matching documents.");
+        return;
+      }
 
-          newPlace.createdOn = new Date();
-          newPlace.geohash = newGeohash;
+      reviews.forEach((doc) => {
+        let review = doc.data();
+        review.id = doc.id;
 
-          fb.placesCollection.add(newPlace);
-          store.commit("setPlace", newPlace);
-          dispatch("fetchReviews");
-          router.push({ name: "place" });
-        })
-        .catch((error) => {
-          this.error = error.message;
-        });
+        if (review.place.types) {
+          for (let t = 0; t < review.place.types.length; t++) {
+            let name = review.place.types[t];
+            let type = {
+              name: name,
+              counter: 1,
+            };
+            if (
+              name == "administrative_area_level_1" ||
+              name == "administrative_area_level_2" ||
+              name == "administrative_area_level_3" ||
+              name == "administrative_area_level_4" ||
+              name == "administrative_area_level_5" ||
+              name == "archipelago" ||
+              name == "colloquial_area" ||
+              name == "continent" ||
+              name == "country" ||
+              name == "establishment" ||
+              name == "finance" ||
+              name == "floor" ||
+              name == "food" ||
+              name == "general_contractor" ||
+              name == "geocode" ||
+              name == "health" ||
+              name == "intersection" ||
+              name == "locality" ||
+              name == "natural_feature" ||
+              name == "place_of_worship" ||
+              name == "plus_code" ||
+              name == "point_of_interest" ||
+              name == "political" ||
+              name == "post_box" ||
+              name == "postal_code" ||
+              name == "postal_code_prefix" ||
+              name == "postal_code_suffix" ||
+              name == "postal_town" ||
+              name == "premise" ||
+              name == "room" ||
+              name == "route" ||
+              name == "street_address" ||
+              name == "sublocality" ||
+              name == "sublocality_level_1" ||
+              name == "sublocality_level_2" ||
+              name == "sublocality_level_3" ||
+              name == "sublocality_level_4" ||
+              name == "sublocality_level_5" ||
+              name == "subpremise" ||
+              name == "town_square"
+            ) {
+              return;
+            }
+            let result = containsType(type, typesArray);
+            if (!result) {
+              typesArray.push(type);
+            } else {
+              typesArray.filter((obj) => {
+                if (obj.name == type.name) {
+                  obj.counter++;
+                }
+              });
+            }
+          }
+        }
+      });
+
+      // sort array by counter then name
+
+      typesArray.sort((a, b) =>
+        a.counter > b.counter
+          ? -1
+          : a.counter === b.counter
+          ? a.name > b.name
+            ? 1
+            : -1
+          : 1
+      );
+
+      store.commit("setTypes", typesArray);
+
+      function containsType(type, list) {
+        var i;
+        for (i = 0; i < list.length; i++) {
+          if (list[i].name == type.name) {
+            return true;
+          }
+        }
+
+        return false;
+      }
     },
     async createReview({ state, commit }, review) {
       // create review in firebase
@@ -673,109 +892,6 @@ const store = new Vuex.Store({
     async deleteReview({ commit }, review) {
       fb.reviewsCollection.doc(review.id).delete();
     },
-    async fetchTypes({ state }) {
-      const reviews = await fb.reviewsCollection.get();
-      let typesArray = [];
-
-      if (reviews.empty) {
-        console.log("No matching documents.");
-        return;
-      }
-
-      reviews.forEach((doc) => {
-        let review = doc.data();
-        review.id = doc.id;
-
-        if (review.place.types) {
-          for (let t = 0; t < review.place.types.length; t++) {
-            let name = review.place.types[t];
-            let type = {
-              name: name,
-              counter: 1,
-            };
-            if (
-              name == "administrative_area_level_1" ||
-              name == "administrative_area_level_2" ||
-              name == "administrative_area_level_3" ||
-              name == "administrative_area_level_4" ||
-              name == "administrative_area_level_5" ||
-              name == "archipelago" ||
-              name == "colloquial_area" ||
-              name == "continent" ||
-              name == "country" ||
-              name == "establishment" ||
-              name == "finance" ||
-              name == "floor" ||
-              name == "food" ||
-              name == "general_contractor" ||
-              name == "geocode" ||
-              name == "health" ||
-              name == "intersection" ||
-              name == "locality" ||
-              name == "natural_feature" ||
-              name == "place_of_worship" ||
-              name == "plus_code" ||
-              name == "point_of_interest" ||
-              name == "political" ||
-              name == "post_box" ||
-              name == "postal_code" ||
-              name == "postal_code_prefix" ||
-              name == "postal_code_suffix" ||
-              name == "postal_town" ||
-              name == "premise" ||
-              name == "room" ||
-              name == "route" ||
-              name == "street_address" ||
-              name == "sublocality" ||
-              name == "sublocality_level_1" ||
-              name == "sublocality_level_2" ||
-              name == "sublocality_level_3" ||
-              name == "sublocality_level_4" ||
-              name == "sublocality_level_5" ||
-              name == "subpremise" ||
-              name == "town_square"
-            ) {
-              return;
-            }
-            let result = containsType(type, typesArray);
-            if (!result) {
-              typesArray.push(type);
-            } else {
-              typesArray.filter((obj) => {
-                if (obj.name == type.name) {
-                  obj.counter++;
-                }
-              });
-            }
-          }
-        }
-      });
-
-      // sort array by counter then name
-
-      typesArray.sort((a, b) =>
-        a.counter > b.counter
-          ? -1
-          : a.counter === b.counter
-          ? a.name > b.name
-            ? 1
-            : -1
-          : 1
-      );
-
-      store.commit("setTypes", typesArray);
-
-      function containsType(type, list) {
-        var i;
-        for (i = 0; i < list.length; i++) {
-          if (list[i].name == type.name) {
-            return true;
-          }
-        }
-
-        return false;
-      }
-    },
     async updateProfile({ dispatch }, user) {
       const userId = fb.auth.currentUser.uid;
       // update user object
@@ -824,7 +940,7 @@ const store = new Vuex.Store({
       // Retrieve the current coordinates using the navigator API
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
-        const range = getGeohashRange(latitude, longitude, 4);
+        const range = getGeohashRange(latitude, longitude, state.geohashRange);
         
         fb.placesFirestore
           .where("geohash", ">=", range.lower)
