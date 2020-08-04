@@ -797,6 +797,7 @@ const store = new Vuex.Store({
       });
     },
     async findNearbyPlaces({ state }, type) {
+      const nearbyPlaces = [];
       const getGeohashRange = (
         latitude,
         longitude,
@@ -823,12 +824,11 @@ const store = new Vuex.Store({
       // Retrieve the current coordinates using the navigator API
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
-        const range = getGeohashRange(latitude, longitude, 20);
-        const nearbyPlaces = [];
-
+        const range = getGeohashRange(latitude, longitude, 4);
+        
         fb.placesFirestore
-          // .where("geohash", ">=", range.lower)
-          // .where("geohash", "<=", range.upper)
+          .where("geohash", ">=", range.lower)
+          .where("geohash", "<=", range.upper)
           .where('types', 'array-contains-any', [type])
           .onSnapshot((snapshot) => {
             if (snapshot.empty) {
