@@ -89,7 +89,7 @@ export default {
       lat: 39.55228,
       lng: -84.23327,
       selected: "",
-      type: ""
+      type: "",
     };
   },
   created() {
@@ -99,6 +99,28 @@ export default {
   },
   computed: {
     ...mapState([["places"], ["validTypes"], ["reviews"]]),
+    filteredPlaces() {
+      var places = this.places;
+      var newPlaces = [];
+      for (let i = 0; i < places.length; i++) {
+        if (!containsObject(places[i], newPlaces)) {
+          newPlaces.push(places[i]);
+        }
+      }
+
+      function containsObject(obj, list) {
+        var i;
+        for (i = 0; i < list.length; i++) {
+          if (list[i] === obj) {
+            return true;
+          }
+        }
+
+        return false;
+      }
+
+      return newPlaces;
+    },
   },
   watch: {
     $route(to, from) {
@@ -116,7 +138,7 @@ export default {
       // this.$router.push({ name: "place" });
     },
     findNearbyPlaces(type) {
-      this.$store.dispatch("findNearbyPlaces", type);      
+      this.$store.dispatch("findNearbyPlaces", type);
     },
   },
   filters: {

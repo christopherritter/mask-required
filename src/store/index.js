@@ -577,6 +577,23 @@ const store = new Vuex.Store({
 
       dispatch("fetchUserProfile");
     },
+    async signup({ dispatch }, form) {
+      // sign user up
+      const { user } = await fb.auth.createUserWithEmailAndPassword(
+        form.email,
+        form.password
+      );
+
+      // create user profile object in userCollections
+      await fb.usersCollection.doc(user.uid).set({
+        name: form.name,
+        nickname: form.nickname,
+        userId: user.uid,
+      });
+
+      // fetch user profile and set in state
+      dispatch("fetchUserProfile", user);
+    },
     async fetchUserProfile({ commit }, user) {
       // fetch user profile
       const currentUser = await firebase.auth().currentUser;
@@ -601,29 +618,25 @@ const store = new Vuex.Store({
         }
       }
     },
-    async signup({ dispatch }, form) {
-      // sign user up
-      const { user } = await fb.auth.createUserWithEmailAndPassword(
-        form.email,
-        form.password
-      );
-
-      // create user profile object in userCollections
-      await fb.usersCollection.doc(user.uid).set({
-        name: form.name,
-        nickname: form.nickname,
-        userId: user.uid,
+    async updateProfile({ dispatch }, user) {
+      const userId = fb.auth.currentUser.uid;
+      // update user object
+      const userRef = await fb.usersCollection.doc(userId).update({
+        name: user.name,
+        nickname: user.nickname,
       });
 
-      // fetch user profile and set in state
-      dispatch("fetchUserProfile", user);
-    },
-    async logout({ commit }) {
-      await fb.auth.signOut();
+      dispatch("fetchUserProfile", { uid: userId });
 
-      // clear userProfile and redirect to /login
-      commit("setUserProfile", {});
-      router.push("/login");
+      // update all reviews by user
+      const reviewDocs = await fb.reviewsCollection
+        .where("userId", "==", userId)
+        .get();
+      reviewDocs.forEach((doc) => {
+        fb.reviewsCollection.doc(doc.id).update({
+          userName: user.name,
+        });
+      });
     },
     async createPlace({ state, dispatch }, place) {
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU`;
@@ -658,7 +671,7 @@ const store = new Vuex.Store({
 
           fb.placesCollection.add(newPlace);
           store.commit("setPlace", newPlace);
-          dispatch("fetchReviews");
+          dispatch("fetchReviews", newPlace);
           router.push({ name: "place" });
         })
         .catch((error) => {
@@ -678,9 +691,59 @@ const store = new Vuex.Store({
 
       snapshot.forEach((doc) => {
         // console.log(doc.id, '=>', doc.data());
-        store.commit("setPlace", doc.data());
-        dispatch("fetchReviews");
+        var newPlace = doc.data();
+        store.commit("setPlace", newPlace);
+        dispatch("fetchReviews", newPlace);
         router.push({ name: "place" });
+      });
+    },
+    async findNearbyPlaces({ state }, type) {
+      const nearbyPlaces = [];
+      const getGeohashRange = (
+        latitude,
+        longitude,
+        distance // miles
+      ) => {
+        const lat = 0.0144927536231884; // degrees latitude per mile
+        const lon = 0.0181818181818182; // degrees longitude per mile
+
+        const lowerLat = latitude - lat * distance;
+        const lowerLon = longitude - lon * distance;
+
+        const upperLat = latitude + lat * distance;
+        const upperLon = longitude + lon * distance;
+
+        const lower = geohash.encode(lowerLat, lowerLon);
+        const upper = geohash.encode(upperLat, upperLon);
+
+        return {
+          lower,
+          upper,
+        };
+      };
+
+      // Retrieve the current coordinates using the navigator API
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        const range = getGeohashRange(latitude, longitude, state.geohashRange);
+        
+        fb.placesFirestore
+          .where("geohash", ">=", range.lower)
+          .where("geohash", "<=", range.upper)
+          .where('types', 'array-contains-any', [type])
+          .onSnapshot((snapshot) => {
+            if (snapshot.empty) {
+              console.log("No matching documents.");
+              return;
+            }
+
+            snapshot.forEach((doc) => {
+              let searchResult = doc.data();
+              nearbyPlaces.push(searchResult);
+            });
+
+            store.commit("setPlaces", nearbyPlaces);
+          });
       });
     },
     async fetchTypes({ state }) {
@@ -812,10 +875,10 @@ const store = new Vuex.Store({
           });
         });
     },
-    async fetchReviews({ state }) {
+    async fetchReviews({ state }, place) {
       // const citiesRef = db.collection("cities");
       const snapshot = await fb.reviewsCollection
-        .where("place.place_id", "==", state.place.place_id)
+        .where("place.place_id", "==", place.place_id)
         .get();
 
       let reviewsArray = [];
@@ -892,74 +955,12 @@ const store = new Vuex.Store({
     async deleteReview({ commit }, review) {
       fb.reviewsCollection.doc(review.id).delete();
     },
-    async updateProfile({ dispatch }, user) {
-      const userId = fb.auth.currentUser.uid;
-      // update user object
-      const userRef = await fb.usersCollection.doc(userId).update({
-        name: user.name,
-        nickname: user.nickname,
-      });
+    async logout({ commit }) {
+      await fb.auth.signOut();
 
-      dispatch("fetchUserProfile", { uid: userId });
-
-      // update all reviews by user
-      const reviewDocs = await fb.reviewsCollection
-        .where("userId", "==", userId)
-        .get();
-      reviewDocs.forEach((doc) => {
-        fb.reviewsCollection.doc(doc.id).update({
-          userName: user.name,
-        });
-      });
-    },
-    async findNearbyPlaces({ state }, type) {
-      const nearbyPlaces = [];
-      const getGeohashRange = (
-        latitude,
-        longitude,
-        distance // miles
-      ) => {
-        const lat = 0.0144927536231884; // degrees latitude per mile
-        const lon = 0.0181818181818182; // degrees longitude per mile
-
-        const lowerLat = latitude - lat * distance;
-        const lowerLon = longitude - lon * distance;
-
-        const upperLat = latitude + lat * distance;
-        const upperLon = longitude + lon * distance;
-
-        const lower = geohash.encode(lowerLat, lowerLon);
-        const upper = geohash.encode(upperLat, upperLon);
-
-        return {
-          lower,
-          upper,
-        };
-      };
-
-      // Retrieve the current coordinates using the navigator API
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        const range = getGeohashRange(latitude, longitude, state.geohashRange);
-        
-        fb.placesFirestore
-          .where("geohash", ">=", range.lower)
-          .where("geohash", "<=", range.upper)
-          .where('types', 'array-contains-any', [type])
-          .onSnapshot((snapshot) => {
-            if (snapshot.empty) {
-              console.log("No matching documents.");
-              return;
-            }
-
-            snapshot.forEach((doc) => {
-              let searchResult = doc.data();
-              nearbyPlaces.push(searchResult);
-            });
-
-            store.commit("setPlaces", nearbyPlaces);
-          });
-      });
+      // clear userProfile and redirect to /login
+      commit("setUserProfile", {});
+      router.push("/login");
     },
   },
 });
