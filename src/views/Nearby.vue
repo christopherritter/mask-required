@@ -131,6 +131,7 @@ export default {
   },
   methods: {
     selectType(type) {
+      this.$store.commit("setPlaces", []);
       this.$router.push(type);
     },
     viewPlace(place) {
