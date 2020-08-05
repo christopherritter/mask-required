@@ -55,7 +55,6 @@ export default {
   },
   methods: {
     viewNearby(type) {
-      this.$store.commit("setPlaces", []);
       this.$router.push('nearby/' + type.name);
     }
   },

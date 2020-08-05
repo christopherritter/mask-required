@@ -93,12 +93,34 @@ export default {
     };
   },
   created() {
+    // this.$store.dispatch("fetchUserLocation");
+    // this.$store.dispatch("getGeohashRange", {
+    //   latitude: this.userLocation.lat,
+    //   longitude: this.userLocation.long,
+    //   distance: this.geohashRange,
+    // });
     let currentType = this.$route.params.name;
-    this.type = currentType;
     this.findNearbyPlaces(currentType);
   },
+  watch: {
+    $route(to, from) {
+      // let currentType = this.$route.params.name;
+      // this.findNearbyPlaces(currentType);
+      // this.type = this.$route.params.name;
+    },
+    type() {
+      // let currentType = this.$route.params.name;
+      // this.findNearbyPlaces(currentType);
+    },
+  },
   computed: {
-    ...mapState([["places"], ["validTypes"], ["reviews"]]),
+    ...mapState([
+      ["places"],
+      ["validTypes"],
+      ["reviews"],
+      "userLocation",
+      "geohashRange",
+    ]),
     filteredPlaces() {
       var places = this.places;
       var newPlaces = [];
@@ -122,23 +144,22 @@ export default {
       return newPlaces;
     },
   },
-  watch: {
-    $route(to, from) {
-      let currentType = this.$route.params.name;
-      this.type = currentType;
-      this.findNearbyPlaces(currentType);
-    },
-  },
   methods: {
-    selectType(type) {
-      this.$store.commit("setPlaces", []);
-      this.$router.push(type);
+    selectType(currentType) {
+      this.findNearbyPlaces(currentType);
+      // this.type = currentType;
+      // this.$router.push(currentType);
     },
     viewPlace(place) {
       this.$store.dispatch("fetchPlace", place);
-      // this.$router.push({ name: "place" });
     },
     findNearbyPlaces(type) {
+      this.$store.dispatch("fetchUserLocation");
+      this.$store.dispatch("getGeohashRange", {
+        latitude: this.userLocation.lat,
+        longitude: this.userLocation.long,
+        distance: this.geohashRange,
+      });
       this.$store.dispatch("findNearbyPlaces", type);
     },
   },

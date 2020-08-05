@@ -634,7 +634,7 @@ const store = new Vuex.Store({
     async fetchUserLocation({ commit }) {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
-        commit("setUserLocation", { latitude: latitude, longitude: longitude });
+        commit("setUserLocation", { latitude, longitude });
       });
     },
     async updateProfile({ dispatch }, user) {
@@ -715,32 +715,27 @@ const store = new Vuex.Store({
         router.push({ name: "place" });
       });
     },
-    async findNearbyPlaces({ state, dispatch }, type) {
+    async findNearbyPlaces({ state, commit }, type) {
       const nearbyPlaces = [];
-      dispatch("fetchUserLocation");
-      dispatch("getGeohashRange", {
-        latitude: state.userLocation.lat,
-        longitude: state.userLocation.long,
-        distance: state.geohashRange,
-      });
+
       // Retrieve the current coordinates using the navigator API
-      fb.placesFirestore
+      const places = await fb.placesFirestore
         .where("geohash", ">=", state.lowerRange)
         .where("geohash", "<=", state.upperRange)
         .where("types", "array-contains-any", [type])
-        .onSnapshot((snapshot) => {
-          if (snapshot.empty) {
-            console.log("No matching documents.");
-            return;
-          }
+        .get();
 
-          snapshot.forEach((doc) => {
-            let searchResult = doc.data();
-            nearbyPlaces.push(searchResult);
-          });
-
-          store.commit("setPlaces", nearbyPlaces);
+        if (places.empty) {
+          console.log("No matching documents.");
+          return;
+        }
+        
+        places.forEach((doc) => {
+          let searchResult = doc.data();
+          nearbyPlaces.push(searchResult);
         });
+
+        commit("setPlaces", nearbyPlaces);
     },
     async getGeohashRange({ commit }, options) {
       const lat = 0.0144927536231884; // degrees latitude per mile
