@@ -417,7 +417,6 @@ const store = new Vuex.Store({
       "spa",
       "stadium",
       "storage",
-      "store",
       "subway_station",
       "supermarket",
       "synagogue",
@@ -798,6 +797,7 @@ const store = new Vuex.Store({
               name == "premise" ||
               name == "room" ||
               name == "route" ||
+              name == "store" ||
               name == "street_address" ||
               name == "sublocality" ||
               name == "sublocality_level_1" ||

@@ -10,7 +10,7 @@
         width="100%"
         @mouseover.native="highlightedCard = index"
         @mouseleave.native="highlightedCard = null"
-        @click="$router.push('nearby/' + type.name)"
+        @click="viewNearby(type)"
         style="cursor: pointer"
         class="type-card"
         :class="{ 'primary white--text': highlightedCard == index }"
@@ -52,6 +52,12 @@ export default {
   },
   created: function() {
     this.$store.dispatch("fetchTypes");
+  },
+  methods: {
+    viewNearby(type) {
+      this.$store.commit("setPlaces", []);
+      this.$router.push('nearby/' + type.name);
+    }
   },
   filters: {
     replaceUnderscore(val) {
