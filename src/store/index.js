@@ -18,6 +18,10 @@ const store = new Vuex.Store({
       name: "",
       nickname: "",
     },
+    userLocation: {
+      lat: null,
+      long: null,
+    },
     place: {},
     places: [],
     rating: 0,
@@ -429,18 +433,28 @@ const store = new Vuex.Store({
       "veterinary_care",
       "zoo",
     ],
-    geohashRange: 20
+    geohashRange: 20,
+    upperRange: null,
+    lowerRange: null,
   },
   getters: {
     getField,
   },
   mutations: {
     updateField,
+    setRange(state, val) {
+      state.lowerRange = val.lower;
+      state.upperRange = val.upper;
+    },
     setUser(state, val) {
       state.user = val;
     },
     setUserProfile(state, val) {
       state.userProfile = val;
+    },
+    setUserLocation(state, val) {
+      state.userLocation.lat = val.latitude;
+      state.userLocation.long = val.longitude;
     },
     setPlace(state, val) {
       state.place = val;
@@ -617,6 +631,12 @@ const store = new Vuex.Store({
         }
       }
     },
+    async fetchUserLocation({ commit }) {
+      navigator.geolocation.getCurrentPosition((position) => {
+        const { latitude, longitude } = position.coords;
+        commit("setUserLocation", { latitude: latitude, longitude: longitude });
+      });
+    },
     async updateProfile({ dispatch }, user) {
       const userId = fb.auth.currentUser.uid;
       // update user object
@@ -655,13 +675,12 @@ const store = new Vuex.Store({
           // console.log("New place types array")
           // console.log(newPlace.types)
 
-          for (let i = 0; i < newPlace.types.length; i++ ) {
-              // console.log("New type no. " + i)
-              // console.log(newPlace.types[i])
-              if (state.validTypes.includes(newPlace.types[i])) {
-                newTypes.push(newPlace.types[i]);
-              }
-              
+          for (let i = 0; i < newPlace.types.length; i++) {
+            // console.log("New type no. " + i)
+            // console.log(newPlace.types[i])
+            if (state.validTypes.includes(newPlace.types[i])) {
+              newTypes.push(newPlace.types[i]);
+            }
           }
 
           // console.log("New types array.")
@@ -677,7 +696,7 @@ const store = new Vuex.Store({
           this.error = error.message;
         });
     },
-    async fetchPlace({ state, dispatch }, place) {
+    async fetchPlace({ dispatch }, place) {
       const snapshot = await fb.placesCollection
         .where("place_id", "==", place.place_id)
         .get();
@@ -696,56 +715,49 @@ const store = new Vuex.Store({
         router.push({ name: "place" });
       });
     },
-    async findNearbyPlaces({ state }, type) {
+    async findNearbyPlaces({ state, dispatch }, type) {
       const nearbyPlaces = [];
-      const getGeohashRange = (
-        latitude,
-        longitude,
-        distance // miles
-      ) => {
-        const lat = 0.0144927536231884; // degrees latitude per mile
-        const lon = 0.0181818181818182; // degrees longitude per mile
-
-        const lowerLat = latitude - lat * distance;
-        const lowerLon = longitude - lon * distance;
-
-        const upperLat = latitude + lat * distance;
-        const upperLon = longitude + lon * distance;
-
-        const lower = geohash.encode(lowerLat, lowerLon);
-        const upper = geohash.encode(upperLat, upperLon);
-
-        return {
-          lower,
-          upper,
-        };
-      };
-
-      // Retrieve the current coordinates using the navigator API
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        const range = getGeohashRange(latitude, longitude, state.geohashRange);
-        
-        fb.placesFirestore
-          .where("geohash", ">=", range.lower)
-          .where("geohash", "<=", range.upper)
-          .where('types', 'array-contains-any', [type])
-          .onSnapshot((snapshot) => {
-            if (snapshot.empty) {
-              console.log("No matching documents.");
-              return;
-            }
-
-            snapshot.forEach((doc) => {
-              let searchResult = doc.data();
-              nearbyPlaces.push(searchResult);
-            });
-
-            store.commit("setPlaces", nearbyPlaces);
-          });
+      dispatch("fetchUserLocation");
+      dispatch("getGeohashRange", {
+        latitude: state.userLocation.lat,
+        longitude: state.userLocation.long,
+        distance: state.geohashRange,
       });
+      // Retrieve the current coordinates using the navigator API
+      fb.placesFirestore
+        .where("geohash", ">=", state.lowerRange)
+        .where("geohash", "<=", state.upperRange)
+        .where("types", "array-contains-any", [type])
+        .onSnapshot((snapshot) => {
+          if (snapshot.empty) {
+            console.log("No matching documents.");
+            return;
+          }
+
+          snapshot.forEach((doc) => {
+            let searchResult = doc.data();
+            nearbyPlaces.push(searchResult);
+          });
+
+          store.commit("setPlaces", nearbyPlaces);
+        });
     },
-    async fetchTypes({ state }) {
+    async getGeohashRange({ commit }, options) {
+      const lat = 0.0144927536231884; // degrees latitude per mile
+      const lon = 0.0181818181818182; // degrees longitude per mile
+
+      const lowerLat = options.latitude - lat * options.distance;
+      const lowerLon = options.longitude - lon * options.distance;
+
+      const upperLat = options.latitude + lat * options.distance;
+      const upperLon = options.longitude + lon * options.distance;
+
+      const lower = geohash.encode(lowerLat, lowerLon);
+      const upper = geohash.encode(upperLat, upperLon);
+
+      commit("setRange", { lower: lower, upper: upper });
+    },
+    async fetchReviewTypes({ commit }) {
       const reviews = await fb.reviewsCollection.get();
       let typesArray = [];
 

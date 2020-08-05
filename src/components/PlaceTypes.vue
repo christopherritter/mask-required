@@ -51,7 +51,7 @@ export default {
     },
   },
   created: function() {
-    this.$store.dispatch("fetchTypes");
+    this.$store.dispatch("fetchReviewTypes");
   },
   methods: {
     viewNearby(type) {
