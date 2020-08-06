@@ -57,7 +57,7 @@
                         <v-chip
                           v-for="(t, index) in place.types"
                           :key="index"
-                          @click="selectType(t)"
+                          @click="findNearbyPlaces(t)"
                           :value="t"
                           >{{ t | replaceUnderscore }}</v-chip
                         >
@@ -83,84 +83,53 @@ export default {
   name: "Nearby",
   data() {
     return {
+      places: [],
       address: "",
       error: "",
       spinner: false,
-      lat: 39.55228,
-      lng: -84.23327,
       selected: "",
       type: "",
     };
   },
-  created() {
-    // this.$store.dispatch("fetchUserLocation");
-    // this.$store.dispatch("getGeohashRange", {
-    //   latitude: this.userLocation.lat,
-    //   longitude: this.userLocation.long,
-    //   distance: this.geohashRange,
-    // });
-    let currentType = this.$route.params.name;
-    this.findNearbyPlaces(currentType);
-  },
-  watch: {
-    $route(to, from) {
-      // let currentType = this.$route.params.name;
-      // this.findNearbyPlaces(currentType);
-      // this.type = this.$route.params.name;
-    },
-    type() {
-      // let currentType = this.$route.params.name;
-      // this.findNearbyPlaces(currentType);
-    },
+  async created() {
+    if (this.$store.state.userLocation.lat === null) {
+      console.log("Fetching user location");
+      await this.$store.dispatch("fetchUserLocation");
+    }
+    if (this.$store.state.upperRange === null) {
+      console.log("Getting geohash range");
+      await this.$store.dispatch("getGeohashRange");
+    }
+    if (this.$store.state.places === null) {
+      console.log("Finding nearby places");
+      var currentType = this.$route.params.name;
+      await this.$store.dispatch("findNearbyPlaces", currentType);
+    }
+    console.log("Setting nearby places:");
+    console.log(this.$store.getters.getPlaces);
+    this.places = this.$store.getters.getPlaces;
   },
   computed: {
-    ...mapState([
-      ["places"],
-      ["validTypes"],
-      ["reviews"],
-      "userLocation",
-      "geohashRange",
-    ]),
-    filteredPlaces() {
-      var places = this.places;
-      var newPlaces = [];
-      for (let i = 0; i < places.length; i++) {
-        if (!containsObject(places[i], newPlaces)) {
-          newPlaces.push(places[i]);
-        }
-      }
-
-      function containsObject(obj, list) {
-        var i;
-        for (i = 0; i < list.length; i++) {
-          if (list[i] === obj) {
-            return true;
-          }
-        }
-
-        return false;
-      }
-
-      return newPlaces;
-    },
+    ...mapState([["validTypes"], ["reviews"]]),
+  },
+  watch: {
+    // async type() {
+    //   console.log("Pushing type to router.")
+    //   let currentType = this.$route.params.name;
+    //   console.log("Type received from path: " + currentType);
+    //   console.log("Pushing to router.")
+    //   this.$router.push(currentType);
+    // }
   },
   methods: {
-    selectType(currentType) {
-      this.findNearbyPlaces(currentType);
-      // this.type = currentType;
-      // this.$router.push(currentType);
+    async findNearbyPlaces(type) {
+      await this.$store.dispatch("findNearbyPlaces", type);
+      this.$router.push(type);
+      this.type = type;
+      this.places = this.$store.getters.getPlaces;
     },
     viewPlace(place) {
       this.$store.dispatch("fetchPlace", place);
-    },
-    findNearbyPlaces(type) {
-      this.$store.dispatch("fetchUserLocation");
-      this.$store.dispatch("getGeohashRange", {
-        latitude: this.userLocation.lat,
-        longitude: this.userLocation.long,
-        distance: this.geohashRange,
-      });
-      this.$store.dispatch("findNearbyPlaces", type);
     },
   },
   filters: {

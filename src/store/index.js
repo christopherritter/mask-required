@@ -23,10 +23,10 @@ const store = new Vuex.Store({
       long: null,
     },
     place: {},
-    places: [],
+    places: null,
     rating: 0,
     reviews: [],
-    types: [],
+    types: null,
     showSearch: true,
     masks: {
       employees: [
@@ -439,6 +439,12 @@ const store = new Vuex.Store({
   },
   getters: {
     getField,
+    getTypes: (state) => state.types,
+    getUserLocation: (state) => state.userLocation,
+    getGeohashRange: (state) => state.geohashRange,
+    getUpperRange: (state) => state.upperRange,
+    getLowerRange: (state) => state.lowerRange,
+    getPlaces: (state) => state.places,
   },
   mutations: {
     updateField,
@@ -735,22 +741,24 @@ const store = new Vuex.Store({
           nearbyPlaces.push(searchResult);
         });
 
+        console.log("Committing nearby places")
+        console.log(nearbyPlaces);
         commit("setPlaces", nearbyPlaces);
     },
-    async getGeohashRange({ commit }, options) {
+    async getGeohashRange({ state, commit }) {
       const lat = 0.0144927536231884; // degrees latitude per mile
       const lon = 0.0181818181818182; // degrees longitude per mile
 
-      const lowerLat = options.latitude - lat * options.distance;
-      const lowerLon = options.longitude - lon * options.distance;
+      const lowerLat = state.userLocation.lat - lat * state.geohashRange;
+      const lowerLon = state.userLocation.long - lon * state.geohashRange;
 
-      const upperLat = options.latitude + lat * options.distance;
-      const upperLon = options.longitude + lon * options.distance;
+      const upperLat = state.userLocation.lat + lat * state.geohashRange;
+      const upperLon = state.userLocation.long + lon * state.geohashRange;
 
       const lower = geohash.encode(lowerLat, lowerLon);
       const upper = geohash.encode(upperLat, upperLon);
 
-      commit("setRange", { lower: lower, upper: upper });
+      commit("setRange", { lower, upper });
     },
     async fetchReviewTypes({ commit }) {
       const reviews = await fb.reviewsCollection.get();

@@ -1,30 +1,35 @@
 <template>
-  <v-row>
-    <v-col
-      v-for="(type, index) in typesToDisplay"
-      :key="index"
-      class="d-flex align-stretch"
-    >
-      <v-card
-        outlined
-        width="100%"
-        @mouseover.native="highlightedCard = index"
-        @mouseleave.native="highlightedCard = null"
-        @click="viewNearby(type)"
-        style="cursor: pointer"
-        class="type-card"
-        :class="{ 'primary white--text': highlightedCard == index }"
+  <div>
+    <v-row v-if="isLoadingTypes">
+      Loading types...
+    </v-row>
+    <v-row v-else>
+      <v-col
+        v-for="(type, index) in typesToDisplay"
+        :key="index"
+        class="d-flex align-stretch"
       >
-        <v-card-text
-          class="font-weight-medium"
-          :class="{
-            'white--text': highlightedCard == index,
-          }"
-          >{{ type.name | replaceUnderscore }}</v-card-text
+        <v-card
+          outlined
+          width="100%"
+          @mouseover.native="highlightedCard = index"
+          @mouseleave.native="highlightedCard = null"
+          @click="viewNearby(type)"
+          style="cursor: pointer"
+          class="type-card"
+          :class="{ 'primary white--text': highlightedCard == index }"
         >
-      </v-card>
-    </v-col>
-  </v-row>
+          <v-card-text
+            class="font-weight-medium"
+            :class="{
+              'white--text': highlightedCard == index,
+            }"
+            >{{ type.name | replaceUnderscore }}</v-card-text
+          >
+        </v-card>
+      </v-col>
+    </v-row>
+  </div>
 </template>
 
 <script>
@@ -34,14 +39,14 @@ export default {
   name: "place-types",
   data() {
     return {
-      isLoadingTypes: false,
+      types: [],
+      isLoadingTypes: true,
       showLessTypes: true,
       highlightedCard: null,
       hover: false,
     };
   },
   computed: {
-    ...mapState([["types"]]),
     typesToDisplay: function() {
       if (this.showLessTypes) {
         return this.types.slice(0, 6);
@@ -50,13 +55,17 @@ export default {
       }
     },
   },
-  created: function() {
-    this.$store.dispatch("fetchReviewTypes");
+  async created() {
+    if (this.$store.state.types === null) {
+      await this.$store.dispatch("fetchReviewTypes");
+    }
+    this.types = this.$store.getters.getTypes;
+    this.isLoadingTypes = false;
   },
   methods: {
     viewNearby(type) {
-      this.$router.push('nearby/' + type.name);
-    }
+      this.$router.push("nearby/" + type.name);
+    },
   },
   filters: {
     replaceUnderscore(val) {
@@ -69,7 +78,7 @@ export default {
       }
       return frags.join(" ");
     },
-  }
+  },
 };
 </script>
 
