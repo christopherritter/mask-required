@@ -102,6 +102,7 @@ export default {
       await this.$store.dispatch("findNearbyPlaces", currentType);
     }
     this.places = this.$store.getters.getPlaces;
+    this.$store.dispatch("showSearchBar", true);
   },
   computed: {
     ...mapState([["validTypes"], ["reviews"]]),

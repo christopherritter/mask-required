@@ -97,7 +97,7 @@ export default {
       // }
     });
 
-    this.$store.state.showSearch = false;
+    this.$store.dispatch("showSearchBar", true);
   },
   components: {
     "svg-img": SvgImg,

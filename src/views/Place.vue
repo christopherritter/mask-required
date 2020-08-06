@@ -294,7 +294,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.state.showSearch = true;
+    this.$store.dispatch("showSearchBar", true);
     this.$store.dispatch("fetchReviews", this.place);
     this.showLocation(
       this.place.geometry.location.lat,

@@ -150,7 +150,7 @@ export default {
       // );
     });
 
-    this.$store.state.showSearch = false;
+    this.$store.dispatch("showSearchBar", false);
   },
   components: {
     "svg-img": SvgImg,

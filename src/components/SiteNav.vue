@@ -38,7 +38,7 @@
       </v-toolbar-title>
 
       <v-text-field
-        v-show="showSearch"
+        v-show="showSearchBar"
         class="pl-4 hidden hidden-sm-and-down"
         v-model="address"
         id="navbar-autocomplete"
@@ -52,7 +52,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn v-show="showSearch" class="hidden-sm-and-up" icon @click="addReview">
+      <v-btn v-show="showSearchBar" class="hidden-sm-and-up" icon @click="addReview">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
@@ -120,7 +120,6 @@ export default {
       document.getElementById("navbar-autocomplete"),
       options
     );
-
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
       this.fetchPlace(place);
@@ -135,6 +134,9 @@ export default {
       //   }
       // }
     });
+
+    this.$store.dispatch("showSearchBar", false);
+    this.showSearchBar = this.$store.getters.getSearchBar;
   },
   props: ["loggedIn"],
   components: {
@@ -163,10 +165,7 @@ export default {
     },
   },
   computed: {
-    ...mapState(["place"]),
-    showSearch() {
-      return this.$store.state.showSearch;
-    },
+    ...mapState([["place"], "showSearchBar"]),
     showPointer() {
       if (this.$router.currentRoute.name == "home") {
         return { pointer: "none" };

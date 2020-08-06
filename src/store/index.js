@@ -27,7 +27,7 @@ const store = new Vuex.Store({
     rating: 0,
     reviews: [],
     types: null,
-    showSearch: true,
+    showSearchBar: null,
     masks: {
       employees: [
         "All of the employees were properly wearing masks",
@@ -445,6 +445,7 @@ const store = new Vuex.Store({
     getUpperRange: (state) => state.upperRange,
     getLowerRange: (state) => state.lowerRange,
     getPlaces: (state) => state.places,
+    getSearchBar: (state) => state.showSearchbar,
   },
   mutations: {
     updateField,
@@ -507,6 +508,9 @@ const store = new Vuex.Store({
     setErrorMessage(state, val) {
       state.errorMessage = val;
     },
+    setSearchBar(state, val) {
+      state.showSearchBar = val;
+    }
     // increaseTypeCounter(state, val) {
     //   state.types[val]++;
     // }
@@ -967,6 +971,9 @@ const store = new Vuex.Store({
     },
     async deleteReview({ commit }, review) {
       fb.reviewsCollection.doc(review.id).delete();
+    },
+    async showSearchBar({ commit }, val) {
+      commit("setSearchBar", val)
     },
     async logout({ commit }) {
       await fb.auth.signOut();

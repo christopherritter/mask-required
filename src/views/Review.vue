@@ -218,7 +218,7 @@ export default {
     };
   },
   mounted() {
-    this.$store.state.showSearch = true;
+    this.$store.dispatch("showSearchBar", true);
   },
   computed: {
     ...mapState([
