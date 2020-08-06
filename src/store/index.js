@@ -22,7 +22,7 @@ const store = new Vuex.Store({
       lat: null,
       long: null,
     },
-    place: {},
+    place: null,
     places: null,
     rating: 0,
     reviews: [],
@@ -445,6 +445,7 @@ const store = new Vuex.Store({
     getUpperRange: (state) => state.upperRange,
     getLowerRange: (state) => state.lowerRange,
     getPlaces: (state) => state.places,
+    getPlace: (state) => state.place,
     getSearchBar: (state) => state.showSearchbar,
   },
   mutations: {
@@ -468,6 +469,9 @@ const store = new Vuex.Store({
     },
     setPlaces(state, val) {
       state.places = val;
+    },
+    setPlace(state, val) {
+      state.place = val;
     },
     setReviews(state, val) {
       state.reviews = val;
@@ -706,7 +710,7 @@ const store = new Vuex.Store({
           this.error = error.message;
         });
     },
-    async fetchPlace({ dispatch }, place) {
+    async fetchPlace({ dispatch, commit }, place) {
       const snapshot = await fb.placesCollection
         .where("place_id", "==", place.place_id)
         .get();
@@ -720,9 +724,8 @@ const store = new Vuex.Store({
       snapshot.forEach((doc) => {
         // console.log(doc.id, '=>', doc.data());
         var newPlace = doc.data();
-        store.commit("setPlace", newPlace);
+        commit("setPlace", newPlace);
         dispatch("fetchReviews", newPlace);
-        router.push({ name: "place" });
       });
     },
     async findNearbyPlaces({ state, commit }, type) {

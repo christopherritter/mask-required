@@ -89,6 +89,7 @@ const routes = [
       import(/* webpackChunkName: "place" */ "../views/Place.vue"),
     meta: {
       title: "Collaborative business reviews on MaskRequired.US.",
+      requiresAuth: true,
     },
     // beforeEnter: (to, from, next) => {
     //   if (store.state.place.name) next();

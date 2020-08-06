@@ -286,6 +286,7 @@ import DeleteReview from "@/components/DeleteReview";
 export default {
   data() {
     return {
+      place: {},
       showViewModal: false,
       showEditModal: false,
       showDeleteModal: false,
@@ -293,15 +294,16 @@ export default {
       fullReview: {},
     };
   },
-  mounted() {
-    this.$store.dispatch("showSearchBar", true);
-    
+  async mounted() {
+    // this.$store.dispatch("showSearchBar", true);
+
     if (this.$store.state.place === null) {
-      console.log("No place found.");
-      return
+      await this.$store.dispatch("fetchPlace", { 'place_id': this.$route.params.id });
     }
 
+    this.place = this.$store.getters.getPlace;
     this.$store.dispatch("fetchReviews", this.place);
+
     this.showLocation(
       this.place.geometry.location.lat,
       this.place.geometry.location.lng
@@ -333,7 +335,7 @@ export default {
     },
   },
   computed: {
-    ...mapState([["userProfile"], "place", ["reviews"], "rating", ["ratings"]]),
+    ...mapState([["userProfile"], ["reviews"], "rating", ["ratings"]]),
     columnWidth() {
       if (this.showDetails) {
         return 4;

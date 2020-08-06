@@ -114,8 +114,9 @@ export default {
       this.type = type;
       this.places = this.$store.getters.getPlaces;
     },
-    viewPlace(place) {
-      this.$store.dispatch("fetchPlace", place);
+    async viewPlace(place) {
+      await this.$store.dispatch("fetchPlace", place);
+      this.$router.push({name: "place", params: { id: place.place_id }});
     },
   },
   filters: {
