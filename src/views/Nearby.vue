@@ -91,6 +91,7 @@ export default {
     };
   },
   async created() {
+    this.$store.dispatch("showSearchBar", true);
     if (this.$store.state.userLocation.lat === null) {
       await this.$store.dispatch("fetchUserLocation");
     }
@@ -102,7 +103,6 @@ export default {
       await this.$store.dispatch("findNearbyPlaces", currentType);
     }
     this.places = this.$store.getters.getPlaces;
-    this.$store.dispatch("showSearchBar", true);
   },
   computed: {
     ...mapState([["validTypes"], ["reviews"]]),
