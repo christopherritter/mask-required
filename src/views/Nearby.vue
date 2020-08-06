@@ -51,7 +51,6 @@
                     <v-card-text class="pa-3">
                       <v-chip-group
                         show-arrows
-                        active-class="light-blue--text darken-2 text--accent-4"
                         v-model="type"
                       >
                         <v-chip
@@ -93,33 +92,19 @@ export default {
   },
   async created() {
     if (this.$store.state.userLocation.lat === null) {
-      console.log("Fetching user location");
       await this.$store.dispatch("fetchUserLocation");
     }
     if (this.$store.state.upperRange === null) {
-      console.log("Getting geohash range");
       await this.$store.dispatch("getGeohashRange");
     }
     if (this.$store.state.places === null) {
-      console.log("Finding nearby places");
       var currentType = this.$route.params.name;
       await this.$store.dispatch("findNearbyPlaces", currentType);
     }
-    console.log("Setting nearby places:");
-    console.log(this.$store.getters.getPlaces);
     this.places = this.$store.getters.getPlaces;
   },
   computed: {
     ...mapState([["validTypes"], ["reviews"]]),
-  },
-  watch: {
-    // async type() {
-    //   console.log("Pushing type to router.")
-    //   let currentType = this.$route.params.name;
-    //   console.log("Type received from path: " + currentType);
-    //   console.log("Pushing to router.")
-    //   this.$router.push(currentType);
-    // }
   },
   methods: {
     async findNearbyPlaces(type) {

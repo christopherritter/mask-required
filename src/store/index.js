@@ -741,8 +741,6 @@ const store = new Vuex.Store({
           nearbyPlaces.push(searchResult);
         });
 
-        console.log("Committing nearby places")
-        console.log(nearbyPlaces);
         commit("setPlaces", nearbyPlaces);
     },
     async getGeohashRange({ state, commit }) {
