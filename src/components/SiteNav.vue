@@ -136,7 +136,6 @@ export default {
     });
 
     this.$store.dispatch("showSearchBar", false);
-    this.showSearchBar = this.$store.getters.getSearchBar;
   },
   props: ["loggedIn"],
   components: {

@@ -295,6 +295,12 @@ export default {
   },
   mounted() {
     this.$store.dispatch("showSearchBar", true);
+    
+    if (this.$store.state.place === null) {
+      console.log("No place found.");
+      return
+    }
+
     this.$store.dispatch("fetchReviews", this.place);
     this.showLocation(
       this.place.geometry.location.lat,

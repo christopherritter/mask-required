@@ -7,7 +7,7 @@ import store from "../store";
 
 Vue.use(VueRouter);
 
-const DEFAULT_TITLE = 'MaskRequired.US';
+const DEFAULT_TITLE = "MaskRequired.US";
 
 const routes = [
   {
@@ -83,17 +83,17 @@ const routes = [
     },
   },
   {
-    path: "/place",
+    path: "/place/:id",
     name: "place",
     component: () =>
       import(/* webpackChunkName: "place" */ "../views/Place.vue"),
-    beforeEnter: (to, from, next) => {
-      if (store.state.place.name) next();
-      else next({ name: "home" });
-    },
     meta: {
       title: "Collaborative business reviews on MaskRequired.US.",
     },
+    // beforeEnter: (to, from, next) => {
+    //   if (store.state.place.name) next();
+    //   else next({ name: "home" });
+    // },
   },
   {
     path: "/review",
@@ -113,7 +113,9 @@ const routes = [
     path: "/privacy-policy",
     name: "privacy-policy",
     component: () =>
-      import(/* webpackChunkName: "privacy-policy" */ "../views/PrivacyPolicy.vue"),
+      import(
+        /* webpackChunkName: "privacy-policy" */ "../views/PrivacyPolicy.vue"
+      ),
     meta: {
       title: "MaskRequired.US Privacy Policy",
     },
@@ -150,42 +152,39 @@ const router = new VueRouter({
 // });
 
 router.beforeEach((to, from, next) => {
-
-  if (to.matched.some(record => record.meta.auth)) {
-    firebase.auth().onAuthStateChanged(user => {
+  if (to.matched.some((record) => record.meta.auth)) {
+    firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         console.log("Auth user" + user);
-        next()
+        next();
       } else {
         next({
           path: "/login",
-        })
+        });
       }
-    })
-  } else if (to.matched.some(record => record.meta.guest)) {
-    firebase.auth().onAuthStateChanged(user => {
+    });
+  } else if (to.matched.some((record) => record.meta.guest)) {
+    firebase.auth().onAuthStateChanged((user) => {
       console.log("Guest user" + user);
       if (user) {
         next({
           path: "/search",
-        })
+        });
       } else {
-        next()
+        next();
       }
-    })
-
+    });
   } else {
-    next()
+    next();
   }
-
-})
+});
 
 router.afterEach((to, from) => {
   // Use next tick to handle router history correctly
   // see: https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
   Vue.nextTick(() => {
-      document.title = to.meta.title || DEFAULT_TITLE;
+    document.title = to.meta.title || DEFAULT_TITLE;
   });
-})
+});
 
 export default router;
