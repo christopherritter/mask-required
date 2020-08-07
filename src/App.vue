@@ -25,7 +25,11 @@ export default {
   computed: {
     ...mapState(["userProfile"]),
     loggedIn() {
-      return Object.keys(this.userProfile).length > 1;
+      if (Object.keys(this.userProfile).length > 1) {
+        return true
+      } else {
+        return false
+      }
     },
   },
   methods: {},

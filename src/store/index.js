@@ -592,7 +592,7 @@ const store = new Vuex.Store({
       }
 
       var uiConfig = {
-        signInSuccessUrl: "/search",
+        signInSuccessUrl: "/",
         signInOptions: [
           firebase.auth.FacebookAuthProvider.PROVIDER_ID,
           firebase.auth.GoogleAuthProvider.PROVIDER_ID,

@@ -1,7 +1,7 @@
 <template>
   <v-main class="mt-0">
     <v-container>
-      <place-types></place-types>
+      <!-- <place-types></place-types> -->
       <v-row>
         <v-col>
           <v-card class="p-4 jumbotron text-center" color="#c5f9da">
@@ -36,7 +36,7 @@
 <script>
 import axios from "axios";
 import SvgImg from "@/components/Svg-img";
-import PlaceTypes from "@/components/PlaceTypes";
+// import PlaceTypes from "@/components/PlaceTypes";
 
 export default {
   name: "Home",
@@ -154,7 +154,7 @@ export default {
   },
   components: {
     "svg-img": SvgImg,
-    "place-types": PlaceTypes,
+    // "place-types": PlaceTypes,
   },
 };
 </script>
