@@ -46,8 +46,9 @@ export default {
     spinner: false,
   }),
   methods: {
-    fetchPlace(place) {
-      this.$store.dispatch("fetchPlace", place);
+    async fetchPlace(place) {
+      await this.$store.dispatch("fetchPlace", place);
+      this.$router.push("place/" + place.place_id);
     },
     locatorButtonPressed() {
       this.spinner = true;
