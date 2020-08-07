@@ -21,56 +21,46 @@
       <v-row>
         <v-col>
           <div class="place-header">
-            <h3>{{ place.name }}</h3>
-
-            <v-row>
-              <v-col class="d-flex flex-row pb-0">
-                <v-chip medium color="white">{{
-                  place.formatted_address
-                }}</v-chip>
-                <!-- <v-chip medium color="white">|</v-chip>
-                <v-chip medium color="white">{{
-                  place.formatted_phone_number
-                }}</v-chip> -->
-                <!-- <v-chip medium color="white">|</v-chip>
-                <v-chip medium color="white">{{ place.website }}</v-chip> -->
-                <!-- <v-chip v-if="place.isOpen" medium color="success">
-                  Currently Open
-                </v-chip>
-                <v-chip v-else medium color="warning">
-                  Currently Closed
-                </v-chip> -->
-              </v-col>
+            <v-row no-gutters>
+              <h3>{{ place.name }}</h3>
             </v-row>
-            <v-row>
-              <v-col class="d-flex flex-row pt-0">
-                <v-rating
-                  v-model="rating"
-                  background-color="yellow"
-                  color="yellow accent-4"
-                  length="5"
-                  dense
-                  half-increments
-                  hover
-                  size="18"
-                  readonly
-                ></v-rating>
-                <v-chip medium color="white">
-                  <v-avatar left>
-                    {{ reviews.length }}
-                  </v-avatar>
-                  Reviews
-                </v-chip>
-                <v-chip medium color="white">|</v-chip>
+
+            <v-row no-gutters>
+              <v-card-text class="pa-0">{{
+                place.formatted_address
+              }}</v-card-text>
+            </v-row>
+            <v-row no-gutters align="center" justify="start">
+              <v-rating
+                v-model="rating"
+                background-color="yellow"
+                color="yellow accent-4"
+                length="5"
+                dense
+                half-increments
+                hover
+                size="18"
+                readonly
+                class="mb-1"
+              ></v-rating>
+
+              <v-chip small color="white" :ripple="false">
+                {{ reviews.length }} reviews
+              </v-chip>
+
+              <v-divider vertical class="ma-2">|</v-divider>
+
+              <v-chip-group show-arrows class="px-0">
                 <v-chip
-                  medium
-                  v-for="type in place.types"
-                  :key="type"
+                  small
                   color="white"
+                  v-for="(t, index) in place.types"
+                  :key="index"
+                  @click="findNearbyPlaces(t)"
+                  :value="t"
+                  >{{ t | replaceUnderscore }}</v-chip
                 >
-                  {{ type | replaceUnderscore }}
-                </v-chip>
-              </v-col>
+              </v-chip-group>
             </v-row>
           </div>
         </v-col>
@@ -298,11 +288,14 @@ export default {
     // this.$store.dispatch("showSearchBar", true);
 
     if (this.$store.state.place === null) {
-      await this.$store.dispatch("fetchPlace", { 'place_id': this.$route.params.id });
+      await this.$store.dispatch("fetchPlace", {
+        place_id: this.$route.params.id,
+      });
     }
-    console.log("Fetching reviews.")
+
+    console.log("Fetching reviews when mounted:")
     this.place = await this.$store.getters.getPlace;
-    this.$store.dispatch("fetchReviews", this.place);
+    this.$store.dispatch("fetchReviews", this.place.place_id);
 
     this.showLocation(
       this.place.geometry.location.lat,
@@ -330,9 +323,12 @@ export default {
         this.showDetails = true;
       }
     },
-    reviews() {
-      this.$store.dispatch("fetchReviews", this.place);
-    },
+    // reviews(newValue, oldValue) {
+    //   if (newValue != oldValue) {
+    //     console.log("Fetching reviews whenever they change:")
+    //     this.$store.dispatch("fetchReviews", this.place.place_id);
+    //   }
+    // },
   },
   computed: {
     ...mapState([["userProfile"], ["reviews"], "rating", ["ratings"]]),
@@ -356,6 +352,12 @@ export default {
         position: new google.maps.LatLng(latitude, longitude),
         map: map,
       });
+    },
+    async findNearbyPlaces(type) {
+      await this.$store.dispatch("findNearbyPlaces", type);
+      this.$router.push({ name: "nearby", params: { name: type }});
+      // this.type = type;
+      // this.places = this.$store.getters.getPlaces;
     },
     userReview(review) {
       if (this.userProfile.userId == review.userId) {

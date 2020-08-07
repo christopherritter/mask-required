@@ -725,7 +725,7 @@ const store = new Vuex.Store({
         // console.log(doc.id, '=>', doc.data());
         var newPlace = doc.data();
         commit("setPlace", newPlace);
-        dispatch("fetchReviews", newPlace);
+        // dispatch("fetchReviews", newPlace);
       });
     },
     async findNearbyPlaces({ state, commit }, type) {
@@ -895,12 +895,14 @@ const store = new Vuex.Store({
           });
         });
     },
-    async fetchReviews({ state }, place) {
+    async fetchReviews({ state }, place_id) {
       // const citiesRef = db.collection("cities");
       const snapshot = await fb.reviewsCollection
-        .where("place.place_id", "==", place.place_id)
+        .where("place.place_id", "==", place_id)
         .get();
 
+      console.log("Place id:")
+      console.log(place_id)
       let reviewsArray = [];
       let reviewsRatings = [];
       let complianceRatings = [];

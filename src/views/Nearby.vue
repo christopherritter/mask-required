@@ -54,6 +54,7 @@
                         v-model="type"
                       >
                         <v-chip
+                          medium color="white"
                           v-for="(t, index) in place.types"
                           :key="index"
                           @click="findNearbyPlaces(t)"
