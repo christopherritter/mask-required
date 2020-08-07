@@ -908,11 +908,6 @@ const store = new Vuex.Store({
       let enforcementRatings = [];
 
       if (snapshot.empty) {
-        // console.log("No matching documents.");
-        store.commit("setReviews", []);
-        store.commit("setComplianceRating", []);
-        store.commit("setNotificationRating", []);
-        store.commit("setEnforcementRating", []);
         return;
       }
 
@@ -931,7 +926,7 @@ const store = new Vuex.Store({
         if (review.ratings && review.ratings[2].value) {
           enforcementRatings.push(review.ratings[2].value);
         }
-
+        console.log("Pushing review ratings!")
         reviewsRatings.push(review.rating);
         reviewsArray.push(review);
       });
@@ -943,6 +938,7 @@ const store = new Vuex.Store({
       totalRating = totalRating / reviewsArray.length;
       state.rating = Math.round(totalRating * 2) / 2;
 
+      console.log("Setting reviews.")
       store.commit("setReviews", reviewsArray);
       store.commit("setComplianceRating", complianceRatings);
       store.commit("setNotificationRating", notificationRatings);

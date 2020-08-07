@@ -300,8 +300,8 @@ export default {
     if (this.$store.state.place === null) {
       await this.$store.dispatch("fetchPlace", { 'place_id': this.$route.params.id });
     }
-
-    this.place = this.$store.getters.getPlace;
+    console.log("Fetching reviews.")
+    this.place = await this.$store.getters.getPlace;
     this.$store.dispatch("fetchReviews", this.place);
 
     this.showLocation(
