@@ -452,8 +452,8 @@ const store = new Vuex.Store({
         .where("place.place_id", "==", id)
         .get();
 
-      console.log("Place id:")
-      console.log(id)
+      console.log("Place id:");
+      console.log(id);
       let reviewsArray = [];
       let reviewsRatings = [];
       let complianceRatings = [];
@@ -466,8 +466,8 @@ const store = new Vuex.Store({
           rating: reviewsRatings,
           compliance: complianceRatings,
           notifications: notificationRatings,
-          enforcement: enforcementRatings
-        }
+          enforcement: enforcementRatings,
+        };
       }
 
       snapshot.forEach((doc) => {
@@ -485,7 +485,7 @@ const store = new Vuex.Store({
         if (review.ratings && review.ratings[2].value) {
           enforcementRatings.push(review.ratings[2].value);
         }
-        console.log("Pushing review ratings!")
+        console.log("Pushing review ratings!");
         reviewsRatings.push(review.rating);
         reviewsArray.push(review);
       });
@@ -503,8 +503,8 @@ const store = new Vuex.Store({
         ratings: reviewsRatings,
         compliance: complianceRatings,
         notifications: notificationRatings,
-        enforcement: enforcementRatings
-      }
+        enforcement: enforcementRatings,
+      };
     },
   },
   mutations: {
@@ -787,7 +787,7 @@ const store = new Vuex.Store({
         // dispatch("fetchReviews", newPlace.place_id);
       });
     },
-    async findNearbyPlaces({ state, commit }, type) {
+    async findNearbyPlaces({ state, commit, dispatch }, type) {
       const nearbyPlaces = [];
 
       // Retrieve the current coordinates using the navigator API
@@ -797,17 +797,33 @@ const store = new Vuex.Store({
         .where("types", "array-contains-any", [type])
         .get();
 
-        if (places.empty) {
-          console.log("No matching documents.");
-          return;
-        }
-        
-        places.forEach((doc) => {
-          let searchResult = doc.data();
-          nearbyPlaces.push(searchResult);
+      if (places.empty) {
+        console.log("No matching documents.");
+        return;
+      }
+
+      places.forEach((doc) => {
+        var searchResult = doc.data();
+
+        dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
+          if (reviews) {
+            searchResult.reviews = reviews.reviews;
+            searchResult.ratings = {};
+            searchResult.ratings.general = reviews.rating;
+            searchResult.ratings.compliance = reviews.compliance;
+            searchResult.ratings.notifications = reviews.notifications;
+            searchResult.ratings.enforcement = reviews.enforcement;
+            nearbyPlaces.push(searchResult);
+          } else {
+            nearbyPlaces.push(searchResult);
+          }
+          
         });
 
-        commit("setPlaces", nearbyPlaces);
+        
+      });
+
+      commit("setPlaces", nearbyPlaces);
     },
     async getGeohashRange({ state, commit }) {
       const lat = 0.0144927536231884; // degrees latitude per mile
@@ -994,8 +1010,8 @@ const store = new Vuex.Store({
         rating: await dispatch("averageRating", reviewsRatings),
         compliance: await dispatch("averageRating", complianceRatings),
         notifications: await dispatch("averageRating", notificationRatings),
-        enforcement: await dispatch("averageRating", enforcementRatings)
-      }
+        enforcement: await dispatch("averageRating", enforcementRatings),
+      };
     },
     async likeReview({ commit }, review) {
       const userId = fb.auth.currentUser.uid;
@@ -1025,7 +1041,7 @@ const store = new Vuex.Store({
       fb.reviewsCollection.doc(review.id).delete();
     },
     async showSearchBar({ commit }, val) {
-      commit("setSearchBar", val)
+      commit("setSearchBar", val);
     },
     async logout({ commit }) {
       await fb.auth.signOut();
@@ -1043,7 +1059,7 @@ const store = new Vuex.Store({
       averageRating = Math.round(averageRating * 2) / 2;
 
       return averageRating;
-    }
+    },
   },
 });
 

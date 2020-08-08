@@ -67,8 +67,7 @@
                       <v-row v-else align="center" justify="start">
                         <v-rating
                           disabled
-                          background-color="yellow"
-                          color="yellow accent-4"
+                          background-color="gray"
                           length="5"
                           dense
                           half-increments
@@ -244,19 +243,19 @@ export default {
     await this.$store.dispatch("findNearbyPlaces", currentType);
     this.places = this.$store.getters.getPlaces;
 
-    for (let p = 0; p < this.places.length; p++) {
-      var placeId = this.places[p].place_id;
-      this.$store.dispatch("fetchReviews", placeId).then((reviews) => {
-        if (reviews) {
-          this.places[p].reviews = reviews.reviews;
-          this.places[p].ratings = {};
-          this.places[p].ratings.general = reviews.rating;
-          this.places[p].ratings.compliance = reviews.compliance;
-          this.places[p].ratings.notifications = reviews.notifications;
-          this.places[p].ratings.enforcement = reviews.enforcement;
-        }
-      });
-    }
+    // for (let p = 0; p < this.places.length; p++) {
+    //   var placeId = this.places[p].place_id;
+    //   this.$store.dispatch("fetchReviews", placeId).then((reviews) => {
+    //     if (reviews) {
+    //       this.places[p].reviews = reviews.reviews;
+    //       this.places[p].ratings = {};
+    //       this.places[p].ratings.general = reviews.rating;
+    //       this.places[p].ratings.compliance = reviews.compliance;
+    //       this.places[p].ratings.notifications = reviews.notifications;
+    //       this.places[p].ratings.enforcement = reviews.enforcement;
+    //     }
+    //   });
+    // }
   },
   computed: {
     ...mapState([["validTypes"]]),
