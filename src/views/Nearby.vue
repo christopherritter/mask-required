@@ -4,8 +4,6 @@
       <v-row>
         <v-col>
           <h1>{{ $route.params.name | replaceUnderscore }} Reviews</h1>
-          <!-- <p>{{ $route.params.location }}</p>
-          <p>{{ $route.params.type }}</p> -->
         </v-col>
       </v-row>
       <v-row v-for="place in places" :key="place.place_id">
@@ -194,12 +192,13 @@
                   <v-row v-if="place.reviews">
                     <v-col>
                       <v-row v-for="review in place.reviews" :key="review.reviewId">
-                        <v-card-subtitle v-if="review.title">
+                        <h5 class="pl-4">Recent reviews</h5>
+                        <v-card-text v-if="review.title">
                           &ldquo;{{ review.title }}&rdquo;
-                        </v-card-subtitle>
-                        <v-card-subtitle v-else>
-                          &ldquo;No title found.&rdquo;
-                        </v-card-subtitle>
+                        </v-card-text>
+                        <v-card-text v-else>
+                          This comment lacks a title.
+                        </v-card-text>
                       </v-row>
                     </v-col>
                   </v-row>
@@ -243,19 +242,6 @@ export default {
     await this.$store.dispatch("findNearbyPlaces", currentType);
     this.places = this.$store.getters.getPlaces;
 
-    // for (let p = 0; p < this.places.length; p++) {
-    //   var placeId = this.places[p].place_id;
-    //   this.$store.dispatch("fetchReviews", placeId).then((reviews) => {
-    //     if (reviews) {
-    //       this.places[p].reviews = reviews.reviews;
-    //       this.places[p].ratings = {};
-    //       this.places[p].ratings.general = reviews.rating;
-    //       this.places[p].ratings.compliance = reviews.compliance;
-    //       this.places[p].ratings.notifications = reviews.notifications;
-    //       this.places[p].ratings.enforcement = reviews.enforcement;
-    //     }
-    //   });
-    // }
   },
   computed: {
     ...mapState([["validTypes"]]),

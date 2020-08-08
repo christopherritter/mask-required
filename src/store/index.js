@@ -873,7 +873,7 @@ const store = new Vuex.Store({
               name == "establishment" ||
               name == "finance" ||
               name == "floor" ||
-              name == "food" ||
+              // name == "food" ||
               name == "general_contractor" ||
               name == "geocode" ||
               name == "health" ||
