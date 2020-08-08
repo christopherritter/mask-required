@@ -63,8 +63,8 @@ export default {
     this.isLoadingTypes = false;
   },
   methods: {
-    viewNearby(type) {
-      this.$router.push("nearby/" + type.name);
+    async viewNearby(type) {
+      this.$router.push({ name: "nearby", params: { name: type.name } });
     },
   },
   filters: {

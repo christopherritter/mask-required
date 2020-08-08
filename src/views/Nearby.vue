@@ -239,11 +239,11 @@ export default {
     if (this.$store.state.upperRange === null) {
       await this.$store.dispatch("getGeohashRange");
     }
-    if (this.$store.state.places === null) {
-      var currentType = this.$route.params.name;
-      await this.$store.dispatch("findNearbyPlaces", currentType);
-    }
+
+    var currentType = this.$route.params.name;
+    await this.$store.dispatch("findNearbyPlaces", currentType);
     this.places = this.$store.getters.getPlaces;
+
     for (let p = 0; p < this.places.length; p++) {
       var placeId = this.places[p].place_id;
       this.$store.dispatch("fetchReviews", placeId).then((reviews) => {
