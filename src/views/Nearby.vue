@@ -194,7 +194,14 @@
                   </v-row>
                   <v-row v-if="place.reviews">
                     <v-col>
-                      <h6>Reviews</h6>
+                      <v-row v-for="review in place.reviews" :key="review.reviewId">
+                        <v-card-subtitle v-if="review.title">
+                          &ldquo;{{ review.title }}&rdquo;
+                        </v-card-subtitle>
+                        <v-card-subtitle v-else>
+                          &ldquo;No title found.&rdquo;
+                        </v-card-subtitle>
+                      </v-row>
                     </v-col>
                   </v-row>
                 </v-col>
