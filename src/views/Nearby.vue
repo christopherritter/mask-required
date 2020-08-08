@@ -32,10 +32,10 @@
                   style="min-width: 100px; max-width: 100%;"
                   class="flex-grow-1 flex-shrink-0"
                 >
-                  <v-row>
+                  <v-row no-gutters>
                     <v-col class="flex-grow-1 flex-shrink-0">
                       <v-row>
-                        <v-card-title class="pa-3">{{
+                        <v-card-title class="px-3 pt-4 pb-1">{{
                           place.name
                         }}</v-card-title>
                       </v-row>
@@ -57,10 +57,10 @@
                           class="mb-1 ml-2"
                         ></v-rating>
 
-                        <span class="ml-2" v-if="place.reviews.length >= 2">
+                        <span class="caption ml-2" v-if="place.reviews.length >= 2">
                           ({{ place.reviews.length }} Reviews)
                         </span>
-                        <span class="ml-2" v-else>
+                        <span class="caption ml-2" v-else>
                           ({{ place.reviews.length }} Review)
                         </span>
                       </v-row>
@@ -78,17 +78,17 @@
                           class="mb-1 ml-2"
                         ></v-rating>
 
-                        <span class="ml-2">(0 Reviews)</span>
+                        <span class="caption ml-2">(0 Reviews)</span>
                       </v-row>
                       <v-row>
-                        <v-card-text class="pa-3">{{
+                        <v-card-text class="px-3 py-2">{{
                           place.formatted_address
                         }}</v-card-text>
                       </v-row>
                     </v-col>
                     <v-col class="flex-grow-0 flex-shrink-0" v-if="place.ratings">
-                      <v-row class="d-flex flex-nowrap">
-                        Compliance
+                      <v-row class="d-flex flex-nowrap" align="center" justify="end">
+                        <strong class="mt-5">Compliance</strong>
                         <v-rating
                           :value="place.ratings.compliance"
                           background-color="yellow"
@@ -99,11 +99,11 @@
                           hover
                           size="18"
                           readonly
-                          class="mb-1 mx-2"
+                          class="mb-1 mt-5 ml-2 mr-10"
                         ></v-rating>
                       </v-row>
-                      <v-row class="d-flex flex-nowrap">
-                        Notifications
+                      <v-row class="d-flex flex-nowrap" align="center" justify="end">
+                        <strong>Notifications</strong>
                         <v-rating
                           :value="place.ratings.notifications"
                           background-color="yellow"
@@ -114,11 +114,11 @@
                           hover
                           size="18"
                           readonly
-                          class="mb-1 mx-2"
+                          class="mb-1 ml-2 mr-10"
                         ></v-rating>
                       </v-row>
-                      <v-row class="d-flex flex-nowrap">
-                        Enforcement
+                      <v-row class="d-flex flex-nowrap" align="center" justify="end">
+                        <strong>Enforcement</strong>
                         <v-rating
                           :value="place.ratings.enforcement"
                           background-color="yellow"
@@ -129,13 +129,13 @@
                           hover
                           size="18"
                           readonly
-                          class="mb-1 mx-2"
+                          class="mb-1 ml-2 mr-10"
                         ></v-rating>
                       </v-row>
                     </v-col>
                     <v-col class="flex-grow-0 flex-shrink-0" v-else>
-                      <v-row class="d-flex flex-nowrap" justify="end">
-                        Compliance
+                      <v-row class="d-flex flex-nowrap" align="center" justify="end">
+                        <strong class="mt-5">Compliance</strong>
                         <v-rating
                           disabled
                           background-color="gray"
@@ -145,11 +145,11 @@
                           hover
                           size="18"
                           readonly
-                          class="mb-1 mx-2"
+                          class="mb-1 mt-5 ml-2 mr-10"
                         ></v-rating>
                       </v-row>
-                      <v-row class="d-flex flex-nowrap" justify="end">
-                        Notifications
+                      <v-row class="d-flex flex-nowrap" align="center" justify="end">
+                        <strong>Notifications</strong>
                         <v-rating
                           disabled
                           background-color="gray"
@@ -159,11 +159,11 @@
                           hover
                           size="18"
                           readonly
-                          class="mb-1 mx-2"
+                          class="mb-1 ml-2 mr-10"
                         ></v-rating>
                       </v-row>
-                      <v-row class="d-flex flex-nowrap" justify="end">
-                        Enforcement
+                      <v-row class="d-flex flex-nowrap" align="center" justify="end">
+                        <strong>Enforcement</strong>
                         <v-rating
                           disabled
                           background-color="gray"
@@ -173,13 +173,13 @@
                           hover
                           size="18"
                           readonly
-                          class="mb-1 mx-2"
+                          class="mb-1 ml-2 mr-10"
                         ></v-rating>
                       </v-row>
                     </v-col>
                   </v-row>
                   <v-row v-if="place.types" no-gutters>
-                    <v-chip-group show-arrows v-model="type">
+                    <v-chip-group show-arrows class="mb-2" v-model="type">
                       <v-chip
                         medium
                         color="gray"
