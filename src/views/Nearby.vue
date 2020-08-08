@@ -49,12 +49,10 @@
                       place.formatted_address
                     }}</v-card-text>
                     <v-card-text class="pa-3">
-                      <v-chip-group
-                        show-arrows
-                        v-model="type"
-                      >
+                      <v-chip-group show-arrows v-model="type">
                         <v-chip
-                          medium color="white"
+                          medium
+                          color="white"
                           v-for="(t, index) in place.types"
                           :key="index"
                           @click="findNearbyPlaces(t)"
@@ -104,9 +102,22 @@ export default {
       await this.$store.dispatch("findNearbyPlaces", currentType);
     }
     this.places = this.$store.getters.getPlaces;
+    for (let p = 0; p < this.places.length; p++) {
+      var placeId = this.places[p].place_id;
+      this.$store.dispatch("fetchReviews", placeId).then((reviews) => {
+        if (reviews) {
+          this.places[p].reviews = reviews.reviews;
+          this.places[p].ratings = {};
+          this.places[p].ratings.general = reviews.rating;
+          this.places[p].ratings.compliance = reviews.compliance;
+          this.places[p].ratings.notifications = reviews.notifications;
+          this.places[p].ratings.enforcement = reviews.enforcement;
+        }
+      });
+    }
   },
   computed: {
-    ...mapState([["validTypes"], ["reviews"]]),
+    ...mapState([["validTypes"]]),
   },
   methods: {
     async findNearbyPlaces(type) {
@@ -117,7 +128,7 @@ export default {
     },
     async viewPlace(place) {
       await this.$store.dispatch("fetchPlace", place);
-      this.$router.push({name: "place", params: { id: place.place_id }});
+      this.$router.push({ name: "place", params: { id: place.place_id } });
     },
   },
   filters: {

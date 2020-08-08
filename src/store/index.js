@@ -447,6 +447,65 @@ const store = new Vuex.Store({
     getPlaces: (state) => state.places,
     getPlace: (state) => state.place,
     getSearchBar: (state) => state.showSearchbar,
+    getReviewsById: (state) => (id) => {
+      const snapshot = fb.reviewsCollection
+        .where("place.place_id", "==", id)
+        .get();
+
+      console.log("Place id:")
+      console.log(id)
+      let reviewsArray = [];
+      let reviewsRatings = [];
+      let complianceRatings = [];
+      let notificationRatings = [];
+      let enforcementRatings = [];
+
+      if (snapshot.empty) {
+        return {
+          reviews: reviewsArray,
+          rating: reviewsRatings,
+          compliance: complianceRatings,
+          notifications: notificationRatings,
+          enforcement: enforcementRatings
+        }
+      }
+
+      snapshot.forEach((doc) => {
+        let review = doc.data();
+        review.id = doc.id;
+
+        if (review.ratings && review.ratings[0].value) {
+          complianceRatings.push(review.ratings[0].value);
+        }
+
+        if (review.ratings && review.ratings[1].value) {
+          notificationRatings.push(review.ratings[1].value);
+        }
+
+        if (review.ratings && review.ratings[2].value) {
+          enforcementRatings.push(review.ratings[2].value);
+        }
+        console.log("Pushing review ratings!")
+        reviewsRatings.push(review.rating);
+        reviewsArray.push(review);
+      });
+
+      var totalRating = reviewsRatings.reduce(function(a, b) {
+        return a + b;
+      }, 0);
+
+      totalRating = totalRating / reviewsArray.length;
+      state.rating = Math.round(totalRating * 2) / 2;
+
+      console.log("Returning reviews.");
+      return {
+        reviews: reviewsArray,
+        ratings: reviewsRatings,
+        compliance: complianceRatings,
+        notifications: notificationRatings,
+        enforcement: enforcementRatings
+      }
+    },
   },
   mutations: {
     updateField,
@@ -514,7 +573,7 @@ const store = new Vuex.Store({
     },
     setSearchBar(state, val) {
       state.showSearchBar = val;
-    }
+    },
     // increaseTypeCounter(state, val) {
     //   state.types[val]++;
     // }
@@ -703,7 +762,7 @@ const store = new Vuex.Store({
 
           fb.placesCollection.add(newPlace);
           store.commit("setPlace", newPlace);
-          dispatch("fetchReviews", newPlace);
+          // dispatch("fetchReviews", newPlace.place_id);
           router.push({ name: "place" });
         })
         .catch((error) => {
@@ -725,7 +784,7 @@ const store = new Vuex.Store({
         // console.log(doc.id, '=>', doc.data());
         var newPlace = doc.data();
         commit("setPlace", newPlace);
-        // dispatch("fetchReviews", newPlace);
+        // dispatch("fetchReviews", newPlace.place_id);
       });
     },
     async findNearbyPlaces({ state, commit }, type) {
@@ -895,14 +954,11 @@ const store = new Vuex.Store({
           });
         });
     },
-    async fetchReviews({ state }, place_id) {
-      // const citiesRef = db.collection("cities");
+    async fetchReviews({ dispatch }, place_id) {
       const snapshot = await fb.reviewsCollection
         .where("place.place_id", "==", place_id)
         .get();
 
-      console.log("Place id:")
-      console.log(place_id)
       let reviewsArray = [];
       let reviewsRatings = [];
       let complianceRatings = [];
@@ -928,23 +984,18 @@ const store = new Vuex.Store({
         if (review.ratings && review.ratings[2].value) {
           enforcementRatings.push(review.ratings[2].value);
         }
-        console.log("Pushing review ratings!")
+
         reviewsRatings.push(review.rating);
         reviewsArray.push(review);
       });
 
-      var totalRating = reviewsRatings.reduce(function(a, b) {
-        return a + b;
-      }, 0);
-
-      totalRating = totalRating / reviewsArray.length;
-      state.rating = Math.round(totalRating * 2) / 2;
-
-      console.log("Setting reviews.")
-      store.commit("setReviews", reviewsArray);
-      store.commit("setComplianceRating", complianceRatings);
-      store.commit("setNotificationRating", notificationRatings);
-      store.commit("setEnforcementRating", enforcementRatings);
+      return {
+        reviews: reviewsArray,
+        rating: await dispatch("averageRating", reviewsRatings),
+        compliance: await dispatch("averageRating", complianceRatings),
+        notifications: await dispatch("averageRating", notificationRatings),
+        enforcement: await dispatch("averageRating", enforcementRatings)
+      }
     },
     async likeReview({ commit }, review) {
       const userId = fb.auth.currentUser.uid;
@@ -983,6 +1034,16 @@ const store = new Vuex.Store({
       commit("setUserProfile", {});
       router.push("/login");
     },
+    async averageRating({}, ratings) {
+      var averageRating = ratings.reduce(function(a, b) {
+        return a + b;
+      }, 0);
+
+      averageRating = averageRating / ratings.length;
+      averageRating = Math.round(averageRating * 2) / 2;
+
+      return averageRating;
+    }
   },
 });
 

@@ -277,6 +277,7 @@ export default {
   data() {
     return {
       place: {},
+      reviews: [],
       showViewModal: false,
       showEditModal: false,
       showDeleteModal: false,
@@ -285,7 +286,7 @@ export default {
     };
   },
   async mounted() {
-    // this.$store.dispatch("showSearchBar", true);
+    this.$store.dispatch("showSearchBar", true);
 
     if (this.$store.state.place === null) {
       await this.$store.dispatch("fetchPlace", {
@@ -295,7 +296,8 @@ export default {
 
     console.log("Fetching reviews when mounted:")
     this.place = await this.$store.getters.getPlace;
-    this.$store.dispatch("fetchReviews", this.place.place_id);
+    this.reviews = this.$store.getters.getReviewsById(this.place.place_id);
+    // this.$store.dispatch("fetchReviews", this.place.place_id);
 
     this.showLocation(
       this.place.geometry.location.lat,
@@ -323,15 +325,9 @@ export default {
         this.showDetails = true;
       }
     },
-    // reviews(newValue, oldValue) {
-    //   if (newValue != oldValue) {
-    //     console.log("Fetching reviews whenever they change:")
-    //     this.$store.dispatch("fetchReviews", this.place.place_id);
-    //   }
-    // },
   },
   computed: {
-    ...mapState([["userProfile"], ["reviews"], "rating", ["ratings"]]),
+    ...mapState([["userProfile"], "rating", ["ratings"]]),
     columnWidth() {
       if (this.showDetails) {
         return 4;
@@ -356,8 +352,6 @@ export default {
     async findNearbyPlaces(type) {
       await this.$store.dispatch("findNearbyPlaces", type);
       this.$router.push({ name: "nearby", params: { name: type }});
-      // this.type = type;
-      // this.places = this.$store.getters.getPlaces;
     },
     userReview(review) {
       if (this.userProfile.userId == review.userId) {
