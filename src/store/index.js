@@ -712,7 +712,7 @@ const store = new Vuex.Store({
         });
     },
     async fetchPlace({ dispatch, commit }, place) {
-      console.log("Fetching place has been called.");
+      // console.log("Fetching place has been called.");
       const snapshot = await fb.placesCollection
         .where("place_id", "==", place.place_id)
         .get();
@@ -723,11 +723,11 @@ const store = new Vuex.Store({
         dispatch("createPlace", place);
         return;
       }
-      console.log("This is what we got back:");
+      // console.log("This is what we got back:");
       snapshot.forEach((doc) => {
         // console.log(doc.id, '=>', doc.data());
         const newPlace = doc.data();
-        console.log(newPlace);
+        // console.log(newPlace);
         dispatch("fetchReviews", newPlace.place_id).then((reviews) => {
           if (reviews) {
             newPlace.reviews = reviews.reviews;
@@ -738,7 +738,7 @@ const store = new Vuex.Store({
             newPlace.ratings.enforcement = reviews.enforcement;
           }
         });
-        console.log("Commiting place to store.")
+        // console.log("Commiting place to store.")
         commit("setPlace", newPlace);
       });
       

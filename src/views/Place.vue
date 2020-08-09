@@ -490,23 +490,23 @@ export default {
   async created() {
     this.$store.dispatch("showSearchBar", true);
 
-    console.log("Fetching reviews when created:");
+    // console.log("Fetching reviews when created:");
     await this.$store.dispatch("fetchPlace", {
       place_id: this.$route.params.id,
       rating: 0,
     });
 
-    console.log("Setting this place in view.");
-    console.log(this.$store.getters.getPlace);
+    // console.log("Setting this place in view.");
+    // console.log(this.$store.getters.getPlace);
     this.place = this.$store.getters.getPlace;
-    console.log("Got place, showing location.");
+    // console.log("Got place, showing location.");
     this.showLocation(
       this.place.geometry.location.lat,
       this.place.geometry.location.lng
     );
-    // if (this.place.isOpen) {
-    //   this.showDetails = true;
-    // }
+    // // if (this.place.isOpen) {
+    // //   this.showDetails = true;
+    // // }
     if (this.$store.state.userLocation.lat !== null) {
       this.userLocation = true;
     }
