@@ -30,7 +30,7 @@
                 place.formatted_address
               }}</v-card-text>
             </v-row>
-            <v-row v-if="place.ratings" no-gutters align="center" justify="start">
+            <v-row v-if="place.reviews" no-gutters align="center" justify="start">
               <v-rating
                 v-model="place.ratings.general"
                 background-color="yellow"
@@ -67,7 +67,7 @@
       </v-row>
       <v-row>
         <v-col cols="12" sm="12" :md="columnWidth">
-          <v-card>
+          <v-card v-if="place.reviews">
             <v-card-title>Ratings and reviews</v-card-title>
             <v-card-actions class="px-4 pb-4">
               <v-avatar color="teal" size="64">
@@ -182,6 +182,117 @@
               </v-list-item>
             </v-list>
           </v-card>
+          <v-card v-else>
+            <v-card-title>Ratings and reviews</v-card-title>
+            <v-card-actions class="px-4 pb-4">
+              <v-avatar color="teal" size="64">
+                <span class="white--text headline">0</span>
+              </v-avatar>
+              <v-spacer></v-spacer>
+              <v-rating
+                background-color="gray"
+                color="gray darken-3"
+                length="5"
+                dense
+                half-increments
+                hover
+                size="18"
+                readonly
+              ></v-rating>
+              <v-spacer></v-spacer>
+              <span class="caption mr-2 font-weight-medium">
+                ( 0 reviews )
+              </span>
+            </v-card-actions>
+            <v-divider class="my-0"></v-divider>
+            <v-list dense class="pl-2">
+              <v-subheader>RATINGS</v-subheader>
+              <v-list-item>
+                <!-- <v-list-item-icon class="mr-2">
+                  <v-icon v-text="rating.icon" small></v-icon>
+                </v-list-item-icon> -->
+                <v-list-item-content>
+                  <v-list-item-title>Compliance</v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-content class="py-0">
+                  <v-rating
+                    background-color="gray lighten-3"
+                    color="gray"
+                    length="5"
+                    dense
+                    small
+                    readonly
+                  ></v-rating>
+                </v-list-item-content>
+                <v-list-item-icon class="mr-2">
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-icon v-bind="attrs" v-on="on" small
+                        >mdi-information</v-icon
+                      >
+                    </template>
+                    <!-- <span>{{ rating.description }}</span> -->
+                  </v-tooltip>
+                </v-list-item-icon>
+              </v-list-item>
+              <v-list-item>
+                <!-- <v-list-item-icon class="mr-2">
+                  <v-icon v-text="rating.icon" small></v-icon>
+                </v-list-item-icon> -->
+                <v-list-item-content>
+                  <v-list-item-title>Notifications</v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-content class="py-0">
+                  <v-rating
+                    background-color="gray lighten-3"
+                    color="gray"
+                    length="5"
+                    dense
+                    small
+                    readonly
+                  ></v-rating>
+                </v-list-item-content>
+                <v-list-item-icon class="mr-2">
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-icon v-bind="attrs" v-on="on" small
+                        >mdi-information</v-icon
+                      >
+                    </template>
+                    <!-- <span>{{ rating.description }}</span> -->
+                  </v-tooltip>
+                </v-list-item-icon>
+              </v-list-item>
+              <v-list-item>
+                <!-- <v-list-item-icon class="mr-2">
+                  <v-icon v-text="rating.icon" small></v-icon>
+                </v-list-item-icon> -->
+                <v-list-item-content>
+                  <v-list-item-title>Enforcement</v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-content class="py-0">
+                  <v-rating
+                    background-color="gray lighten-3"
+                    color="gray"
+                    length="5"
+                    dense
+                    small
+                    readonly
+                  ></v-rating>
+                </v-list-item-content>
+                <v-list-item-icon class="mr-2">
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-icon v-bind="attrs" v-on="on" small
+                        >mdi-information</v-icon
+                      >
+                    </template>
+                    <!-- <span>{{ rating.description }}</span> -->
+                  </v-tooltip>
+                </v-list-item-icon>
+              </v-list-item>
+            </v-list>
+          </v-card>
         </v-col>
         <v-col v-if="showDetails" cols="12" sm="12" :md="columnWidth">
           <v-card>
@@ -235,7 +346,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-card v-if="place.reviews.length">
+          <v-card v-if="place.reviews">
             <v-row>
               <v-col>
                 <v-card-title
@@ -342,6 +453,7 @@ export default {
       showDeleteModal: false,
       showDetails: false,
       fullReview: {},
+      userLocation: false
     };
   },
   async created() {
@@ -361,6 +473,9 @@ export default {
     );
     if (this.place.isOpen) {
       this.showDetails = true;
+    }
+    if (this.$store.state.userLocation.lat !== null) {
+      this.userLocation = true;
     }
   },
   components: {
