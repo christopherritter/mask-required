@@ -643,10 +643,14 @@ const store = new Vuex.Store({
       }
     },
     async fetchUserLocation({ commit }) {
-      navigator.geolocation.getCurrentPosition((position) => {
-        const { latitude, longitude } = position.coords;
-        commit("setUserLocation", { latitude, longitude });
-      });
+      if(!navigator.geolocation) {
+        console.log('Geolocation is not supported by your browser');
+      } else {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const { latitude, longitude } = position.coords;
+          commit("setUserLocation", { latitude, longitude });
+        });
+      }
     },
     async updateProfile({ dispatch }, user) {
       const userId = fb.auth.currentUser.uid;
