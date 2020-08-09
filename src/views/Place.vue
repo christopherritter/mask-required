@@ -30,9 +30,9 @@
                 place.formatted_address
               }}</v-card-text>
             </v-row>
-            <v-row no-gutters align="center" justify="start">
+            <v-row v-if="place.ratings" no-gutters align="center" justify="start">
               <v-rating
-                v-model="rating"
+                v-model="place.ratings.general"
                 background-color="yellow"
                 color="yellow accent-4"
                 length="5"
@@ -45,7 +45,7 @@
               ></v-rating>
 
               <v-chip small color="white" :ripple="false">
-                {{ reviews.length }} reviews
+                {{ place.reviews.length }} reviews
               </v-chip>
 
               <v-divider vertical class="ma-2">|</v-divider>
@@ -71,11 +71,11 @@
             <v-card-title>Ratings and reviews</v-card-title>
             <v-card-actions class="px-4 pb-4">
               <v-avatar color="teal" size="64">
-                <span class="white--text headline">{{ rating }}</span>
+                <span class="white--text headline">{{ place.ratings.general }}</span>
               </v-avatar>
               <v-spacer></v-spacer>
               <v-rating
-                v-model="rating"
+                v-model="place.ratings.general"
                 background-color="yellow"
                 color="yellow accent-4"
                 length="5"
@@ -87,25 +87,22 @@
               ></v-rating>
               <v-spacer></v-spacer>
               <span class="caption mr-2 font-weight-medium">
-                ( {{ reviews.length }} reviews )
+                ( {{ place.reviews.length }} reviews )
               </span>
             </v-card-actions>
             <v-divider class="my-0"></v-divider>
             <v-list dense class="pl-2">
               <v-subheader>RATINGS</v-subheader>
-              <v-list-item
-                v-for="rating in ratings"
-                :key="'rating' + rating.id"
-              >
-                <v-list-item-icon class="mr-2">
+              <v-list-item>
+                <!-- <v-list-item-icon class="mr-2">
                   <v-icon v-text="rating.icon" small></v-icon>
-                </v-list-item-icon>
+                </v-list-item-icon> -->
                 <v-list-item-content>
-                  <v-list-item-title v-text="rating.label"></v-list-item-title>
+                  <v-list-item-title>Compliance</v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-content class="py-0">
                   <v-rating
-                    v-model="rating.value"
+                    v-model="place.ratings.compliance"
                     background-color="purple lighten-3"
                     color="purple"
                     length="5"
@@ -121,7 +118,65 @@
                         >mdi-information</v-icon
                       >
                     </template>
-                    <span>{{ rating.description }}</span>
+                    <!-- <span>{{ rating.description }}</span> -->
+                  </v-tooltip>
+                </v-list-item-icon>
+              </v-list-item>
+              <v-list-item>
+                <!-- <v-list-item-icon class="mr-2">
+                  <v-icon v-text="rating.icon" small></v-icon>
+                </v-list-item-icon> -->
+                <v-list-item-content>
+                  <v-list-item-title>Notifications</v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-content class="py-0">
+                  <v-rating
+                    v-model="place.ratings.notifications"
+                    background-color="purple lighten-3"
+                    color="purple"
+                    length="5"
+                    dense
+                    small
+                    readonly
+                  ></v-rating>
+                </v-list-item-content>
+                <v-list-item-icon class="mr-2">
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-icon v-bind="attrs" v-on="on" small
+                        >mdi-information</v-icon
+                      >
+                    </template>
+                    <!-- <span>{{ rating.description }}</span> -->
+                  </v-tooltip>
+                </v-list-item-icon>
+              </v-list-item>
+              <v-list-item>
+                <!-- <v-list-item-icon class="mr-2">
+                  <v-icon v-text="rating.icon" small></v-icon>
+                </v-list-item-icon> -->
+                <v-list-item-content>
+                  <v-list-item-title>Enforcement</v-list-item-title>
+                </v-list-item-content>
+                <v-list-item-content class="py-0">
+                  <v-rating
+                    v-model="place.ratings.enforcement"
+                    background-color="purple lighten-3"
+                    color="purple"
+                    length="5"
+                    dense
+                    small
+                    readonly
+                  ></v-rating>
+                </v-list-item-content>
+                <v-list-item-icon class="mr-2">
+                  <v-tooltip right>
+                    <template v-slot:activator="{ on, attrs }">
+                      <v-icon v-bind="attrs" v-on="on" small
+                        >mdi-information</v-icon
+                      >
+                    </template>
+                    <!-- <span>{{ rating.description }}</span> -->
                   </v-tooltip>
                 </v-list-item-icon>
               </v-list-item>
@@ -180,13 +235,13 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-card v-if="reviews.length">
+          <v-card v-if="place.reviews.length">
             <v-row>
               <v-col>
                 <v-card-title
                   >Reviews
                   <span class="reviews-length"
-                    >({{ reviews.length }})</span
+                    >({{ place.reviews.length }})</span
                   ></v-card-title
                 >
               </v-col>
@@ -204,7 +259,7 @@
             </v-row>
             <v-divider></v-divider>
             <div
-              v-for="review in reviews"
+              v-for="review in place.reviews"
               :key="'review-' + review.id"
               class="review"
             >
@@ -274,9 +329,13 @@ import EditReview from "@/components/EditReview";
 import DeleteReview from "@/components/DeleteReview";
 
 export default {
+  name: "place",
   data() {
     return {
-      place: {},
+      place: {
+        reviews: [],
+        ratings: {}
+      },
       reviews: [],
       showViewModal: false,
       showEditModal: false,
@@ -285,20 +344,17 @@ export default {
       fullReview: {},
     };
   },
-  async mounted() {
+  async created() {
     this.$store.dispatch("showSearchBar", true);
 
-    if (this.$store.state.place === null) {
-      await this.$store.dispatch("fetchPlace", {
-        place_id: this.$route.params.id,
-      });
-    }
-
-    console.log("Fetching reviews when mounted:")
-    this.place = await this.$store.getters.getPlace;
-    this.reviews = this.$store.getters.getReviewsById(this.place.place_id);
-    // this.$store.dispatch("fetchReviews", this.place.place_id);
-
+    console.log("Fetching reviews when created:")
+    await this.$store.dispatch("fetchPlace", {
+      place_id: this.$route.params.id,
+      rating: 0
+    });
+    console.log("Setting this place in view.")
+    this.place = this.$store.getters.getPlace;
+    console.log("Got place, showing location.")
     this.showLocation(
       this.place.geometry.location.lat,
       this.place.geometry.location.lng
@@ -312,22 +368,22 @@ export default {
     EditReview,
     DeleteReview,
   },
-  watch: {
-    place(newValue, oldValue) {
-      this.showLocation(
-        this.place.geometry.location.lat,
-        this.place.geometry.location.lng
-      );
+  // watch: {
+  //   place(newValue, oldValue) {
+  //     this.showLocation(
+  //       this.place.geometry.location.lat,
+  //       this.place.geometry.location.lng
+  //     );
 
-      if (!newValue.open_hours) {
-        this.showDetails = false;
-      } else {
-        this.showDetails = true;
-      }
-    },
-  },
+  //     if (!newValue.open_hours) {
+  //       this.showDetails = false;
+  //     } else {
+  //       this.showDetails = true;
+  //     }
+  //   },
+  // },
   computed: {
-    ...mapState([["userProfile"], "rating", ["ratings"]]),
+    ...mapState([["userProfile"], ["ratings"]]),
     columnWidth() {
       if (this.showDetails) {
         return 4;

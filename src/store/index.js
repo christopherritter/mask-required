@@ -447,65 +447,6 @@ const store = new Vuex.Store({
     getPlaces: (state) => state.places,
     getPlace: (state) => state.place,
     getSearchBar: (state) => state.showSearchbar,
-    getReviewsById: (state) => (id) => {
-      const snapshot = fb.reviewsCollection
-        .where("place.place_id", "==", id)
-        .get();
-
-      console.log("Place id:");
-      console.log(id);
-      let reviewsArray = [];
-      let reviewsRatings = [];
-      let complianceRatings = [];
-      let notificationRatings = [];
-      let enforcementRatings = [];
-
-      if (snapshot.empty) {
-        return {
-          reviews: reviewsArray,
-          rating: reviewsRatings,
-          compliance: complianceRatings,
-          notifications: notificationRatings,
-          enforcement: enforcementRatings,
-        };
-      }
-
-      snapshot.forEach((doc) => {
-        let review = doc.data();
-        review.id = doc.id;
-
-        if (review.ratings && review.ratings[0].value) {
-          complianceRatings.push(review.ratings[0].value);
-        }
-
-        if (review.ratings && review.ratings[1].value) {
-          notificationRatings.push(review.ratings[1].value);
-        }
-
-        if (review.ratings && review.ratings[2].value) {
-          enforcementRatings.push(review.ratings[2].value);
-        }
-        console.log("Pushing review ratings!");
-        reviewsRatings.push(review.rating);
-        reviewsArray.push(review);
-      });
-
-      var totalRating = reviewsRatings.reduce(function(a, b) {
-        return a + b;
-      }, 0);
-
-      totalRating = totalRating / reviewsArray.length;
-      state.rating = Math.round(totalRating * 2) / 2;
-
-      console.log("Returning reviews.");
-      return {
-        reviews: reviewsArray,
-        ratings: reviewsRatings,
-        compliance: complianceRatings,
-        notifications: notificationRatings,
-        enforcement: enforcementRatings,
-      };
-    },
   },
   mutations: {
     updateField,
@@ -574,9 +515,6 @@ const store = new Vuex.Store({
     setSearchBar(state, val) {
       state.showSearchBar = val;
     },
-    // increaseTypeCounter(state, val) {
-    //   state.types[val]++;
-    // }
   },
   actions: {
     async login({ dispatch }, form) {
@@ -770,22 +708,40 @@ const store = new Vuex.Store({
         });
     },
     async fetchPlace({ dispatch, commit }, place) {
+      console.log("Fetching place has been called.");
       const snapshot = await fb.placesCollection
         .where("place_id", "==", place.place_id)
         .get();
-
+      
+      
       if (snapshot.empty) {
-        // console.log('No matching documents.');
+        console.log("No matching documents.");
         dispatch("createPlace", place);
         return;
       }
-
+      console.log("This is what we got back:");
       snapshot.forEach((doc) => {
         // console.log(doc.id, '=>', doc.data());
+        console.log(doc.data());
+        console.log("Checking out the new place");
         var newPlace = doc.data();
-        commit("setPlace", newPlace);
-        // dispatch("fetchReviews", newPlace.place_id);
+        console.log(newPlace);
+        dispatch("fetchReviews", newPlace.place_id).then((reviews) => {
+          if (reviews) {
+            newPlace.reviews = reviews.reviews;
+            newPlace.ratings = {};
+            newPlace.ratings.general = reviews.rating;
+            newPlace.ratings.compliance = reviews.compliance;
+            newPlace.ratings.notifications = reviews.notifications;
+            newPlace.ratings.enforcement = reviews.enforcement;
+          }
+          console.log("Setting place");
+          commit("setPlace", newPlace);
+        });
+        
       });
+      
+      // dispatch("fetchReviews", newPlace.place_id);
     },
     async findNearbyPlaces({ state, commit, dispatch }, type) {
       const nearbyPlaces = [];
@@ -817,10 +773,7 @@ const store = new Vuex.Store({
           } else {
             nearbyPlaces.push(searchResult);
           }
-          
         });
-
-        
       });
 
       commit("setPlaces", nearbyPlaces);
