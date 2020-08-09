@@ -94,9 +94,9 @@
             <v-list dense class="pl-2">
               <v-subheader>RATINGS</v-subheader>
               <v-list-item>
-                <!-- <v-list-item-icon class="mr-2">
-                  <v-icon v-text="rating.icon" small></v-icon>
-                </v-list-item-icon> -->
+                <v-list-item-icon class="mr-2">
+                  <v-icon v-text="ratings[0].icon" small></v-icon>
+                </v-list-item-icon>
                 <v-list-item-content>
                   <v-list-item-title>Compliance</v-list-item-title>
                 </v-list-item-content>
@@ -118,16 +118,16 @@
                         >mdi-information</v-icon
                       >
                     </template>
-                    <!-- <span>{{ rating.description }}</span> -->
+                    <span>{{ ratings[0].description }}</span>
                   </v-tooltip>
                 </v-list-item-icon>
               </v-list-item>
               <v-list-item>
-                <!-- <v-list-item-icon class="mr-2">
-                  <v-icon v-text="rating.icon" small></v-icon>
-                </v-list-item-icon> -->
+                <v-list-item-icon class="mr-2">
+                  <v-icon v-text="ratings[1].icon" small></v-icon>
+                </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title>Notifications</v-list-item-title>
+                  <v-list-item-title>{{ ratings[1].label }}</v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-content class="py-0">
                   <v-rating
@@ -147,16 +147,16 @@
                         >mdi-information</v-icon
                       >
                     </template>
-                    <!-- <span>{{ rating.description }}</span> -->
+                    <span>{{ ratings[1].description }}</span>
                   </v-tooltip>
                 </v-list-item-icon>
               </v-list-item>
               <v-list-item>
-                <!-- <v-list-item-icon class="mr-2">
-                  <v-icon v-text="rating.icon" small></v-icon>
-                </v-list-item-icon> -->
+                <v-list-item-icon class="mr-2">
+                  <v-icon v-text="ratings[2].icon" small></v-icon>
+                </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title>Enforcement</v-list-item-title>
+                  <v-list-item-title>{{ ratings[2].label }}</v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-content class="py-0">
                   <v-rating
@@ -176,7 +176,7 @@
                         >mdi-information</v-icon
                       >
                     </template>
-                    <!-- <span>{{ rating.description }}</span> -->
+                    <span>{{ ratings[2].description }}</span>
                   </v-tooltip>
                 </v-list-item-icon>
               </v-list-item>
@@ -208,11 +208,11 @@
             <v-list dense class="pl-2">
               <v-subheader>RATINGS</v-subheader>
               <v-list-item>
-                <!-- <v-list-item-icon class="mr-2">
-                  <v-icon v-text="rating.icon" small></v-icon>
-                </v-list-item-icon> -->
+                <v-list-item-icon class="mr-2">
+                  <v-icon v-text="ratings[0].icon" small></v-icon>
+                </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title>Compliance</v-list-item-title>
+                  <v-list-item-title>{{ ratings[0].label }}</v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-content class="py-0">
                   <v-rating
@@ -231,16 +231,16 @@
                         >mdi-information</v-icon
                       >
                     </template>
-                    <!-- <span>{{ rating.description }}</span> -->
+                    <span>{{ ratings[0].description }}</span>
                   </v-tooltip>
                 </v-list-item-icon>
               </v-list-item>
               <v-list-item>
-                <!-- <v-list-item-icon class="mr-2">
-                  <v-icon v-text="rating.icon" small></v-icon>
-                </v-list-item-icon> -->
+                <v-list-item-icon class="mr-2">
+                  <v-icon v-text="ratings[1].icon" small></v-icon>
+                </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title>Notifications</v-list-item-title>
+                  <v-list-item-title>{{ ratings[1].label }}</v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-content class="py-0">
                   <v-rating
@@ -259,16 +259,16 @@
                         >mdi-information</v-icon
                       >
                     </template>
-                    <!-- <span>{{ rating.description }}</span> -->
+                    <span>{{ ratings[1].description }}</span>
                   </v-tooltip>
                 </v-list-item-icon>
               </v-list-item>
               <v-list-item>
-                <!-- <v-list-item-icon class="mr-2">
-                  <v-icon v-text="rating.icon" small></v-icon>
-                </v-list-item-icon> -->
+                <v-list-item-icon class="mr-2">
+                  <v-icon v-text="ratings[2].icon" small></v-icon>
+                </v-list-item-icon>
                 <v-list-item-content>
-                  <v-list-item-title>Enforcement</v-list-item-title>
+                  <v-list-item-title>{{ ratings[2].label }}</v-list-item-title>
                 </v-list-item-content>
                 <v-list-item-content class="py-0">
                   <v-rating
@@ -287,7 +287,7 @@
                         >mdi-information</v-icon
                       >
                     </template>
-                    <!-- <span>{{ rating.description }}</span> -->
+                    <span>{{ ratings[2].description }}</span>
                   </v-tooltip>
                 </v-list-item-icon>
               </v-list-item>
