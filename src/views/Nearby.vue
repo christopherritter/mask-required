@@ -85,6 +85,7 @@
                     </v-col>
                     <v-col class="flex-grow-0 flex-shrink-0" v-if="place.ratings">
                       <v-row class="d-flex flex-nowrap" align="center" justify="end">
+                        <v-icon v-text="ratings[0].icon" class="mt-5 mr-5" small></v-icon>
                         <strong class="mt-5">Compliance</strong>
                         <v-rating
                           :value="place.ratings.compliance"
@@ -100,6 +101,7 @@
                         ></v-rating>
                       </v-row>
                       <v-row class="d-flex flex-nowrap" align="center" justify="end">
+                        <v-icon v-text="ratings[1].icon" class="mr-3" small></v-icon>
                         <strong>Notifications</strong>
                         <v-rating
                           :value="place.ratings.notifications"
@@ -115,6 +117,7 @@
                         ></v-rating>
                       </v-row>
                       <v-row class="d-flex flex-nowrap" align="center" justify="end">
+                        <v-icon v-text="ratings[2].icon" class="mr-3" small></v-icon>
                         <strong>Enforcement</strong>
                         <v-rating
                           :value="place.ratings.enforcement"
@@ -132,6 +135,7 @@
                     </v-col>
                     <v-col class="flex-grow-0 flex-shrink-0" v-else>
                       <v-row class="d-flex flex-nowrap" align="center" justify="end">
+                        <v-icon v-text="ratings[0].icon" class="mt-5 mr-5" small></v-icon>
                         <strong class="mt-5">Compliance</strong>
                         <v-rating
                           disabled
@@ -146,6 +150,7 @@
                         ></v-rating>
                       </v-row>
                       <v-row class="d-flex flex-nowrap" align="center" justify="end">
+                        <v-icon v-text="ratings[1].icon" class="mr-3" small></v-icon>
                         <strong>Notifications</strong>
                         <v-rating
                           disabled
@@ -160,6 +165,7 @@
                         ></v-rating>
                       </v-row>
                       <v-row class="d-flex flex-nowrap" align="center" justify="end">
+                        <v-icon v-text="ratings[1].icon" class="mr-3" small></v-icon>
                         <strong>Enforcement</strong>
                         <v-rating
                           disabled
@@ -244,7 +250,7 @@ export default {
 
   },
   computed: {
-    ...mapState([["validTypes"]]),
+    ...mapState([["validTypes"], ["ratings"]]),
   },
   methods: {
     async findNearbyPlaces(type) {
