@@ -726,9 +726,7 @@ const store = new Vuex.Store({
       console.log("This is what we got back:");
       snapshot.forEach((doc) => {
         // console.log(doc.id, '=>', doc.data());
-        console.log(doc.data());
-        console.log("Checking out the new place");
-        var newPlace = doc.data();
+        const newPlace = doc.data();
         console.log(newPlace);
         dispatch("fetchReviews", newPlace.place_id).then((reviews) => {
           if (reviews) {
@@ -739,10 +737,9 @@ const store = new Vuex.Store({
             newPlace.ratings.notifications = reviews.notifications;
             newPlace.ratings.enforcement = reviews.enforcement;
           }
-          console.log("Setting place");
-          commit("setPlace", newPlace);
         });
-        
+        console.log("Commiting place to store.")
+        commit("setPlace", newPlace);
       });
       
       // dispatch("fetchReviews", newPlace.place_id);
