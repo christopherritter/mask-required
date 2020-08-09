@@ -30,8 +30,9 @@
                 place.formatted_address
               }}</v-card-text>
             </v-row>
-            <v-row v-if="place.reviews" no-gutters align="center" justify="start">
+            <v-row no-gutters align="center" justify="start">
               <v-rating
+                v-if="place.reviews"
                 v-model="place.ratings.general"
                 background-color="yellow"
                 color="yellow accent-4"
@@ -44,13 +45,30 @@
                 class="mb-1"
               ></v-rating>
 
-              <v-chip small color="white" :ripple="false">
+              <v-rating
+                v-else
+                background-color="gray"
+                color="gray accent-4"
+                length="5"
+                dense
+                half-increments
+                hover
+                size="18"
+                readonly
+                class="mb-1"
+              ></v-rating>
+
+              <v-chip v-if="place.reviews" small color="white" :ripple="false">
                 {{ place.reviews.length }} reviews
+              </v-chip>
+
+              <v-chip v-else small color="white" :ripple="false">
+                0 reviews
               </v-chip>
 
               <v-divider vertical class="ma-2">|</v-divider>
 
-              <v-chip-group show-arrows class="px-0">
+              <v-chip-group v-if="userLocation" show-arrows class="px-0">
                 <v-chip
                   small
                   color="white"
@@ -58,6 +76,17 @@
                   :key="index"
                   @click="findNearbyPlaces(t)"
                   :value="t"
+                  >{{ t | replaceUnderscore }}</v-chip
+                >
+              </v-chip-group>
+
+              <v-chip-group v-else show-arrows class="px-0">
+                <v-chip
+                  disabled
+                  small
+                  color="white"
+                  v-for="(t, index) in place.types"
+                  :key="index"
                   >{{ t | replaceUnderscore }}</v-chip
                 >
               </v-chip-group>
@@ -71,7 +100,9 @@
             <v-card-title>Ratings and reviews</v-card-title>
             <v-card-actions class="px-4 pb-4">
               <v-avatar color="teal" size="64">
-                <span class="white--text headline">{{ place.ratings.general }}</span>
+                <span class="white--text headline">{{
+                  place.ratings.general
+                }}</span>
               </v-avatar>
               <v-spacer></v-spacer>
               <v-rating
@@ -445,7 +476,7 @@ export default {
     return {
       place: {
         reviews: [],
-        ratings: {}
+        ratings: {},
       },
       reviews: [],
       showViewModal: false,
@@ -453,20 +484,20 @@ export default {
       showDeleteModal: false,
       showDetails: false,
       fullReview: {},
-      userLocation: false
+      userLocation: false,
     };
   },
   async created() {
     this.$store.dispatch("showSearchBar", true);
 
-    console.log("Fetching reviews when created:")
+    console.log("Fetching reviews when created:");
     await this.$store.dispatch("fetchPlace", {
       place_id: this.$route.params.id,
-      rating: 0
+      rating: 0,
     });
-    console.log("Setting this place in view.")
+    console.log("Setting this place in view.");
     this.place = this.$store.getters.getPlace;
-    console.log("Got place, showing location.")
+    console.log("Got place, showing location.");
     this.showLocation(
       this.place.geometry.location.lat,
       this.place.geometry.location.lng
@@ -483,20 +514,24 @@ export default {
     EditReview,
     DeleteReview,
   },
-  // watch: {
-  //   place(newValue, oldValue) {
-  //     this.showLocation(
-  //       this.place.geometry.location.lat,
-  //       this.place.geometry.location.lng
-  //     );
+  watch: {
+    async $route(to, from) {
+      console.log("Fetching reviews when route updated:");
+      await this.$store.dispatch("fetchPlace", {
+        place_id: this.$route.params.id,
+        rating: 0,
+      });
 
-  //     if (!newValue.open_hours) {
-  //       this.showDetails = false;
-  //     } else {
-  //       this.showDetails = true;
-  //     }
-  //   },
-  // },
+      console.log("Setting this place in view when route updated.");
+      this.place = this.$store.getters.getPlace;
+
+      console.log("Got place, showing location via route.");
+      this.showLocation(
+        this.place.geometry.location.lat,
+        this.place.geometry.location.lng
+      );
+    },
+  },
   computed: {
     ...mapState([["userProfile"], ["ratings"]]),
     columnWidth() {
@@ -522,7 +557,7 @@ export default {
     },
     async findNearbyPlaces(type) {
       await this.$store.dispatch("findNearbyPlaces", type);
-      this.$router.push({ name: "nearby", params: { name: type }});
+      this.$router.push({ name: "nearby", params: { name: type } });
     },
     userReview(review) {
       if (this.userProfile.userId == review.userId) {

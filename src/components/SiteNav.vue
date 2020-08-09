@@ -142,8 +142,13 @@ export default {
     "svg-img": SvgImg,
   },
   methods: {
-    fetchPlace(place) {
-      this.$store.dispatch("fetchPlace", place);
+    async fetchPlace(place) {
+      await this.$store.dispatch("fetchPlace", place);
+      if (this.$router.currentRoute.name != "place") {
+        this.$router.push({ name: "place", params: { id: place.place_id } });
+      } else {
+        this.$router.push(place.place_id)
+      }
     },
     goHome() {
       if (this.$router.currentRoute.name != "home") {
