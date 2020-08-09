@@ -450,7 +450,7 @@
                   large
                   raised
                   color="success"
-                  @click="$router.push('review')"
+                  @click="$router.push({ name: 'review' })"
                 >
                   <v-icon left>mdi-plus-circle-outline</v-icon> Add Review
                 </v-btn>
@@ -518,16 +518,16 @@ export default {
   },
   watch: {
     async $route(to, from) {
-      console.log("Fetching reviews when route updated:");
+      // console.log("Fetching reviews when route updated:");
       await this.$store.dispatch("fetchPlace", {
         place_id: this.$route.params.id,
         rating: 0,
       });
 
-      console.log("Setting this place in view when route updated.");
+      // console.log("Setting this place in view when route updated.");
       this.place = this.$store.getters.getPlace;
 
-      console.log("Got place, showing location via route.");
+      // console.log("Got place, showing location via route.");
       this.showLocation(
         this.place.geometry.location.lat,
         this.place.geometry.location.lng
