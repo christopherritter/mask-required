@@ -66,7 +66,6 @@ const routes = [
       import(/* webpackChunkName: "nearby" */ "../views/Nearby.vue"),
     meta: {
       title: "Find nearby places to shop safely on MaskRequired.US.",
-      requiresAuth: true,
     },
     // beforeEnter: (to, from, next) => {
     //   if (store.state.place.name) next();
@@ -89,7 +88,6 @@ const routes = [
       import(/* webpackChunkName: "place" */ "../views/Place.vue"),
     meta: {
       title: "Collaborative business reviews on MaskRequired.US.",
-      requiresAuth: true,
     },
     // beforeEnter: (to, from, next) => {
     //   if (store.state.place.name) next();
