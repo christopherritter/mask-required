@@ -32,7 +32,7 @@
             </v-row>
             <v-row no-gutters align="center" justify="start">
               <v-rating
-                v-if="place.reviews"
+                v-if="place.reviews && place.reviews.length > 0"
                 v-model="ratings.general"
                 background-color="yellow"
                 color="yellow accent-4"
@@ -58,7 +58,7 @@
                 class="mb-1"
               ></v-rating>
 
-              <v-chip v-if="place.reviews" small color="white" :ripple="false">
+              <v-chip v-if="place.reviews && place.reviews.length > 0" small color="white" :ripple="false">
                 {{ place.reviews.length }} reviews
               </v-chip>
 
@@ -96,7 +96,7 @@
       </v-row>
       <v-row>
         <v-col cols="12" sm="12" :md="columnWidth">
-          <v-card v-if="place.reviews">
+          <v-card v-if="place.reviews && place.reviews.length > 0">
             <v-card-title>Ratings and reviews</v-card-title>
             <v-card-actions class="px-4 pb-4">
               <v-avatar color="teal" size="64">
@@ -377,7 +377,7 @@
       </v-row>
       <v-row>
         <v-col>
-          <v-card v-if="place.reviews">
+          <v-card v-if="place.reviews && place.reviews.length > 0">
             <v-row>
               <v-col>
                 <v-card-title
@@ -393,7 +393,7 @@
                   large
                   raised
                   color="success"
-                  @click="$router.push('review')"
+                  @click="$router.push({ name: 'review' })"
                   ><v-icon left>mdi-plus-circle-outline</v-icon> Write a
                   review</v-btn
                 >
@@ -474,7 +474,9 @@ export default {
   name: "place",
   data() {
     return {
-      place: {},
+      place: {
+        reviews: []
+      },
       showViewModal: false,
       showEditModal: false,
       showDeleteModal: false,
@@ -484,19 +486,21 @@ export default {
     };
   },
   async created() {
+    var placeId = await this.$route.params.id;
+
     this.$store.dispatch("showSearchBar", true);
 
     // console.log("Fetching reviews when created:");
     await this.$store.dispatch("fetchPlace", {
-      place_id: this.$route.params.id,
+      place_id: placeId,
       rating: 0,
     });
 
+    console.log("Fetching reviews when created.")
+    await this.$store.dispatch("fetchReviews", placeId);
+
     console.log("Setting this place in view when created:");
     const newPlace = await this.$store.getters.getPlace;
-
-    // newPlace.ratings = this.place.ratings;
-    // newPlace.reviews = this.place.reviews;
 
     console.log(newPlace);
     this.place = newPlace;
@@ -508,7 +512,9 @@ export default {
     // // if (this.place.isOpen) {
     // //   this.showDetails = true;
     // // }
-    if (this.$store.state.userLocation.lat !== null) {
+    if (this.$store.state.userLocation.lat === null) {
+      await this.$store.dispatch("fetchUserLocation");
+    } else {
       this.userLocation = true;
     }
   },
@@ -519,7 +525,7 @@ export default {
   },
   watch: {
     async $route(to, from) {
-      // console.log("Fetching reviews when route updated:");
+      console.log("Fetching reviews when route updated:");
       await this.$store.dispatch("fetchPlace", {
         place_id: this.$route.params.id,
         rating: 0,
@@ -530,7 +536,7 @@ export default {
       console.log(newPlace);
       this.place = newPlace;
 
-      // console.log("Got place, showing location via route.");
+      console.log("Got place, showing location via route.");
       this.showLocation(
         this.place.geometry.location.lat,
         this.place.geometry.location.lng
