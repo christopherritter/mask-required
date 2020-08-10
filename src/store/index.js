@@ -705,7 +705,7 @@ const store = new Vuex.Store({
           fb.placesCollection.add(newPlace);
           store.commit("setPlace", newPlace);
           // dispatch("fetchReviews", newPlace.place_id);
-          router.push({ name: "place" });
+          router.push({ name: "place", params: { id: newPlace.place_id } });
         })
         .catch((error) => {
           this.error = error.message;
@@ -716,7 +716,7 @@ const store = new Vuex.Store({
       const snapshot = await fb.placesCollection
         .where("place_id", "==", place.place_id)
         .get();
-      
+      var newPlace = {};
       
       if (snapshot.empty) {
         console.log("No matching documents.");
@@ -726,7 +726,7 @@ const store = new Vuex.Store({
       // console.log("This is what we got back:");
       snapshot.forEach((doc) => {
         // console.log(doc.id, '=>', doc.data());
-        const newPlace = doc.data();
+        newPlace = doc.data();
         // console.log(newPlace);
         dispatch("fetchReviews", newPlace.place_id).then((reviews) => {
           if (reviews) {
@@ -739,9 +739,11 @@ const store = new Vuex.Store({
           }
         });
         // console.log("Commiting place to store.")
-        commit("setPlace", newPlace);
+        // commit("setPlace", newPlace);
       });
-      
+
+      console.log("Commiting place to store.")
+      commit("setPlace", newPlace);
       // dispatch("fetchReviews", newPlace.place_id);
     },
     async findNearbyPlaces({ state, commit, dispatch }, type) {

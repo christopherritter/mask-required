@@ -33,7 +33,7 @@
             <v-row no-gutters align="center" justify="start">
               <v-rating
                 v-if="place.reviews"
-                v-model="place.ratings.general"
+                v-model="ratings.general"
                 background-color="yellow"
                 color="yellow accent-4"
                 length="5"
@@ -474,11 +474,7 @@ export default {
   name: "place",
   data() {
     return {
-      place: {
-        reviews: [],
-        ratings: {},
-      },
-      reviews: [],
+      place: {},
       showViewModal: false,
       showEditModal: false,
       showDeleteModal: false,
@@ -496,10 +492,15 @@ export default {
       rating: 0,
     });
 
-    // console.log("Setting this place in view.");
-    // console.log(this.$store.getters.getPlace);
-    this.place = this.$store.getters.getPlace;
-    // console.log("Got place, showing location.");
+    console.log("Setting this place in view when created:");
+    const newPlace = await this.$store.getters.getPlace;
+
+    // newPlace.ratings = this.place.ratings;
+    // newPlace.reviews = this.place.reviews;
+
+    console.log(newPlace);
+    this.place = newPlace;
+    console.log("Got place, showing location.");
     this.showLocation(
       this.place.geometry.location.lat,
       this.place.geometry.location.lng
@@ -524,8 +525,10 @@ export default {
         rating: 0,
       });
 
-      // console.log("Setting this place in view when route updated.");
-      this.place = this.$store.getters.getPlace;
+      console.log("Setting this place in view when route updated.");
+      const newPlace = await this.$store.getters.getPlace;
+      console.log(newPlace);
+      this.place = newPlace;
 
       // console.log("Got place, showing location via route.");
       this.showLocation(
