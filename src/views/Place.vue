@@ -33,7 +33,7 @@
             <v-row no-gutters align="center" justify="start">
               <v-rating
                 v-if="place.reviews && place.reviews.length > 0"
-                v-model="ratings.general"
+                v-model="place.ratings.general"
                 background-color="yellow"
                 color="yellow accent-4"
                 length="5"
