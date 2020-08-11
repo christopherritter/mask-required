@@ -50,9 +50,9 @@
           review.content | trimLength
         }}</v-card-text>
         <v-card-actions>
-          <v-btn text @click="likeReview(review.id, review.likes)"
+          <!-- <v-btn text @click="likeReview(review.id, review.likes)"
             >likes {{ review.likes }}</v-btn
-          >
+          > -->
           <v-btn text @click="viewReview(review)">full review</v-btn>
           <v-spacer></v-spacer>
           <v-btn
@@ -127,9 +127,9 @@ export default {
         return false;
       }
     },
-    likeReview(id, likesCount) {
-      this.$store.dispatch("likeReview", { id, likesCount });
-    },
+    // likeReview(id, likesCount) {
+    //   this.$store.dispatch("likeReview", { id, likesCount });
+    // },
     viewReview(review) {
       this.fullReview = review;
       this.showViewModal = true;

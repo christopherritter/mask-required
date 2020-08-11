@@ -49,6 +49,7 @@
             {{ rating.label }}
 
             <v-rating
+              readonly
               v-model="fullReview.ratings[rating.id].value"
               dark
               size="25"
@@ -57,11 +58,11 @@
         </div>
       </v-card-text>
 
-      <v-card-actions>
+      <!-- <v-card-actions>
         <v-spacer></v-spacer>
         <v-btn @click="$emit('close')" text>Disagree</v-btn>
         <v-btn @click="$emit('close')" text>Agree</v-btn>
-      </v-card-actions>
+      </v-card-actions> -->
     </v-card>
   </v-dialog>
 </template>
