@@ -1,20 +1,20 @@
 <template>
   <div>
-    <ViewReview
+    <ViewReviewDialog
       :dialog-view="showViewModal"
       :full-review="fullReview"
       @close="toggleViewModal()"
-    ></ViewReview>
-    <EditReview
+    ></ViewReviewDialog>
+    <EditReviewDialog
       :dialog-view="showEditModal"
       :full-review="fullReview"
       @close="toggleEditModal()"
-    ></EditReview>
-    <DeleteReview
+    ></EditReviewDialog>
+    <DeleteReviewDialog
       :dialog-view="showDeleteModal"
       :full-review="fullReview"
       @close="toggleDeleteModal()"
-    ></DeleteReview>
+    ></DeleteReviewDialog>
     <v-card v-if="place.reviews && place.reviews.length > 0">
       <v-row>
         <v-col>
@@ -96,9 +96,9 @@
 import { mapState } from "vuex";
 import moment from "moment";
 
-import ViewReview from "@/components/ViewReview";
-import EditReview from "@/components/EditReview";
-import DeleteReview from "@/components/DeleteReview";
+import ViewReviewDialog from "@/components/ViewReviewDialog";
+import EditReviewDialog from "@/components/EditReviewDialog";
+import DeleteReviewDialog from "@/components/DeleteReviewDialog";
 
 export default {
   name: "place-reviews",
@@ -115,9 +115,9 @@ export default {
     place: Object,
   },
   components: {
-    ViewReview,
-    EditReview,
-    DeleteReview,
+    ViewReviewDialog,
+    EditReviewDialog,
+    DeleteReviewDialog,
   },
   methods: {
     userReview(review) {

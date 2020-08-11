@@ -1,9 +1,9 @@
 <template>
   <v-app id="app">
-    <SiteNav
+    <Navbar
       :logged-in="loggedIn"
       v-if="$router.currentRoute.name != 'login'"
-    ></SiteNav>
+    ></Navbar>
     <router-view />
     <v-footer class="font-weight-light mt-12">
       <v-col class="text-center" cols="12">
@@ -16,11 +16,11 @@
 
 <script>
 import { mapState } from "vuex";
-import SiteNav from "@/components/SiteNav";
+import Navbar from "@/components/Navbar";
 
 export default {
   components: {
-    SiteNav,
+    Navbar,
   },
   computed: {
     ...mapState(["userProfile"]),

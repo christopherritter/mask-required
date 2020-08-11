@@ -3,20 +3,20 @@
     <v-container id="place">
       <v-row>
         <v-col>
-          <place-header :place="place"></place-header>
+          <place-header-bar :place="place"></place-header-bar>
         </v-col>
       </v-row>
       <v-row>
         <v-col cols="12" sm="12" md="6">
-          <place-ratings :place="place"></place-ratings>
+          <place-ratings-card :place="place"></place-ratings-card>
         </v-col>
         <v-col cols="12" sm="12" md="6">
-          <place-location :place="place"></place-location>
+          <place-location-card :place="place"></place-location-card>
         </v-col>
       </v-row>
       <v-row>
         <v-col>
-          <place-reviews :place="place"></place-reviews>
+          <place-reviews-section :place="place"></place-reviews-section>
         </v-col>
       </v-row>
     </v-container>
@@ -24,10 +24,10 @@
 </template>
 
 <script>
-import PlaceHeader from "@/components/PlaceHeader";
-import PlaceRatings from "@/components/PlaceRatings";
-import PlaceLocation from "@/components/PlaceLocation";
-import PlaceReviews from "@/components/PlaceReviews";
+import PlaceHeaderBar from "@/components/PlaceHeaderBar";
+import PlaceRatingsCard from "@/components/PlaceRatingsCard";
+import PlaceLocationCard from "@/components/PlaceLocationCard";
+import PlaceReviewsSection from "@/components/PlaceReviewsSection";
 
 export default {
   name: "place",
@@ -51,10 +51,10 @@ export default {
     this.place = newPlace;
   },
   components: {
-    PlaceHeader,
-    PlaceRatings,
-    PlaceLocation,
-    PlaceReviews,
+    PlaceHeaderBar,
+    PlaceRatingsCard,
+    PlaceLocationCard,
+    PlaceReviewsSection,
   },
   watch: {
     async $route(to, from) {

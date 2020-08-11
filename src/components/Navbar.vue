@@ -1,5 +1,5 @@
 <template>
-  <div id="siteNav">
+  <div id="navbar">
     <!-- <v-navigation-drawer
       v-model="drawer"
       :clipped="$vuetify.breakpoint.lgAndUp"

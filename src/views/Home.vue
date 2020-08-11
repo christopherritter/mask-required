@@ -1,7 +1,7 @@
 <template>
   <v-main class="mt-0">
     <v-container>
-      <place-types></place-types>
+      <place-types-bar></place-types-bar>
       <v-row>
         <v-col>
           <v-card class="p-4 jumbotron text-center" color="#c5f9da">
@@ -36,7 +36,7 @@
 <script>
 import axios from "axios";
 import SvgImg from "@/components/Svg-img";
-import PlaceTypes from "@/components/PlaceTypes";
+import PlaceTypesBar from "@/components/PlaceTypesBar";
 
 export default {
   name: "Home",
@@ -154,8 +154,8 @@ export default {
     this.$store.dispatch("showSearchBar", false);
   },
   components: {
-    "svg-img": SvgImg,
-    "place-types": PlaceTypes,
+    SvgImg,
+    PlaceTypesBar,
   },
 };
 </script>
