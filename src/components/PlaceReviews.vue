@@ -1,5 +1,20 @@
 <template>
   <div>
+    <ViewReview
+      :dialog-view="showViewModal"
+      :full-review="fullReview"
+      @close="toggleViewModal()"
+    ></ViewReview>
+    <EditReview
+      :dialog-view="showEditModal"
+      :full-review="fullReview"
+      @close="toggleEditModal()"
+    ></EditReview>
+    <DeleteReview
+      :dialog-view="showDeleteModal"
+      :full-review="fullReview"
+      @close="toggleDeleteModal()"
+    ></DeleteReview>
     <v-card v-if="place.reviews && place.reviews.length > 0">
       <v-row>
         <v-col>
@@ -81,10 +96,28 @@
 import { mapState } from "vuex";
 import moment from "moment";
 
+import ViewReview from "@/components/ViewReview";
+import EditReview from "@/components/EditReview";
+import DeleteReview from "@/components/DeleteReview";
+
 export default {
   name: "place-reviews",
+  data() {
+    return {
+      fullReview: {},
+      showDetails: false,
+      showViewModal: false,
+      showEditModal: false,
+      showDeleteModal: false,
+    };
+  },
   props: {
     place: Object,
+  },
+  components: {
+    ViewReview,
+    EditReview,
+    DeleteReview,
   },
   methods: {
     userReview(review) {
@@ -120,7 +153,7 @@ export default {
     },
   },
   computed: {
-    ...mapState([["userProfile"]])
+    ...mapState([["userProfile"]]),
   },
   filters: {
     formatDate(val) {

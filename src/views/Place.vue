@@ -1,23 +1,6 @@
 <template>
   <v-main>
     <v-container id="place">
-      <v-row justify="center">
-        <ViewReview
-          :dialog-view="showViewModal"
-          :full-review="fullReview"
-          @close="toggleViewModal()"
-        ></ViewReview>
-        <EditReview
-          :dialog-view="showEditModal"
-          :full-review="fullReview"
-          @close="toggleEditModal()"
-        ></EditReview>
-        <DeleteReview
-          :dialog-view="showDeleteModal"
-          :full-review="fullReview"
-          @close="toggleDeleteModal()"
-        ></DeleteReview>
-      </v-row>
       <v-row>
         <v-col>
           <place-header :place="place"></place-header>
@@ -45,9 +28,6 @@ import PlaceHeader from "@/components/PlaceHeader";
 import PlaceRatings from "@/components/PlaceRatings";
 import PlaceLocation from "@/components/PlaceLocation";
 import PlaceReviews from "@/components/PlaceReviews";
-import ViewReview from "@/components/ViewReview";
-import EditReview from "@/components/EditReview";
-import DeleteReview from "@/components/DeleteReview";
 
 export default {
   name: "place",
@@ -56,11 +36,6 @@ export default {
       place: {
         reviews: [],
       },
-      showViewModal: false,
-      showEditModal: false,
-      showDeleteModal: false,
-      showDetails: false,
-      fullReview: {},
       userLocation: false,
     };
   },
@@ -80,9 +55,6 @@ export default {
     PlaceRatings,
     PlaceLocation,
     PlaceReviews,
-    ViewReview,
-    EditReview,
-    DeleteReview,
   },
   watch: {
     async $route(to, from) {
@@ -96,14 +68,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss" scoped>
-.hours-title-list-item,
-.hours-list-item {
-  min-height: 24px;
-}
-
-#map {
-  height: 8rem;
-}
-</style>
