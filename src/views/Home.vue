@@ -35,7 +35,7 @@
 
 <script>
 import axios from "axios";
-import SvgImg from "@/components/Svg-img";
+import SvgImg from "@/components/SvgImg";
 import PlaceTypesBar from "@/components/PlaceTypesBar";
 
 export default {

@@ -89,7 +89,7 @@
 
 <script>
 import { mapState } from "vuex";
-import SvgImg from "@/components/Svg-img";
+import SvgImg from "@/components/SvgImg";
 
 export default {
   data: () => ({
@@ -139,7 +139,7 @@ export default {
   },
   props: ["loggedIn"],
   components: {
-    "svg-img": SvgImg,
+    SvgImg,
   },
   methods: {
     async fetchPlace(place) {

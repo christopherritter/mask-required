@@ -45,7 +45,7 @@
 
 <script>
 import { mapState } from "vuex";
-import SvgImg from "@/components/Svg-img";
+import SvgImg from "@/components/SvgImg";
 
 export default {
   data: () => ({
@@ -100,7 +100,7 @@ export default {
     this.$store.dispatch("showSearchBar", true);
   },
   components: {
-    "svg-img": SvgImg,
+    SvgImg,
   },
   computed: {
     ...mapState(["place"]),

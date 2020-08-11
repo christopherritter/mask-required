@@ -27,14 +27,14 @@
 
 <script>
 import { mapState } from "vuex";
-import SvgImg from "@/components/Svg-img";
+import SvgImg from "@/components/SvgImg";
 
 export default {
   mounted() {
     this.$store.dispatch("socialLogin", {});
   },
   components: {
-    "svg-img": SvgImg,
+    SvgImg,
   },
 };
 </script>
