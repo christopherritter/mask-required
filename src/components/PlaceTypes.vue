@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="placeTypes">
     <v-row v-if="userLocation.lat && !isLoadingTypes">
       <v-col class="d-flex align-stretch">
         <v-card outlined color="#c5f9da" light width="100%">
