@@ -50,7 +50,7 @@
 
       <v-divider vertical class="ma-2">|</v-divider>
 
-      <v-chip-group v-if="userLocation" show-arrows class="px-0">
+      <v-chip-group v-if="userLocation.lat" show-arrows class="px-0">
         <v-chip
           small
           color="white"
@@ -81,18 +81,20 @@ export default {
   name: "place-header",
   data() {
     return {
-      userLocation: false,
+      userLocation: {
+        lat: null,
+        long: null,
+      },
     };
   },
   props: {
     place: Object,
   },
-  created() {
+  async created() {
     if (this.$store.state.userLocation.lat === null) {
-      this.$store.dispatch("fetchUserLocation");
-    } else {
-      this.userLocation = true;
+      await this.$store.dispatch("fetchUserLocation");
     }
+    this.userLocation = this.$store.getters.getUserLocation;
   },
   filters: {
     replaceUnderscore(val) {
