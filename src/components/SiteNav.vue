@@ -32,7 +32,7 @@
       app
     >
       <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon> -->
-      <svg-img icon="logo2" class="logo pr-4"></svg-img>
+      <svg-img @click="goHome" icon="logo2" class="logo pr-4" :style="showPointer"></svg-img>
       <v-toolbar-title @click="goHome" class="ml-0 p-3" :style="showPointer">
         Mask Required
       </v-toolbar-title>
@@ -171,8 +171,9 @@ export default {
   computed: {
     ...mapState([["place"], "showSearchBar"]),
     showPointer() {
-      if (this.$router.currentRoute.name == "home") {
-        return { pointer: "none" };
+      let currentRoute = this.$router.currentRoute.name;
+      if (currentRoute == "home") {
+        return { cursor: "pointer" };
       } else {
         return { cursor: "pointer" };
       }
