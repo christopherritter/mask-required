@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section>
     <ViewReviewDialog
       :dialog-view="showViewModal"
       :full-review="fullReview"
@@ -89,7 +89,7 @@
         </v-col>
       </v-row>
     </v-card>
-  </div>
+  </section>
 </template>
 
 <script>
