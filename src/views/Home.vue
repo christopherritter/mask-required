@@ -48,6 +48,17 @@ export default {
     address: null,
     target: false,
     spinner: false,
+    options: {
+      types: ["establishment"],
+      componentRestrictions: { country: "us" },
+      fields: [
+        // "formatted_address",
+        // "geometry",
+        // "name",
+        "place_id",
+        // "types",
+      ],
+    }
   }),
   methods: {
     async fetchPlace(place) {
@@ -111,33 +122,15 @@ export default {
     },
   },
   mounted() {
-    var options = {
-      types: ["establishment"],
-      componentRestrictions: { country: "us" },
-      fields: [
-        "formatted_address",
-        "geometry",
-        "name",
-        "place_id",
-        "url",
-        "vicinity",
-        "business_status",
-        "formatted_phone_number", // More expensive
-        "opening_hours", // More expensive (includes isOpen)
-        "types",
-        "utc_offset_minutes", // Necessary for opening_hours
-        "website", // More expensive
-      ],
-    };
-
     let autocomplete = new google.maps.places.Autocomplete(
       document.getElementById("home-autocomplete"),
-      options
+      this.options
     );
 
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
-      this.fetchPlace(place);
+      this.$router.push({ name: "place", params: { id: place.place_id } });
+      // this.fetchPlace(place);
 
       // if (place.business_status) {
       //   if (this.$router.currentRoute.name != "place") {

@@ -100,11 +100,11 @@ export default {
       types: ["establishment"],
       componentRestrictions: { country: "us" },
       fields: [
-        "formatted_address",
-        "geometry",
-        "name",
+        // "formatted_address",
+        // "geometry",
+        // "name",
         "place_id",
-        "types",
+        // "types",
       ],
     },
   }),
@@ -125,7 +125,7 @@ export default {
   },
   methods: {
     async fetchPlace(place) {
-      await this.$store.dispatch("fetchPlace", place);
+      // await this.$store.dispatch("fetchPlace", place);
       if (this.$router.currentRoute.name != "place") {
         this.$router.push({ name: "place", params: { id: place.place_id } });
       } else {

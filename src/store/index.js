@@ -673,7 +673,7 @@ const store = new Vuex.Store({
         });
       });
     },
-    async createPlace({ state, dispatch }, place) {
+    createPlace({ state, dispatch }, place) {
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU`;
 
       axios
@@ -702,11 +702,13 @@ const store = new Vuex.Store({
           // console.log("New types array.")
           // console.log(newTypes)
           newPlace.types = newTypes;
-
+          console.log("Creating new place!")
+          console.log(newPlace);
           fb.placesCollection.add(newPlace);
+          console.log("Setting new place in store.")
           store.commit("setPlace", newPlace);
-          // dispatch("fetchReviews", newPlace.place_id);
-          router.push({ name: "place", params: { id: newPlace.place_id } });
+          // console.log("Pushing place id to router.")
+          // router.push({ name: "place", params: { id: newPlace.place_id } });
         })
         .catch((error) => {
           this.error = error.message;
@@ -720,15 +722,14 @@ const store = new Vuex.Store({
       var newPlace = {};
       
       if (snapshot.empty) {
-        // console.log("No matching documents.");
+        console.log("No matching documents.");
+        console.log(place)
         dispatch("createPlace", place);
         return;
       }
       // console.log("This is what we got back:");
       snapshot.forEach((doc) => {
         // console.log(doc.id, '=>', doc.data());
-        newPlace = doc.data();
-        // console.log(newPlace);
         dispatch("fetchReviews", newPlace.place_id).then((reviews) => {
           if (reviews) {
             newPlace.reviews = reviews.reviews;
