@@ -1,5 +1,5 @@
 <template>
-  <div id="navbar">
+  <div id="site-nav-bar">
     <!-- <v-navigation-drawer
       v-model="drawer"
       :clipped="$vuetify.breakpoint.lgAndUp"
@@ -96,9 +96,7 @@ export default {
     address: null,
     drawer: false,
     group: null,
-  }),
-  mounted() {
-    var options = {
+    options: {
       types: ["establishment"],
       componentRestrictions: { country: "us" },
       fields: [
@@ -106,38 +104,23 @@ export default {
         "geometry",
         "name",
         "place_id",
-        "url",
-        "vicinity",
-        "business_status",
-        "formatted_phone_number", // More expensive
-        "opening_hours", // More expensive (includes isOpen)
         "types",
-        "utc_offset_minutes", // Necessary for opening_hours
-        "website", // More expensive
       ],
-    };
+    }
+  }),
+  mounted() {
+    console.log("Site navbar logged in? " + this.loggedIn)
     let autocomplete = new google.maps.places.Autocomplete(
       document.getElementById("navbar-autocomplete"),
-      options
+      this.options
     );
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
       this.fetchPlace(place);
-
-      // if (place.business_status) {
-      //   if (this.$router.currentRoute.name != "place") {
-      //     this.$router.push("place");
-      //   }
-      // } else {
-      //   if (this.$router.currentRoute.name != "search") {
-      //     this.$router.push("search");
-      //   }
-      // }
     });
 
     this.$store.dispatch("showSearchBar", false);
   },
-  props: ["loggedIn"],
   components: {
     SvgImg,
   },
@@ -169,13 +152,20 @@ export default {
     },
   },
   computed: {
-    ...mapState([["place"], "showSearchBar"]),
+    ...mapState([["userProfile"], ["place"], "showSearchBar"]),
     showPointer() {
       let currentRoute = this.$router.currentRoute.name;
       if (currentRoute == "home") {
         return { cursor: "pointer" };
       } else {
         return { cursor: "pointer" };
+      }
+    },
+    loggedIn() {
+      if (Object.keys(this.userProfile).length > 1) {
+        return true
+      } else {
+        return false
       }
     },
   },

@@ -1,5 +1,5 @@
 <template>
-  <div id="placeTypes">
+  <section id="placeTypes">
     <v-row v-if="userLocation.lat && !isLoadingTypes">
       <v-col class="d-flex align-stretch">
         <v-card outlined color="#c5f9da" light width="100%">
@@ -75,14 +75,14 @@
         <v-card outlined color="grey lighten-4" width="100%"></v-card>
       </v-col>
     </v-row>
-  </div>
+  </section>
 </template>
 
 <script>
 import { mapState } from "vuex";
 
 export default {
-  name: "place-types",
+  name: "place-types-bar",
   data() {
     return {
       types: [],

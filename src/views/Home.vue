@@ -2,33 +2,36 @@
   <v-main class="mt-0">
     <v-container>
       <place-types-bar></place-types-bar>
-      <v-row>
-        <v-col>
-          <v-card class="p-4 jumbotron text-center" color="#c5f9da">
-            <v-row>
-              <v-col cols="12" md="5" class="hidden-sm-and-down">
-                <svg-img
-                  class="jumbotron-image"
-                  icon="social-distancing"
-                ></svg-img>
-              </v-col>
-              <v-col md="7">
-                <div class="jumbotron-text">
-                  <h2 class="jumbotron-header">Find a safe place to shop.</h2>
-                  <v-text-field
-                    class="px-4 pb-2 jumbotron-search"
-                    v-model="address"
-                    id="home-autocomplete"
-                    solo
-                    prepend-inner-icon="mdi-magnify"
-                    placeholder="Enter business name or category"
-                  ></v-text-field>
-                </div>
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-col>
-      </v-row>
+      <section id="home-search-card">
+        <v-row>
+          <v-col>
+            <v-card class="p-4 jumbotron text-center" color="#c5f9da">
+              <v-row>
+                <v-col cols="12" md="5" class="hidden-sm-and-down">
+                  <svg-img
+                    class="jumbotron-image"
+                    icon="social-distancing"
+                  ></svg-img>
+                </v-col>
+                <v-col md="7">
+                  <div class="jumbotron-text">
+                    <h2 class="jumbotron-header">Find a safe place to shop.</h2>
+                    <v-text-field
+                      class="px-4 pb-2 jumbotron-search"
+                      v-model="address"
+                      id="home-autocomplete"
+                      solo
+                      prepend-inner-icon="mdi-magnify"
+                      placeholder="Enter business name or category"
+                    ></v-text-field>
+                  </div>
+                </v-col>
+              </v-row>
+            </v-card>
+          </v-col>
+        </v-row>
+      </section>
+      <place-types-section></place-types-section>
     </v-container>
   </v-main>
 </template>
@@ -37,6 +40,7 @@
 import axios from "axios";
 import SvgImg from "@/components/SvgImg";
 import PlaceTypesBar from "@/components/PlaceTypesBar";
+import PlaceTypesSection from "@/components/PlaceTypesSection";
 
 export default {
   name: "Home",
@@ -53,7 +57,7 @@ export default {
     locatorButtonPressed() {
       this.spinner = true;
       this.target = true;
-      console.log("Locator button pressed!")
+      console.log("Locator button pressed!");
 
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -77,7 +81,7 @@ export default {
       }
     },
     getAddressFrom(lat, long) {
-      console.log("Getting address")
+      console.log("Getting address");
       axios
         .get(
           "https://cors-anywhere.herokuapp.com/" +
@@ -90,7 +94,7 @@ export default {
         .then((response) => {
           if (response.data.error_message) {
             this.error = response.data.error_message;
-            console.log(response.data.error_message)
+            console.log(response.data.error_message);
           } else {
             this.address = response.data.results[0].formatted_address;
             console.log(response.data.results[0].formatted_address);
@@ -156,6 +160,7 @@ export default {
   components: {
     SvgImg,
     PlaceTypesBar,
+    PlaceTypesSection,
   },
 };
 </script>

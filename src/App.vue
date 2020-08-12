@@ -15,23 +15,11 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
 import SiteNavBar from "@/components/SiteNavBar";
 
 export default {
   components: {
     SiteNavBar,
-  },
-  computed: {
-    ...mapState(["userProfile"]),
-    loggedIn() {
-      if (Object.keys(this.userProfile).length > 1) {
-        return true
-      } else {
-        return false
-      }
-    },
-  },
-  methods: {},
+  }
 };
 </script>
