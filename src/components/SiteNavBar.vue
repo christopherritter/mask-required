@@ -106,10 +106,9 @@ export default {
         "place_id",
         "types",
       ],
-    }
+    },
   }),
   mounted() {
-    console.log("Site navbar logged in? " + this.loggedIn)
     let autocomplete = new google.maps.places.Autocomplete(
       document.getElementById("navbar-autocomplete"),
       this.options
