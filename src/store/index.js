@@ -716,20 +716,23 @@ const store = new Vuex.Store({
     },
     async fetchPlace({ dispatch, commit }, place) {
       // console.log("Fetching place has been called.");
+      // console.log(place)
+      var placeId = place.place_id;
       const snapshot = await fb.placesCollection
-        .where("place_id", "==", place.place_id)
+        .where("place_id", "==", placeId)
         .get();
       var newPlace = {};
       
       if (snapshot.empty) {
-        console.log("No matching documents.");
-        console.log(place)
+        // console.log("No matching documents.");
+        // console.log(place)
         dispatch("createPlace", place);
         return;
       }
       // console.log("This is what we got back:");
       snapshot.forEach((doc) => {
         // console.log(doc.id, '=>', doc.data());
+        newPlace = doc.data();
         dispatch("fetchReviews", newPlace.place_id).then((reviews) => {
           if (reviews) {
             newPlace.reviews = reviews.reviews;
@@ -743,6 +746,7 @@ const store = new Vuex.Store({
       });
 
       // console.log("Commiting place to store.");
+      // console.log(newPlace)
       commit("setPlace", newPlace);
     },
     async findNearbyPlaces({ state, commit, dispatch }, type) {

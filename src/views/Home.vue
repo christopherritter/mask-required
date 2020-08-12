@@ -48,6 +48,7 @@ export default {
     address: null,
     target: false,
     spinner: false,
+    apiKey: process.env.VUE_APP_NOT_SECRET_CODE,
     options: {
       types: ["establishment"],
       componentRestrictions: { country: "us" },
@@ -101,6 +102,7 @@ export default {
             "," +
             long +
             "&key=AIzaSyCHzVbXJqB_-tUwT2AeUGZ_-HRkvJOHjqI"
+            // this.apiKey
         )
         .then((response) => {
           if (response.data.error_message) {
