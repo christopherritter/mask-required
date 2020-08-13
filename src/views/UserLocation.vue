@@ -111,10 +111,8 @@ export default {
         .then((response) => {
           if (response.data.error_message) {
             this.error = response.data.error_message;
-            // console.log(response.data.error_message)
           } else {
             this.address = response.data.results[0].formatted_address;
-            console.log(response.data.results[0].formatted_address);
           }
           this.spinner = false;
         })

@@ -57,14 +57,11 @@ export default {
   },
   watch: {
     async $route(to, from) {
-      console.log("Watcher activated on place.")
       var placeId = this.$route.params.id;
       await this.$store.dispatch("fetchPlace", {
         place_id: placeId,
       });
-      console.log("Getting new place from store.")
       var newPlace = this.$store.getters.getPlace;
-      console.log(newPlace)
       this.place = newPlace;
     },
   },

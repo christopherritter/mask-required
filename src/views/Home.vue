@@ -59,41 +59,15 @@ export default {
         "place_id",
         // "types",
       ],
-    }
+    },
+    error: ""
   }),
   methods: {
     async fetchPlace(place) {
       await this.$store.dispatch("fetchPlace", place);
       this.$router.push("place/" + place.place_id);
     },
-    locatorButtonPressed() {
-      this.spinner = true;
-      this.target = true;
-      console.log("Locator button pressed!");
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (position) => {
-            this.getAddressFrom(
-              position.coords.latitude,
-              position.coords.longitude
-            );
-          },
-          (error) => {
-            this.error = "Can't find your address. Please enter it manually.";
-            this.spinner = false;
-            this.target = false;
-            console.log(error.message);
-          }
-        );
-      } else {
-        this.error = "Your browser does not support Geolocation API";
-        this.spinner = false;
-        this.target = false;
-      }
-    },
     getAddressFrom(lat, long) {
-      console.log("Getting address");
       axios
         .get(
           "https://cors-anywhere.herokuapp.com/" +

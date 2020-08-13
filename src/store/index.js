@@ -466,7 +466,6 @@ const store = new Vuex.Store({
       state.userLocation.long = val.longitude;
     },
     setPlace(state, val) {
-      console.log("Setting place through mutations!")
       state.place = val;
     },
     setPlaces(state, val) {
@@ -672,7 +671,6 @@ const store = new Vuex.Store({
       });
     },
     async fetchPlace({ dispatch, commit }, place) {
-      console.log("Fetching place has been called.");
       // console.log(place)
       var placeId = place.place_id;
       const snapshot = await fb.placesCollection
@@ -681,18 +679,14 @@ const store = new Vuex.Store({
       var newPlace = {};
       
       if (snapshot.empty) {
-        console.log("No matching places.");
-        // console.log(place)
+        // console.log("No matching places.");
         await dispatch("createPlace", place).then((newPlace) => {
-          console.log("Finished creating place:")
-          console.log(newPlace)
           commit("setPlace", newPlace);
         });
         return;
       }
-      // console.log("This is what we got back:");
+
       snapshot.forEach((doc) => {
-        // console.log(doc.id, '=>', doc.data());
         newPlace = doc.data();
         dispatch("fetchReviews", newPlace.place_id).then((reviews) => {
           if (reviews) {
@@ -706,8 +700,6 @@ const store = new Vuex.Store({
         });
       });
 
-      console.log("Committing place to store.");
-      console.log(newPlace)
       commit("setPlace", newPlace);
     },
     async createPlace({ state, dispatch }, place) {
@@ -723,47 +715,19 @@ const store = new Vuex.Store({
           var newGeohash = geohash.encode(latitude, longitude);
           var newTypes = [];
 
-          console.log("Axios response:")
-          console.log(newPlace);
-
           newPlace.createdOn = new Date();
           newPlace.geohash = newGeohash;
           newPlace.review = 0;
 
-          // console.log("New place types array")
-          // console.log(newPlace.types)
-
           for (let i = 0; i < newPlace.types.length; i++) {
-            // console.log("New type no. " + i)
-            // console.log(newPlace.types[i])
             if (state.validTypes.includes(newPlace.types[i])) {
               newTypes.push(newPlace.types[i]);
             }
           }
 
-          // console.log("New types array.")
-          // console.log(newTypes)
           newPlace.types = newTypes;
 
-          // console.log("Commiting new place:")
-          // commit("setPlace", newPlace);
-
-          console.log("Adding new place to firebase.")
-          console.log(newPlace);
           fb.placesCollection.add(newPlace);
-          
-          
-          
-          
-          // dispatch("fetchPlace", newPlace);
-          // console.log("Pushing place id to router.")
-          // if (router.currentRoute.name != "place") {
-          //   console.log("Going to the place view!")
-          //   router.push({ name: "place", params: { id: place.place_id } });
-          // } else {
-          //   console.log("I'm already on the place view.")
-          //   router.push(place_id)
-          // }
         })
         .catch((error) => {
           this.errorMessage = error.message;
@@ -782,7 +746,6 @@ const store = new Vuex.Store({
         .get();
 
       if (places.empty) {
-        console.log("No matching places nearby.");
         return;
       }
 
@@ -826,7 +789,6 @@ const store = new Vuex.Store({
       let typesArray = [];
 
       if (reviews.empty) {
-        console.log("No matching review types.");
         return;
       }
 
