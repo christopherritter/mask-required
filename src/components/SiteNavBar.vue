@@ -129,7 +129,7 @@ export default {
       if (this.$router.currentRoute.name != "place") {
         this.$router.push({ name: "place", params: { id: place.place_id } });
       } else {
-        this.$router.push({ params: { id: place.place_id } })
+        this.$router.push(place.place_id)
       }
     },
     goHome() {

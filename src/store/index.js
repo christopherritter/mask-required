@@ -466,13 +466,11 @@ const store = new Vuex.Store({
       state.userLocation.long = val.longitude;
     },
     setPlace(state, val) {
+      console.log("Setting place through mutations!")
       state.place = val;
     },
     setPlaces(state, val) {
       state.places = val;
-    },
-    setPlace(state, val) {
-      state.place = val;
     },
     setReviews(state, val) {
       state.reviews = val;
@@ -673,49 +671,8 @@ const store = new Vuex.Store({
         });
       });
     },
-    createPlace({ state, dispatch }, place) {
-      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU`;
-
-      axios
-        .get(URL)
-        .then((response) => {
-          let newPlace = response.data.result;
-          let latitude = newPlace.geometry.location.lat;
-          let longitude = newPlace.geometry.location.lng;
-          let newGeohash = geohash.encode(latitude, longitude);
-          let newTypes = [];
-
-          newPlace.createdOn = new Date();
-          newPlace.geohash = newGeohash;
-
-          // console.log("New place types array")
-          // console.log(newPlace.types)
-
-          for (let i = 0; i < newPlace.types.length; i++) {
-            // console.log("New type no. " + i)
-            // console.log(newPlace.types[i])
-            if (state.validTypes.includes(newPlace.types[i])) {
-              newTypes.push(newPlace.types[i]);
-            }
-          }
-
-          // console.log("New types array.")
-          // console.log(newTypes)
-          newPlace.types = newTypes;
-          console.log("Creating new place!")
-          console.log(newPlace);
-          fb.placesCollection.add(newPlace);
-          console.log("Setting new place in store.")
-          store.commit("setPlace", newPlace);
-          // console.log("Pushing place id to router.")
-          // router.push({ name: "place", params: { id: newPlace.place_id } });
-        })
-        .catch((error) => {
-          this.error = error.message;
-        });
-    },
     async fetchPlace({ dispatch, commit }, place) {
-      // console.log("Fetching place has been called.");
+      console.log("Fetching place has been called.");
       // console.log(place)
       var placeId = place.place_id;
       const snapshot = await fb.placesCollection
@@ -724,9 +681,13 @@ const store = new Vuex.Store({
       var newPlace = {};
       
       if (snapshot.empty) {
-        // console.log("No matching documents.");
+        console.log("No matching places.");
         // console.log(place)
-        dispatch("createPlace", place);
+        await dispatch("createPlace", place).then((newPlace) => {
+          console.log("Finished creating place:")
+          console.log(newPlace)
+          commit("setPlace", newPlace);
+        });
         return;
       }
       // console.log("This is what we got back:");
@@ -745,9 +706,70 @@ const store = new Vuex.Store({
         });
       });
 
-      // console.log("Commiting place to store.");
-      // console.log(newPlace)
+      console.log("Committing place to store.");
+      console.log(newPlace)
       commit("setPlace", newPlace);
+    },
+    async createPlace({ state, dispatch }, place) {
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU`;
+      var newPlace = {};
+
+      await axios
+        .get(URL)
+        .then((response) => {
+          newPlace = response.data.result;
+          var latitude = newPlace.geometry.location.lat;
+          var longitude = newPlace.geometry.location.lng;
+          var newGeohash = geohash.encode(latitude, longitude);
+          var newTypes = [];
+
+          console.log("Axios response:")
+          console.log(newPlace);
+
+          newPlace.createdOn = new Date();
+          newPlace.geohash = newGeohash;
+          newPlace.review = 0;
+
+          // console.log("New place types array")
+          // console.log(newPlace.types)
+
+          for (let i = 0; i < newPlace.types.length; i++) {
+            // console.log("New type no. " + i)
+            // console.log(newPlace.types[i])
+            if (state.validTypes.includes(newPlace.types[i])) {
+              newTypes.push(newPlace.types[i]);
+            }
+          }
+
+          // console.log("New types array.")
+          // console.log(newTypes)
+          newPlace.types = newTypes;
+
+          // console.log("Commiting new place:")
+          // commit("setPlace", newPlace);
+
+          console.log("Adding new place to firebase.")
+          console.log(newPlace);
+          fb.placesCollection.add(newPlace);
+          
+          
+          
+          
+          // dispatch("fetchPlace", newPlace);
+          // console.log("Pushing place id to router.")
+          // if (router.currentRoute.name != "place") {
+          //   console.log("Going to the place view!")
+          //   router.push({ name: "place", params: { id: place.place_id } });
+          // } else {
+          //   console.log("I'm already on the place view.")
+          //   router.push(place_id)
+          // }
+        })
+        .catch((error) => {
+          this.errorMessage = error.message;
+        });
+
+        return newPlace
     },
     async findNearbyPlaces({ state, commit, dispatch }, type) {
       const nearbyPlaces = [];
@@ -760,7 +782,7 @@ const store = new Vuex.Store({
         .get();
 
       if (places.empty) {
-        console.log("No matching documents.");
+        console.log("No matching places nearby.");
         return;
       }
 
@@ -804,7 +826,7 @@ const store = new Vuex.Store({
       let typesArray = [];
 
       if (reviews.empty) {
-        console.log("No matching documents.");
+        console.log("No matching review types.");
         return;
       }
 

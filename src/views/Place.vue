@@ -44,7 +44,6 @@ export default {
     var placeId = await this.$route.params.id;
     await this.$store.dispatch("fetchPlace", {
       place_id: placeId,
-      rating: 0,
     });
     await this.$store.dispatch("fetchReviews", placeId);
     const newPlace = this.$store.getters.getPlace;
@@ -58,11 +57,14 @@ export default {
   },
   watch: {
     async $route(to, from) {
+      console.log("Watcher activated on place.")
+      var placeId = this.$route.params.id;
       await this.$store.dispatch("fetchPlace", {
-        place_id: this.$route.params.id,
-        rating: 0,
+        place_id: placeId,
       });
-      const newPlace = await this.$store.getters.getPlace;
+      console.log("Getting new place from store.")
+      var newPlace = this.$store.getters.getPlace;
+      console.log(newPlace)
       this.place = newPlace;
     },
   },
