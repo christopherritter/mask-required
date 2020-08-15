@@ -48,6 +48,7 @@ export default {
       address: "",
       error: "",
       spinner: false,
+      apiKey: process.env.VUE_APP_GOOGLE_API
     };
   },
   mounted() {
@@ -106,7 +107,8 @@ export default {
             lat +
             "," +
             long +
-            "&key=AIzaSyCHzVbXJqB_-tUwT2AeUGZ_-HRkvJOHjqI"
+            "&key=" +
+            this.apiKey
         )
         .then((response) => {
           if (response.data.error_message) {

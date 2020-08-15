@@ -335,7 +335,7 @@ const store = new Vuex.Store({
     },
     errorMessage: "",
     fields: "",
-    apiKey: "",
+    googleApiKey: process.env.VUE_APP_GOOGLE_API,
     validTypes: [
       "accounting",
       "airport",
@@ -448,6 +448,7 @@ const store = new Vuex.Store({
     getPlaces: (state) => state.places,
     getPlace: (state) => state.place,
     getSearchBar: (state) => state.showSearchbar,
+    getGoogleApiKey: (state) => state.googleApiKey,
   },
   mutations: {
     updateField,
@@ -702,9 +703,14 @@ const store = new Vuex.Store({
 
       commit("setPlace", newPlace);
     },
-    async createPlace({ state, dispatch }, place) {
-      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=AIzaSyA56PC1wQBFfmGzANdum2uGNSJW4TIn6xU`;
+    async createPlace({ state, getters }, place) {
+      var googleApiKey = getters.getGoogleApiKey;
+      console.log("Here's the API Key:")
+      console.log(googleApiKey)
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${googleApiKey}`;
       var newPlace = {};
+      console.log("Here's the URL:")
+      console.log(URL)
 
       await axios
         .get(URL)
@@ -730,9 +736,12 @@ const store = new Vuex.Store({
           fb.placesCollection.add(newPlace);
         })
         .catch((error) => {
+          console.log(error.message)
           this.errorMessage = error.message;
         });
 
+        console.log("Here's the new place:")
+        console.log(newPlace)
         return newPlace
     },
     async findNearbyPlaces({ state, commit, dispatch }, type) {

@@ -71,7 +71,7 @@ export default {
       address: "",
       error: "",
       spinner: false,
-      apiKey: "AIzaSyCHzVbXJqB_-tUwT2AeUGZ_-HRkvJOHjqI",
+      apiKey: process.env.VUE_APP_GOOGLE_API,
       lat: 0,
       lng: 0,
       type: "",

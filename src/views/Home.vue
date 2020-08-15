@@ -75,8 +75,8 @@ export default {
             lat +
             "," +
             long +
-            "&key=AIzaSyCHzVbXJqB_-tUwT2AeUGZ_-HRkvJOHjqI"
-            // this.apiKey
+            "&key=" +
+            this.apiKey
         )
         .then((response) => {
           if (response.data.error_message) {
