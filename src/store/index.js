@@ -707,18 +707,14 @@ const store = new Vuex.Store({
     },
     async createPlace({ state, getters }, place) {
       var apiKey = getters.getFixieKey;
-      console.log("Here is the APIKey")
-      console.log(apiKey)
+
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${apiKey}`;
       var newPlace = {};
-      console.log(URL)
 
       await axios
         .get(URL)
         .then((response) => {
-          console.log("Examining the results")
-          console.log(response)
-          console.log(newPlace)
+
           newPlace = response.data.result;
           var latitude = newPlace.geometry.location.lat;
           var longitude = newPlace.geometry.location.lng;
@@ -740,7 +736,7 @@ const store = new Vuex.Store({
           fb.placesCollection.add(newPlace);
         })
         .catch((error) => {
-          console.log(error.message)
+ 
           this.errorMessage = error.message;
         });
 
