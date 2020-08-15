@@ -705,12 +705,10 @@ const store = new Vuex.Store({
     },
     async createPlace({ state, getters }, place) {
       var googleApiKey = getters.getGoogleApiKey;
-      console.log("Here's the API Key:")
-      console.log(googleApiKey)
+
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${googleApiKey}`;
       var newPlace = {};
-      console.log("Here's the URL:")
-      console.log(URL)
+
 
       await axios
         .get(URL)
@@ -736,12 +734,11 @@ const store = new Vuex.Store({
           fb.placesCollection.add(newPlace);
         })
         .catch((error) => {
-          console.log(error.message)
+
           this.errorMessage = error.message;
         });
 
-        console.log("Here's the new place:")
-        console.log(newPlace)
+
         return newPlace
     },
     async findNearbyPlaces({ state, commit, dispatch }, type) {
