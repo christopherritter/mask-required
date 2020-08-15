@@ -335,7 +335,8 @@ const store = new Vuex.Store({
     },
     errorMessage: "",
     fields: "",
-    googleApiKey: process.env.VUE_APP_GOOGLE_API,
+    googleAPIKey: process.env.VUE_APP_GOOGLE_API,
+    fixieAPIKey: process.env.VUE_APP_FIXIE_KEY,
     validTypes: [
       "accounting",
       "airport",
@@ -448,7 +449,8 @@ const store = new Vuex.Store({
     getPlaces: (state) => state.places,
     getPlace: (state) => state.place,
     getSearchBar: (state) => state.showSearchbar,
-    getGoogleApiKey: (state) => state.googleApiKey,
+    getGoogleAPIKey: (state) => state.googleAPIKey,
+    getFixieKey: (state) => state.fixieKey,
   },
   mutations: {
     updateField,
@@ -704,9 +706,9 @@ const store = new Vuex.Store({
       commit("setPlace", newPlace);
     },
     async createPlace({ state, getters }, place) {
-      var googleApiKey = getters.getGoogleApiKey;
+      var apiKey = getters.getFixieKey;
 
-      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${googleApiKey}`;
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${apiKey}`;
       var newPlace = {};
 
 
