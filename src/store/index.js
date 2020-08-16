@@ -714,9 +714,6 @@ const store = new Vuex.Store({
       await axios
         .get(URL)
         .then((response) => {
-          // console.log("Here's what we got back:")
-          // console.log(response)
-          // console.log(response.data.result)
           newPlace = response.data.result;
           var latitude = newPlace.geometry.location.lat;
           var longitude = newPlace.geometry.location.lng;
@@ -737,12 +734,11 @@ const store = new Vuex.Store({
 
         })
         .catch((error) => {
-          // console.log(error.message)
+          console.log(error.message)
           this.errorMessage = error.message;
         });
 
-        // console.log(newPlace)
-        // fb.placesCollection.add(newPlace);
+        fb.placesCollection.add(newPlace);
         return newPlace
     },
     async findNearbyPlaces({ state, commit, dispatch }, type) {
