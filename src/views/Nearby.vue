@@ -247,7 +247,6 @@ export default {
     var currentType = this.$route.params.name;
     await this.$store.dispatch("findNearbyPlaces", currentType);
     this.places = this.$store.getters.getPlaces;
-
   },
   computed: {
     ...mapState([["validTypes"], ["ratings"]]),

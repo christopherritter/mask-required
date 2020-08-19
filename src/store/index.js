@@ -742,6 +742,7 @@ const store = new Vuex.Store({
         return newPlace
     },
     async findNearbyPlaces({ state, commit, dispatch }, type) {
+      // console.log("Fetching nearby places for " + type + "s.")
       const nearbyPlaces = [];
 
       // Retrieve the current coordinates using the navigator API

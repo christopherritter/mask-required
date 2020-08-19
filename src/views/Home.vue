@@ -5,7 +5,7 @@
       <section id="home-search-card">
         <v-row>
           <v-col>
-            <v-card class="p-4 jumbotron text-center" color="#c5f9da">
+            <v-card class="p-4 mb-16 jumbotron text-center" flat color="#c5f9da">
               <v-row>
                 <v-col cols="12" md="5" class="hidden-sm-and-down">
                   <svg-img
@@ -138,7 +138,7 @@ export default {
 .jumbotron .jumbotron-image {
   font-size: 25rem;
   float: left;
-  margin-bottom: -15rem;
+  margin-bottom: -6rem;
   margin-top: -3.15rem;
 }
 .jumbotron .jumbotron-text {
