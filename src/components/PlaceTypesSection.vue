@@ -12,9 +12,9 @@
       <h3>{{ type.name | replaceUnderscore }} reviews</h3>
       <v-slide-group
         v-model="place"
-        class="pa-4"
+        class="py-4"
         show-arrows
-        v-scroll:#scroll-target="onScroll"
+        style="margin-left: -25px"
       >
         <v-slide-item v-for="place in type.places" v-bind:key="place.place_id">
           <v-card
@@ -36,15 +36,54 @@
                 'white--text': highlightedCard == index + place.place_id,
               }"
             >
-              {{ place.name }}
+              {{ place.name | truncateWithEllipse(20) }}
             </v-card-title>
             <v-card-subtitle
+              class="pb-2"
               :class="{
                 'white--text': highlightedCard == index + place.place_id,
               }"
             >
               {{ place.formatted_address }}
             </v-card-subtitle>
+            <v-rating
+              v-if="place.reviews && place.reviews.length > 0"
+              v-model="place.ratings.general"
+              background-color="yellow"
+              color="yellow accent-4"
+              length="5"
+              dense
+              half-increments
+              hover
+              size="18"
+              readonly
+              class="ml-4 mb-1"
+            ></v-rating>
+            <v-rating
+              v-else
+              background-color="gray"
+              color="gray accent-4"
+              length="5"
+              dense
+              half-increments
+              hover
+              size="18"
+              readonly
+              class="ml-4 mb-1"
+            ></v-rating>
+            <v-card-text
+              v-if="
+                place.reviews &&
+                  place.reviews.length > 0 &&
+                  place.reviews[0].title.length > 0
+              "
+              class="pt-2"
+              :class="{
+                'white--text': highlightedCard == index + place.place_id,
+              }"
+            >
+              &ldquo;{{ place.reviews[0].title }}&rdquo;
+            </v-card-text>
           </v-card>
         </v-slide-item>
       </v-slide-group>
@@ -75,7 +114,13 @@ export default {
   computed: {
     typesToDisplay: function() {
       if (this.showLessTypes) {
-        return this.types.slice(0, 5);
+        var lessTypes = [];
+        for (let i = 0; i < this.types.length; i++) {
+          if (this.types[i].places.length > 4) {
+            lessTypes.push(this.types[i]);
+          }
+        }
+        return lessTypes;
       } else {
         return this.types;
       }
@@ -120,9 +165,6 @@ export default {
     async printResults(results) {
       this.places.push(results);
     },
-    onScroll(e) {
-      this.offsetLeft = e.target.scrollLeft;
-    },
   },
   filters: {
     replaceUnderscore(val) {
@@ -134,6 +176,13 @@ export default {
         }
       }
       return frags.join(" ");
+    },
+    truncateWithEllipse(val, stringLength) {
+      if (val.length > stringLength) {
+        return val.slice(0, stringLength - 1) + "...";
+      } else {
+        return val;
+      }
     },
   },
 };
