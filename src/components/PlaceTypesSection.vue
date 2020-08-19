@@ -10,37 +10,44 @@
       class="place-types"
     >
       <h3>{{ type.name | replaceUnderscore }} reviews</h3>
-      <div class="d-flex flex-nowrap" style="overflow:auto">
-        <v-card
-          v-for="place in type.places"
-          v-bind:key="place.place_id"
-          width="250"
-          min-width="250"
-          height="200"
-          outlined
-          @mouseover.native="highlightedCard = index + place.place_id"
-          @mouseleave.native="highlightedCard = null"
-          :style="styleObject"
-          class="mr-2 mb-2"
-          :class="{ 'teal white--text': highlightedCard == index + place.place_id }"
-          style="cursor: pointer"
-        >
-          <v-card-title
+      <v-slide-group
+        v-model="place"
+        class="pa-4"
+        show-arrows
+        v-scroll:#scroll-target="onScroll"
+      >
+        <v-slide-item v-for="place in type.places" v-bind:key="place.place_id">
+          <v-card
+            width="250"
+            min-width="250"
+            height="200"
+            outlined
+            @mouseover.native="highlightedCard = index + place.place_id"
+            @mouseleave.native="highlightedCard = null"
+            :style="styleObject"
+            class="mr-2 mb-2"
             :class="{
-              'white--text': highlightedCard == index + place.place_id,
+              'teal white--text': highlightedCard == index + place.place_id,
             }"
+            style="cursor: pointer"
           >
-            {{ place.name }}
-          </v-card-title>
-          <v-card-subtitle
-            :class="{
-              'white--text': highlightedCard == index + place.place_id,
-            }"
-          >
-            {{ place.formatted_address }}
-          </v-card-subtitle>
-        </v-card>
-      </div>
+            <v-card-title
+              :class="{
+                'white--text': highlightedCard == index + place.place_id,
+              }"
+            >
+              {{ place.name }}
+            </v-card-title>
+            <v-card-subtitle
+              :class="{
+                'white--text': highlightedCard == index + place.place_id,
+              }"
+            >
+              {{ place.formatted_address }}
+            </v-card-subtitle>
+          </v-card>
+        </v-slide-item>
+      </v-slide-group>
     </div>
   </section>
 </template>
@@ -52,6 +59,7 @@ export default {
   name: "place-types-section",
   data() {
     return {
+      place: null,
       types: [],
       userLocation: {
         lat: null,
@@ -111,6 +119,9 @@ export default {
     },
     async printResults(results) {
       this.places.push(results);
+    },
+    onScroll(e) {
+      this.offsetLeft = e.target.scrollLeft;
     },
   },
   filters: {
