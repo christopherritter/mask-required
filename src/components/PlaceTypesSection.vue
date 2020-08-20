@@ -4,8 +4,8 @@
     <p class="subtitle text-center" v-if="this.userLocation.lat">
       Read the latest reviews of local businesses and other nearby places.
     </p>
-    <p v-else>
-      You need to enable your location in order to view local reviews. Enable location.
+    <p class="subtitle text-center" v-else>
+      Allow your browser to get your location in order to browse nearby places. <a href="javascript:" @click.prevent="getUserLocation" class="text-decoration-none">Get your location.</a>
     </p>
     <div v-if="loading">
       <v-skeleton-loader
