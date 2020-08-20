@@ -1,15 +1,180 @@
 <template>
   <section>
     <h2 class="text-center">Recent reviews</h2>
-    <p class="subtitle text-center">
+    <p class="subtitle text-center" v-if="this.userLocation.lat">
       Read the latest reviews of local businesses and other nearby places.
     </p>
+    <p v-else>
+      You need to enable your location in order to view local reviews. Enable location.
+    </p>
+    <div v-if="loading">
+      <v-skeleton-loader
+        width="450"
+        height="50"
+        type="heading"
+      ></v-skeleton-loader>
+      <v-row>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+      </v-row>
+      <v-skeleton-loader
+        width="450"
+        height="50"
+        class="mt-6"
+        type="heading"
+      ></v-skeleton-loader>
+      <v-row>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+      </v-row>
+      <v-skeleton-loader
+        width="450"
+        height="50"
+        class="mt-6"
+        type="heading"
+      ></v-skeleton-loader>
+      <v-row>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+        <v-col>
+          <v-sheet
+            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+            ><v-skeleton-loader
+              height="200"
+              type="card-heading, list-item-two-line, list-item-two-line"
+            ></v-skeleton-loader>
+          </v-sheet>
+        </v-col>
+      </v-row>
+    </div>
     <div
+      v-else
       v-for="(type, index) in typesToDisplay"
       v-bind:key="index"
       class="place-types"
     >
       <h3>{{ type.name | replaceUnderscore }} reviews</h3>
+
       <v-slide-group
         v-model="place"
         class="py-4"
@@ -116,7 +281,7 @@ export default {
         lat: null,
         long: null,
       },
-      isLoadingTypes: true,
+      loading: true,
       showLessTypes: true,
       styleObject: { "border-color": "#7dbc96" },
       highlightedCard: null,
@@ -161,8 +326,7 @@ export default {
         });
     }
     this.types = currentTypes;
-
-    this.isLoadingTypes = false;
+    this.loading = false;
   },
   methods: {
     getUserLocation() {
