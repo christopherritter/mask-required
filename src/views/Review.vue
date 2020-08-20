@@ -135,7 +135,7 @@
               <v-btn
                 @click="createReview(place)"
                 class="mt-4"
-                :disabled="!review.rating.length > 0 && !review.title.length > 79 && !review.content.length > 99 && !review.agreement"
+                :disabled="!review.agreement"
                 color="primary"
               >
                 Submit Your Review
