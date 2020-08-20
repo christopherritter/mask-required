@@ -224,7 +224,7 @@ import * as fb from "../firebase";
 import { mapState } from "vuex";
 
 export default {
-  name: "Nearby",
+  name: "nearby",
   data() {
     return {
       places: [],
