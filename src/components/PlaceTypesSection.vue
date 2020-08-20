@@ -30,6 +30,7 @@
               'teal white--text': highlightedCard == index + place.place_id,
             }"
             style="cursor: pointer"
+            @click="viewPlace(place)"
           >
             <v-card-title
               :class="{
@@ -46,31 +47,42 @@
             >
               {{ place.formatted_address }}
             </v-card-subtitle>
-            <v-rating
+            <div
               v-if="place.reviews && place.reviews.length > 0"
-              v-model="place.ratings.general"
-              background-color="yellow"
-              color="yellow accent-4"
-              length="5"
-              dense
-              half-increments
-              hover
-              size="18"
-              readonly
-              class="ml-4 mb-1"
-            ></v-rating>
-            <v-rating
-              v-else
-              background-color="gray"
-              color="gray accent-4"
-              length="5"
-              dense
-              half-increments
-              hover
-              size="18"
-              readonly
-              class="ml-4 mb-1"
-            ></v-rating>
+              class="d-flex flex-row"
+            >
+              <v-rating
+                v-model="place.ratings.general"
+                background-color="yellow"
+                color="yellow accent-4"
+                length="5"
+                dense
+                half-increments
+                hover
+                size="18"
+                readonly
+                class="ml-4 mb-1"
+              ></v-rating>
+              <span class="text-caption mt-1 ml-2">
+                {{ place.reviews.length }} reviews
+              </span>
+            </div>
+            <div v-else class="d-flex flex-row">
+              <v-rating
+                background-color="gray"
+                color="gray accent-4"
+                length="5"
+                dense
+                half-increments
+                hover
+                size="18"
+                readonly
+                class="ml-4 mb-1"
+              ></v-rating>
+              <span class="text-caption mt-1 ml-2">
+                0 reviews
+              </span>
+            </div>
             <v-card-text
               v-if="
                 place.reviews &&
@@ -156,14 +168,9 @@ export default {
     getUserLocation() {
       this.$store.dispatch("fetchUserLocation");
     },
-    async displayTypeOfPlaces(type) {
-      await this.$store.dispatch("findNearbyPlaces", type).then(() => {
-        this.printResults(this.$store.getters.getPlaces);
-      });
-      return;
-    },
-    async printResults(results) {
-      this.places.push(results);
+    async viewPlace(place) {
+      await this.$store.dispatch("fetchPlace", place);
+      this.$router.push({ name: "place", params: { id: place.place_id } });
     },
   },
   filters: {
