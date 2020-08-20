@@ -135,7 +135,7 @@
               <v-btn
                 @click="createReview()"
                 class="mt-4"
-                :disabled="!review.agreement"
+                :disabled="!review.rating && !review.title && !review.content && !review.agreement"
                 color="primary"
               >
                 Submit Your Review
@@ -275,7 +275,7 @@ export default {
         { id: 2, value: 0 },
       ];
       this.review.agreement = false;
-      this.$router.push("place");
+      this.$router.push("place", this.place.place_id);
     },
     likeReview(id, likesCount) {
       this.$store.dispatch("likeReview", { id, likesCount });
