@@ -54,11 +54,11 @@
         <v-chip
           small
           color="white"
-          v-for="(t, index) in place.types"
+          v-for="(type, index) in place.types"
           :key="index"
-          @click="findNearbyPlaces(t)"
-          :value="t"
-          >{{ t | replaceUnderscore }}</v-chip
+          @click="findNearbyPlaces(type)"
+          :value="type"
+          >{{ type | replaceUnderscore }}</v-chip
         >
       </v-chip-group>
 
@@ -67,9 +67,9 @@
           disabled
           small
           color="white"
-          v-for="(t, index) in place.types"
+          v-for="(type, index) in place.types"
           :key="index"
-          >{{ t | replaceUnderscore }}</v-chip
+          >{{ type | replaceUnderscore }}</v-chip
         >
       </v-chip-group>
     </v-row>
@@ -95,6 +95,12 @@ export default {
       await this.$store.dispatch("fetchUserLocation");
     }
     this.userLocation = this.$store.getters.getUserLocation;
+  },
+  methods: {
+    async findNearbyPlaces(type) {
+      await this.$store.dispatch("findNearbyPlaces", type);
+      this.$router.push({ name: "nearby", params: { name: type } });
+    },
   },
   filters: {
     replaceUnderscore(val) {
