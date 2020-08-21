@@ -332,6 +332,7 @@ const store = new Vuex.Store({
         return pattern.test(value) || "Invalid e-mail.";
       },
       minLength: (value) => value.length >= 100 || "Min 100 characters",
+      rating: (value) => value <= 0 || "Leave a rating between 1 and 5."
     },
     errorMessage: "",
     fields: "",

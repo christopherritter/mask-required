@@ -4,7 +4,7 @@
       <v-row>
         <v-col cols="12" md="8">
           <div class="create-review">
-            <form @submit.prevent>
+            <v-form ref="form" v-model="valid" lazy-validation>
               <!-- Place header -->
               <div class="place-header">
                 <h3>{{ place.name }}</h3>
@@ -14,21 +14,23 @@
               <!-- Content of review -->
               <div>
                 <h6>Your overall rating of this place.</h6>
-                <v-rating
-                  :rules="[rules.required]"
-                  v-model="review.rating"
-                  dark
-                  hover
-                  color="green"
-                  background-color="green lighten-2"
-                  size="35"
-                  class="mb-5"
-                ></v-rating>
+                <v-input :value="value" :rules="[rules.required, rules.rating]">
+                  <v-rating
+                    v-model="review.rating"
+                    dark
+                    hover
+                    color="green"
+                    background-color="green lighten-2"
+                    size="35"
+                    required
+                  ></v-rating>
+                </v-input>
               </div>
 
               <!-- Title of review -->
               <v-text-field
                 :rules="[rules.required, rules.counter]"
+                class="mt-5"
                 outlined
                 counter
                 maxlength="80"
@@ -36,6 +38,7 @@
                 label="Title of your review"
                 v-model="review.title"
                 placeholder="Summarize your visit or highlight an important detail"
+                required
               ></v-text-field>
               <v-textarea
                 :rules="[rules.required, rules.minLength]"
@@ -44,13 +47,13 @@
                 label="Your review"
                 v-model.trim="review.content"
                 placeholder="Tell others about your experience. Did you see people wearing masks?"
+                required
               ></v-textarea>
 
               <h6>Who was wearing masks?</h6>
 
               <v-select
                 :items="masks.employees"
-                :rules="[rules.required]"
                 v-model="review.masks.employees"
                 label="Were employees wearing masks?"
                 outlined
@@ -58,7 +61,6 @@
 
               <v-select
                 :items="masks.customers"
-                :rules="[rules.required]"
                 v-model="review.masks.customers"
                 label="Were customers wearing masks?"
                 outlined
@@ -140,7 +142,7 @@
               >
                 Submit Your Review
               </v-btn>
-            </form>
+            </v-form>
           </div>
         </v-col>
 
@@ -182,6 +184,7 @@ import { mapState } from "vuex";
 import moment from "moment";
 
 export default {
+  name: "review",
   data() {
     return {
       address: null,
@@ -215,6 +218,8 @@ export default {
         agreement: false,
       },
       agreement: false,
+      value: [ 1, 2, 3, 4, 5 ],
+      valid: true
     };
   },
   mounted() {
@@ -236,46 +241,22 @@ export default {
       this.$store.dispatch("fetchPlace", place);
     },
     createReview(place) {
-      this.$store.dispatch("createReview", {
-        rating: this.review.rating,
-        title: this.review.title,
-        content: this.review.content,
-        masks: {
-          employees: this.review.masks.employees,
-          customers: this.review.masks.customers,
-        },
-        questions: this.review.questions,
-        ratings: this.review.ratings,
-        agreement: this.review.agreement,
-      });
-      this.review.rating = 0;
-      this.review.title = "";
-      this.review.content = "";
-      this.review.masks = {
-        employees: "",
-        customers: "",
-      };
-      this.review.questions = [
-        { id: 0, value: "" },
-        { id: 1, value: "" },
-        { id: 2, value: "" },
-        { id: 3, value: "" },
-        { id: 4, value: "" },
-        { id: 5, value: "" },
-        { id: 6, value: "" },
-        { id: 7, value: "" },
-        { id: 8, value: "" },
-        { id: 9, value: "" },
-        { id: 10, value: "" },
-        { id: 11, value: "" },
-      ];
-      this.review.ratings = [
-        { id: 0, value: 0 },
-        { id: 1, value: 0 },
-        { id: 2, value: 0 },
-      ];
-      this.review.agreement = false;
-      this.$router.push({ name: "place", params: { id: place.place_id }});
+      if (this.$refs.form.validate()) {
+        this.$store.dispatch("createReview", {
+          rating: this.review.rating,
+          title: this.review.title,
+          content: this.review.content,
+          masks: {
+            employees: this.review.masks.employees,
+            customers: this.review.masks.customers,
+          },
+          questions: this.review.questions,
+          ratings: this.review.ratings,
+          agreement: this.review.agreement,
+        });
+        this.$refs.form.reset();
+        this.$router.push({ name: "place", params: { id: place.place_id } });
+      }
     },
     likeReview(id, likesCount) {
       this.$store.dispatch("likeReview", { id, likesCount });
