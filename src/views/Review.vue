@@ -12,9 +12,10 @@
               </div>
 
               <!-- Content of review -->
-              <h4 class="mt-10 mb-1">Your overall rating of this place.</h4>
+              <h4 class="mt-10 mb-4">Your overall rating of this place.</h4>
               <v-select
                 v-model="review.rating"
+                outlined
                 :items="value"
                 :rules="[rules.required, rules.rating]"
                 label="How would you rate this place?"
