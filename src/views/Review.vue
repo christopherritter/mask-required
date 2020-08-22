@@ -13,22 +13,13 @@
 
               <!-- Content of review -->
               <h4 class="mt-10 mb-1">Your overall rating of this place.</h4>
-              <v-input
-                :value="value"
+              <v-select
+                v-model="review.rating"
+                :items="value"
                 :rules="[rules.required, rules.rating]"
-                class="mb-0"
-              >
-                <v-rating
-                  v-model="review.rating"
-                  dark
-                  hover
-                  color="green"
-                  background-color="green lighten-2"
-                  size="40"
-                  required
-                  class="mb-0"
-                ></v-rating>
-              </v-input>
+                label="How would you rate this place?"
+                required
+              ></v-select>
 
               <!-- Title of review -->
               <v-text-field
@@ -210,7 +201,7 @@ export default {
     return {
       address: null,
       review: {
-        rating: 0,
+        rating: null,
         title: "",
         content: "",
         masks: {
@@ -239,7 +230,13 @@ export default {
         agreement: false,
       },
       agreement: false,
-      value: [1, 2, 3, 4, 5],
+      value: [
+        { text: "5 - Perfect example of a safe business.", value: 5 },
+        { text: "4 - Not perfect but a good place to shop.", value: 4 },
+        { text: "3 - Could definitely use some improvement.", value: 3 },
+        { text: "2 - Not exactly my favorite place to shop.", value: 2 },
+        { text: "1 - I would rather do business elsewhere.", value: 1 },
+      ],
       valid: true,
     };
   },
@@ -275,10 +272,14 @@ export default {
           ratings: this.review.ratings,
           agreement: this.review.agreement,
         });
+        console.log("Passed validation");
+        console.log(this.review.rating);
         this.$refs.form.reset();
         this.$router.push({ name: "place", params: { id: place.place_id } });
       } else {
-        this.$vuetify.goTo('form')
+        console.log("Failed validation");
+        console.log(this.review.rating);
+        this.$vuetify.goTo("form");
       }
     },
     likeReview(id, likesCount) {
