@@ -277,6 +277,8 @@ export default {
         });
         this.$refs.form.reset();
         this.$router.push({ name: "place", params: { id: place.place_id } });
+      } else {
+        this.$vuetify.goTo('form')
       }
     },
     likeReview(id, likesCount) {
