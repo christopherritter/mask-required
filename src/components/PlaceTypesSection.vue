@@ -5,7 +5,13 @@
       Read the latest reviews of local businesses and other nearby places.
     </p>
     <p class="subtitle text-center" v-else>
-      Allow your browser to get your location in order to browse nearby places. <a href="javascript:" @click.prevent="getUserLocation" class="text-decoration-none">Get your location.</a>
+      Allow your browser to get your location in order to browse nearby places.
+      <a
+        href="javascript:"
+        @click.prevent="getUserLocation"
+        class="text-decoration-none"
+        >Get your location.</a
+      >
     </p>
     <div v-if="loading">
       <v-skeleton-loader
@@ -175,11 +181,7 @@
     >
       <h3>{{ type.name | replaceUnderscore }} reviews</h3>
 
-      <v-slide-group
-        v-model="place"
-        class="py-4"
-        show-arrows
-      >
+      <v-slide-group v-model="place" class="py-4" show-arrows>
         <v-slide-item v-for="place in type.places" v-bind:key="place.place_id">
           <v-card
             width="250"
@@ -292,7 +294,7 @@ export default {
       if (this.showLessTypes) {
         var lessTypes = [];
         for (let i = 0; i < this.types.length; i++) {
-          if (this.types[i].places.length > 4) {
+          if (i < 3) {
             lessTypes.push(this.types[i]);
           }
         }
@@ -317,7 +319,7 @@ export default {
     var i,
       currentTypes = this.$store.getters.getTypes;
 
-    for (i = 0; i < 2; i++) {
+    for (i = 0; i < currentTypes.length; i++) {
       await this.$store
         .dispatch("findNearbyPlaces", currentTypes[i].name)
         .then(() => {
