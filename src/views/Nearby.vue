@@ -6,7 +6,220 @@
           <h1>{{ $route.params.name | replaceUnderscore }} Reviews</h1>
         </v-col>
       </v-row>
-      <v-row v-for="place in places" :key="place.place_id">
+      <v-row v-if="loading">
+        <v-col>
+          <v-sheet elevation="2">
+            <v-row style="flex-wrap: nowrap;">
+              <v-col
+                cols="2"
+                class="d-flex justify-center flex-grow-0 flex-shrink-0"
+                ><v-skeleton-loader
+                  type="avatar"
+                  width="48"
+                  height="48"
+                  class="mt-10"
+                ></v-skeleton-loader
+              ></v-col>
+              <v-col cols="10" class="flex-grow-1 flex-shrink-0">
+                <v-row no-gutter>
+                  <v-col>
+                    <v-row no-gutter>
+                      <v-skeleton-loader
+                        type="heading"
+                        width="500"
+                        height="36"
+                        class="mt-3"
+                      ></v-skeleton-loader>
+                    </v-row>
+                    <v-row no-gutter
+                      ><v-skeleton-loader
+                        type="sentences"
+                        width="350"
+                        height="60"
+                      ></v-skeleton-loader
+                    ></v-row>
+                  </v-col>
+                  <v-col class="d-flex justify-end"
+                    ><v-skeleton-loader
+                      type="paragraph"
+                      width="248"
+                      height="48"
+                      class="mt-4 mr-6"
+                    ></v-skeleton-loader
+                  ></v-col>
+                </v-row>
+                <v-row no-gutter class="d-flex justify-start">
+                  <v-skeleton-loader
+                    type="chip"
+                    width="124"
+                    height="48"
+                  ></v-skeleton-loader
+                  ><v-skeleton-loader
+                    type="chip"
+                    width="124"
+                    height="48"
+                  ></v-skeleton-loader
+                  ><v-skeleton-loader
+                    type="chip"
+                    width="124"
+                    height="48"
+                  ></v-skeleton-loader
+                  ><v-skeleton-loader
+                    type="chip"
+                    width="124"
+                    height="48"
+                  ></v-skeleton-loader
+                  ><v-skeleton-loader
+                    type="chip"
+                    width="124"
+                    height="48"
+                  ></v-skeleton-loader>
+                </v-row>
+                <v-row no-gutter>
+                  <v-skeleton-loader
+                    type="paragraph"
+                    width="448"
+                    height="48"
+                    class="mt-6 mb-4"
+                  ></v-skeleton-loader>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-sheet>
+        </v-col>
+      </v-row>
+      <v-row v-if="loading">
+        <v-col>
+          <v-sheet elevation="2">
+            <v-row style="flex-wrap: nowrap;">
+              <v-col
+                cols="2"
+                class="d-flex justify-center flex-grow-0 flex-shrink-0"
+                ><v-skeleton-loader
+                  type="avatar"
+                  width="48"
+                  height="48"
+                  class="mt-10"
+                ></v-skeleton-loader
+              ></v-col>
+              <v-col cols="10" class="flex-grow-1 flex-shrink-0">
+                <v-row no-gutter>
+                  <v-col>
+                    <v-row no-gutter>
+                      <v-skeleton-loader
+                        type="heading"
+                        width="500"
+                        height="36"
+                        class="mt-3"
+                      ></v-skeleton-loader>
+                    </v-row>
+                    <v-row no-gutter
+                      ><v-skeleton-loader
+                        type="sentences"
+                        width="350"
+                        height="60"
+                      ></v-skeleton-loader
+                    ></v-row>
+                  </v-col>
+                  <v-col class="d-flex justify-end"
+                    ><v-skeleton-loader
+                      type="paragraph"
+                      width="248"
+                      height="48"
+                      class="mt-4 mr-6"
+                    ></v-skeleton-loader
+                  ></v-col>
+                </v-row>
+                <v-row no-gutter class="d-flex justify-start">
+                  <v-skeleton-loader
+                    type="chip"
+                    width="124"
+                    height="48"
+                  ></v-skeleton-loader
+                  ><v-skeleton-loader
+                    type="chip"
+                    width="124"
+                    height="48"
+                  ></v-skeleton-loader>
+                </v-row>
+                <v-row no-gutter>
+                  <v-skeleton-loader
+                    type="paragraph"
+                    width="448"
+                    height="48"
+                    class="mt-6 mb-4"
+                  ></v-skeleton-loader>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-sheet>
+        </v-col>
+      </v-row>
+      <v-row v-if="loading">
+        <v-col>
+          <v-sheet elevation="2">
+            <v-row style="flex-wrap: nowrap;">
+              <v-col
+                cols="2"
+                class="d-flex justify-center flex-grow-0 flex-shrink-0"
+                ><v-skeleton-loader
+                  type="avatar"
+                  width="48"
+                  height="48"
+                  class="mt-10"
+                ></v-skeleton-loader
+              ></v-col>
+              <v-col cols="10" class="flex-grow-1 flex-shrink-0">
+                <v-row no-gutter>
+                  <v-col>
+                    <v-row no-gutter>
+                      <v-skeleton-loader
+                        type="heading"
+                        width="500"
+                        height="36"
+                        class="mt-3"
+                      ></v-skeleton-loader>
+                    </v-row>
+                    <v-row no-gutter
+                      ><v-skeleton-loader
+                        type="sentences"
+                        width="350"
+                        height="60"
+                      ></v-skeleton-loader
+                    ></v-row>
+                  </v-col>
+                  <v-col class="d-flex justify-end"
+                    ><v-skeleton-loader
+                      type="paragraph"
+                      width="248"
+                      height="48"
+                      class="mt-4 mr-6"
+                    ></v-skeleton-loader
+                  ></v-col>
+                </v-row>
+                <v-row no-gutter class="d-flex justify-start">
+                  <v-skeleton-loader
+                    type="chip"
+                    width="124"
+                    height="48"
+                  ></v-skeleton-loader
+                  ><v-skeleton-loader
+                    type="chip"
+                    width="124"
+                    height="48"
+                  ></v-skeleton-loader
+                  ><v-skeleton-loader
+                    type="chip"
+                    width="124"
+                    height="48"
+                  ></v-skeleton-loader>
+                </v-row>
+              </v-col>
+            </v-row>
+          </v-sheet>
+        </v-col>
+      </v-row>
+      <v-row v-else v-for="place in places" :key="place.place_id">
         <v-col>
           <v-card>
             <v-container class="pa-0">
@@ -55,7 +268,10 @@
                           class="mb-1 ml-2"
                         ></v-rating>
 
-                        <span class="caption ml-2" v-if="place.reviews.length >= 2">
+                        <span
+                          class="caption ml-2"
+                          v-if="place.reviews.length >= 2"
+                        >
                           ({{ place.reviews.length }} Reviews)
                         </span>
                         <span class="caption ml-2" v-else>
@@ -83,9 +299,20 @@
                         }}</v-card-text>
                       </v-row>
                     </v-col>
-                    <v-col class="flex-grow-0 flex-shrink-0" v-if="place.ratings">
-                      <v-row class="d-flex flex-nowrap" align="center" justify="end">
-                        <v-icon v-text="ratings[0].icon" class="mt-5 mr-5" small></v-icon>
+                    <v-col
+                      class="flex-grow-0 flex-shrink-0"
+                      v-if="place.ratings"
+                    >
+                      <v-row
+                        class="d-flex flex-nowrap"
+                        align="center"
+                        justify="end"
+                      >
+                        <v-icon
+                          v-text="ratings[0].icon"
+                          class="mt-5 mr-5"
+                          small
+                        ></v-icon>
                         <strong class="mt-5">Compliance</strong>
                         <v-rating
                           :value="place.ratings.compliance"
@@ -100,8 +327,16 @@
                           class="mb-1 mt-5 ml-2 mr-10"
                         ></v-rating>
                       </v-row>
-                      <v-row class="d-flex flex-nowrap" align="center" justify="end">
-                        <v-icon v-text="ratings[1].icon" class="mr-3" small></v-icon>
+                      <v-row
+                        class="d-flex flex-nowrap"
+                        align="center"
+                        justify="end"
+                      >
+                        <v-icon
+                          v-text="ratings[1].icon"
+                          class="mr-3"
+                          small
+                        ></v-icon>
                         <strong>Notifications</strong>
                         <v-rating
                           :value="place.ratings.notifications"
@@ -116,8 +351,16 @@
                           class="mb-1 ml-2 mr-10"
                         ></v-rating>
                       </v-row>
-                      <v-row class="d-flex flex-nowrap" align="center" justify="end">
-                        <v-icon v-text="ratings[2].icon" class="mr-3" small></v-icon>
+                      <v-row
+                        class="d-flex flex-nowrap"
+                        align="center"
+                        justify="end"
+                      >
+                        <v-icon
+                          v-text="ratings[2].icon"
+                          class="mr-3"
+                          small
+                        ></v-icon>
                         <strong>Enforcement</strong>
                         <v-rating
                           :value="place.ratings.enforcement"
@@ -134,8 +377,16 @@
                       </v-row>
                     </v-col>
                     <v-col class="flex-grow-0 flex-shrink-0" v-else>
-                      <v-row class="d-flex flex-nowrap" align="center" justify="end">
-                        <v-icon v-text="ratings[0].icon" class="mt-5 mr-5" small></v-icon>
+                      <v-row
+                        class="d-flex flex-nowrap"
+                        align="center"
+                        justify="end"
+                      >
+                        <v-icon
+                          v-text="ratings[0].icon"
+                          class="mt-5 mr-5"
+                          small
+                        ></v-icon>
                         <strong class="mt-5">Compliance</strong>
                         <v-rating
                           disabled
@@ -149,8 +400,16 @@
                           class="mb-1 mt-5 ml-2 mr-10"
                         ></v-rating>
                       </v-row>
-                      <v-row class="d-flex flex-nowrap" align="center" justify="end">
-                        <v-icon v-text="ratings[1].icon" class="mr-3" small></v-icon>
+                      <v-row
+                        class="d-flex flex-nowrap"
+                        align="center"
+                        justify="end"
+                      >
+                        <v-icon
+                          v-text="ratings[1].icon"
+                          class="mr-3"
+                          small
+                        ></v-icon>
                         <strong>Notifications</strong>
                         <v-rating
                           disabled
@@ -164,8 +423,16 @@
                           class="mb-1 ml-2 mr-10"
                         ></v-rating>
                       </v-row>
-                      <v-row class="d-flex flex-nowrap" align="center" justify="end">
-                        <v-icon v-text="ratings[1].icon" class="mr-3" small></v-icon>
+                      <v-row
+                        class="d-flex flex-nowrap"
+                        align="center"
+                        justify="end"
+                      >
+                        <v-icon
+                          v-text="ratings[1].icon"
+                          class="mr-3"
+                          small
+                        ></v-icon>
                         <strong>Enforcement</strong>
                         <v-rating
                           disabled
@@ -197,7 +464,10 @@
                   </v-row>
                   <v-row v-if="place.reviews">
                     <v-col>
-                      <v-row v-for="review in place.reviews" :key="review.reviewId">
+                      <v-row
+                        v-for="review in place.reviews"
+                        :key="review.reviewId"
+                      >
                         <h5 class="pl-4">Recent reviews</h5>
                         <v-card-text v-if="review.title">
                           &ldquo;{{ review.title }}&rdquo;
@@ -233,6 +503,7 @@ export default {
       spinner: false,
       selected: "",
       type: "",
+      loading: true,
     };
   },
   async created() {
@@ -247,6 +518,7 @@ export default {
     var currentType = this.$route.params.name;
     await this.$store.dispatch("findNearbyPlaces", currentType);
     this.places = this.$store.getters.getPlaces;
+    this.loading = false;
   },
   computed: {
     ...mapState([["validTypes"], ["ratings"]]),
