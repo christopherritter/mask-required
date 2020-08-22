@@ -101,7 +101,7 @@ import EditReviewDialog from "@/components/EditReviewDialog";
 import DeleteReviewDialog from "@/components/DeleteReviewDialog";
 
 export default {
-  name: "place-reviews",
+  name: "place-reviews-section",
   data() {
     return {
       fullReview: {},
