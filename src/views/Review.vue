@@ -12,7 +12,7 @@
               </div>
 
               <!-- Content of review -->
-              <h4 class="mt-10 mb-4">Your overall rating of this place.</h4>
+              <h4 class="mt-10 mb-4">Review your shopping experience.</h4>
               <v-select
                 v-model="review.rating"
                 outlined
@@ -29,18 +29,16 @@
                 counter
                 maxlength="80"
                 name="review-title"
-                label="Title of your review"
+                label="How would you summarize your visit?"
                 v-model="review.title"
-                placeholder="Summarize your visit or highlight an important detail"
                 required
               ></v-text-field>
               <v-textarea
                 :rules="[rules.required, rules.minLength]"
                 outlined
                 name="review-text"
-                label="Your review"
+                label="Tell us more about your experience."
                 v-model.trim="review.content"
-                placeholder="Tell others about your experience. Did you see people wearing masks?"
                 required
               ></v-textarea>
 
@@ -64,7 +62,6 @@
 
               <h4 class="mb-2">
                 Could you say a little more about it?
-                <span color="secondary">(optional)</span>
               </h4>
 
               <v-row
@@ -74,7 +71,7 @@
                 <v-col sm="12" md="6">
                   {{ question.text }}
                 </v-col>
-                <v-col sm="12" md="6">
+                <v-col sm="12" md="6" class="d-flex justify-end">
                   <v-radio-group
                     row
                     v-model="review.questions[question.id].value"
