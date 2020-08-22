@@ -1,5 +1,5 @@
 <template>
-  <div id="placeHeader" class="place-header">
+  <section id="placeHeader" class="place-header">
     <v-row no-gutters>
       <h3>{{ place.name }}</h3>
     </v-row>
@@ -7,6 +7,7 @@
     <v-row no-gutters>
       <v-card-text class="pa-0">{{ place.formatted_address }}</v-card-text>
     </v-row>
+
     <v-row no-gutters align="center" justify="start">
       <v-rating
         v-if="place.reviews && place.reviews.length > 0"
@@ -73,7 +74,7 @@
         >
       </v-chip-group>
     </v-row>
-  </div>
+  </section>
 </template>
 
 <script>

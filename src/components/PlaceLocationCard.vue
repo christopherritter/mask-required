@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <section>
     <v-card>
       <v-card-title>Location and address</v-card-title>
       <div id="map"></div>
@@ -22,7 +22,7 @@
         </v-list-item>
       </v-list>
     </v-card>
-  </div>
+  </section>
 </template>
 
 <script>
@@ -30,11 +30,6 @@ import { mapState } from "vuex";
 
 export default {
   name: "place-location",
-  data() {
-    return {
-      isLoadingLocation: true,
-    };
-  },
   props: {
     place: Object,
   },
@@ -45,17 +40,18 @@ export default {
   },
   watch: {
     place() {
+      this.loading = true;
       if (this.place.geometry) {
         this.showLocation();
-      } 
+      }
     },
   },
   methods: {
-    showLocation() {
+    async showLocation() {
       var location = this.$store.getters.getPlaceLocation;
 
       // Create a map object
-      let map = new google.maps.Map(document.getElementById("map"), {
+      let map = await new google.maps.Map(document.getElementById("map"), {
         zoom: 15,
         center: new google.maps.LatLng(location.lat, location.lng),
         mapTypeId: google.maps.MapTypeId.ROADMAP,
