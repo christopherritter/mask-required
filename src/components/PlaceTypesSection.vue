@@ -317,7 +317,7 @@ export default {
     var i,
       currentTypes = this.$store.getters.getTypes;
 
-    for (i = 0; i < currentTypes.length; i++) {
+    for (i = 0; i < 2; i++) {
       await this.$store
         .dispatch("findNearbyPlaces", currentTypes[i].name)
         .then(() => {
