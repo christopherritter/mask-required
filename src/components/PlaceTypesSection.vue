@@ -179,7 +179,6 @@
         v-model="place"
         class="py-4"
         show-arrows
-        style="margin-left: -25px"
       >
         <v-slide-item v-for="place in type.places" v-bind:key="place.place_id">
           <v-card
