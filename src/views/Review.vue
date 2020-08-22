@@ -24,7 +24,6 @@
 
               <!-- Title of review -->
               <v-text-field
-                class="mt-4"
                 :rules="[rules.required, rules.counter]"
                 outlined
                 counter
