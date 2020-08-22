@@ -119,59 +119,6 @@
           </v-sheet>
         </v-col>
       </v-row>
-      <v-skeleton-loader
-        width="450"
-        height="50"
-        class="mt-6"
-        type="heading"
-      ></v-skeleton-loader>
-      <v-row>
-        <v-col>
-          <v-sheet
-            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
-            ><v-skeleton-loader
-              height="200"
-              type="card-heading, list-item-two-line, list-item-two-line"
-            ></v-skeleton-loader>
-          </v-sheet>
-        </v-col>
-        <v-col>
-          <v-sheet
-            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
-            ><v-skeleton-loader
-              height="200"
-              type="card-heading, list-item-two-line, list-item-two-line"
-            ></v-skeleton-loader>
-          </v-sheet>
-        </v-col>
-        <v-col>
-          <v-sheet
-            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
-            ><v-skeleton-loader
-              height="200"
-              type="card-heading, list-item-two-line, list-item-two-line"
-            ></v-skeleton-loader>
-          </v-sheet>
-        </v-col>
-        <v-col>
-          <v-sheet
-            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
-            ><v-skeleton-loader
-              height="200"
-              type="card-heading, list-item-two-line, list-item-two-line"
-            ></v-skeleton-loader>
-          </v-sheet>
-        </v-col>
-        <v-col>
-          <v-sheet
-            style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
-            ><v-skeleton-loader
-              height="200"
-              type="card-heading, list-item-two-line, list-item-two-line"
-            ></v-skeleton-loader>
-          </v-sheet>
-        </v-col>
-      </v-row>
     </div>
     <div
       v-else
@@ -294,7 +241,7 @@ export default {
       if (this.showLessTypes) {
         var lessTypes = [];
         for (let i = 0; i < this.types.length; i++) {
-          if (i < 3) {
+          if (this.types[i].counter > 2) {
             lessTypes.push(this.types[i]);
           }
         }
@@ -323,6 +270,7 @@ export default {
       await this.$store
         .dispatch("findNearbyPlaces", currentTypes[i].name)
         .then(() => {
+          if (currentTypes[i].counter > 2)
           currentTypes[i].places = this.$store.getters.getPlaces;
         });
     }
