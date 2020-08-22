@@ -9,8 +9,8 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn color="secondary darken-1" @click="$emit('close')" text>Nevermind</v-btn>
-        <v-btn color="green darken-1" @click="deleteReview(fullReview)" text>Absolutely</v-btn>
+        <v-btn color="secondary darken-1" @click="$emit('close')" text></v-btn>
+        <v-btn color="green darken-1" @click="deleteReview(fullReview)" text>Delete review</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

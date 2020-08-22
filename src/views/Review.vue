@@ -146,14 +146,24 @@
 
               <!-- Create Post button -->
 
-              <v-btn
-                @click="createReview(place)"
-                class="mt-4"
-                :disabled="!review.agreement"
-                color="primary"
-              >
-                Submit Your Review
-              </v-btn>
+              <div class="d-flex justify-start">
+                <v-btn
+                  @click="createReview(place)"
+                  class="mt-4"
+                  :disabled="!review.agreement"
+                  color="primary"
+                >
+                  Submit your review
+                </v-btn>
+                <v-spacer></v-spacer>
+                <v-btn
+                  @click="cancelReview(place)"
+                  class="mt-4"
+                  color="blue-grey lighten-5"
+                >
+                  Cancel review
+                </v-btn>
+              </div>
             </v-form>
           </div>
         </v-col>
@@ -272,18 +282,18 @@ export default {
           ratings: this.review.ratings,
           agreement: this.review.agreement,
         });
-        console.log("Passed validation");
-        console.log(this.review.rating);
         this.$refs.form.reset();
         this.$router.push({ name: "place", params: { id: place.place_id } });
       } else {
-        console.log("Failed validation");
-        console.log(this.review.rating);
         this.$vuetify.goTo("form");
       }
     },
     likeReview(id, likesCount) {
       this.$store.dispatch("likeReview", { id, likesCount });
+    },
+    cancelReview(place) {
+      this.$refs.form.reset();
+      this.$router.push({ name: "place", params: { id: place.place_id } });
     },
   },
   filters: {
