@@ -12,25 +12,28 @@
               </div>
 
               <!-- Content of review -->
-              <div>
-                <h6>Your overall rating of this place.</h6>
-                <v-input :value="value" :rules="[rules.required, rules.rating]">
-                  <v-rating
-                    v-model="review.rating"
-                    dark
-                    hover
-                    color="green"
-                    background-color="green lighten-2"
-                    size="35"
-                    required
-                  ></v-rating>
-                </v-input>
-              </div>
+              <h4 class="mt-10 mb-1">Your overall rating of this place.</h4>
+              <v-input
+                :value="value"
+                :rules="[rules.required, rules.rating]"
+                class="mb-0"
+              >
+                <v-rating
+                  v-model="review.rating"
+                  dark
+                  hover
+                  color="green"
+                  background-color="green lighten-2"
+                  size="40"
+                  required
+                  class="mb-0"
+                ></v-rating>
+              </v-input>
 
               <!-- Title of review -->
               <v-text-field
+                class="mt-4"
                 :rules="[rules.required, rules.counter]"
-                class="mt-5"
                 outlined
                 counter
                 maxlength="80"
@@ -50,7 +53,7 @@
                 required
               ></v-textarea>
 
-              <h6>Who was wearing masks?</h6>
+              <h4 class="mb-4">Who was wearing masks?</h4>
 
               <v-select
                 :items="masks.employees"
@@ -68,10 +71,10 @@
 
               <!-- Optional ratings -->
 
-              <h6>
+              <h4 class="mb-2">
                 Could you say a little more about it?
                 <span color="secondary">(optional)</span>
-              </h6>
+              </h4>
 
               <v-row
                 v-for="question in questions"
@@ -97,20 +100,30 @@
 
               <!-- Specific ratings -->
 
-              <h6>Click to leave a rating</h6>
+              <h4 class="mb-2">Click to leave a rating</h4>
 
-              <v-row v-for="rating in ratings" :key="'rating-' + rating.id">
-                <v-col sm="12" md="6">
+              <v-row
+                v-for="rating in ratings"
+                :key="'rating-' + rating.id"
+                style="flex-wrap: nowrap;"
+              >
+                <v-col
+                  sm="12"
+                  md="6"
+                  class="d-flex align-stretch flex-grow-0 flex-shrink-1"
+                >
                   {{ rating.label }}
                 </v-col>
-                <v-col sm="12" md="6">
+                <v-col sm="12" md="6" class="flex-grow-1 flex-shrink-0">
                   <v-rating
                     :rules="[rules.required]"
                     v-model="review.ratings[rating.id].value"
                     dark
-                    size="25"
+                    size="30"
                   ></v-rating>
-                  <v-list-item-icon class="mr-2">
+                </v-col>
+                <v-col class="flex-grow-0 flex-shrink-1"
+                  ><v-list-item-icon class="mr-2">
                     <v-tooltip right>
                       <template v-slot:activator="{ on, attrs }">
                         <v-icon v-bind="attrs" v-on="on" small
@@ -119,17 +132,25 @@
                       </template>
                       <span>{{ rating.description }}</span>
                     </v-tooltip>
-                  </v-list-item-icon>
-                </v-col>
+                  </v-list-item-icon></v-col
+                >
               </v-row>
 
               <!-- I certify this review -->
 
-              <h6>Submit your review</h6>
+              <h4 class="mb-4">Certify your review</h4>
+
+              <p class="text-subtitle-2">
+                This review is based on my own experience and is my genuine
+                opinion of this restaurant. I have no personal or business
+                relationship with this establishment, and have not been offered
+                any incentive or payment originating from the establishment to
+                write this review.
+              </p>
 
               <v-checkbox
                 v-model="review.agreement"
-                label="I certify that this review is based on my own experience and is my genuine opinion of this restaurant, and that I have no personal or business relationship with this establishment, and have not been offered any incentive or payment originating from the establishment to write this review."
+                label="I certify the above statement is true."
               ></v-checkbox>
 
               <!-- Create Post button -->
@@ -218,8 +239,8 @@ export default {
         agreement: false,
       },
       agreement: false,
-      value: [ 1, 2, 3, 4, 5 ],
-      valid: true
+      value: [1, 2, 3, 4, 5],
+      valid: true,
     };
   },
   mounted() {
