@@ -2,14 +2,14 @@
   <v-dialog v-model="dialogView" scrollable max-width="600px">
     <v-card>
       <v-card-title v-if="fullReview.place">
-        {{ fullReview.place.name }}
+        {{ place.name }}
       </v-card-title>
 
-      <v-card-subtitle v-if="fullReview.place">
-        {{ fullReview.place.formatted_address }}
+      <v-card-subtitle class="pt-2" v-if="fullReview.place">
+        {{ place.formatted_address }}
       </v-card-subtitle>
 
-      <v-card-text>
+      <v-card-text class="mb-6">
         <form @submit.prevent>
           <!-- Content of review -->
           <div>
@@ -43,7 +43,7 @@
           ></v-textarea>
 
           <div v-if="fullReview.masks">
-            <h6>Who was wearing masks? (optional)</h6>
+            <h4 class="mb-2">Who was wearing masks?</h4>
 
             <v-select
               :items="masks.employees"
@@ -63,7 +63,7 @@
           <!-- Optional ratings -->
 
           <div v-if="fullReview.questions">
-            <h6>Could you say a little more about it? (optional)</h6>
+            <h4 class="mt-6 mb-2">Additional Information</h4>
 
             <v-row
               v-for="question in questions"
@@ -91,7 +91,7 @@
           <!-- Specific ratings -->
 
           <div v-if="fullReview.ratings">
-            <h6>Click to leave a rating</h6>
+            <h4 class="mt-6 mb-2">Specific Ratings</h4>
 
             <v-row v-for="rating in ratings" :key="'rating-' + rating.id">
               <v-col sm="12" md="6">
@@ -109,11 +109,18 @@
 
           <!-- I certify this review -->
 
-          <h6>Submit your review</h6>
+          <h4 class="mt-6 mb-2">Certify your review</h4>
+
+          <p class="text-subtitle-2">
+            This review is based on my own experience and is my genuine opinion
+            of this restaurant. I have no personal or business relationship with
+            this establishment, and have not been offered any incentive or
+            payment originating from the establishment to write this review.
+          </p>
 
           <v-checkbox
             v-model="fullReview.agreement"
-            label="I certify that this review is based on my own experience and is my genuine opinion of this restaurant, and that I have no personal or business relationship with this establishment, and have not been offered any incentive or payment originating from the establishment to write this review."
+            label="I certify the above statement is true."
           ></v-checkbox>
 
           <!-- Create Post button -->
@@ -155,7 +162,7 @@ export default {
   },
   props: ["dialogView", "fullReview"],
   computed: {
-    ...mapState([["masks"], ["questions"], ["ratings"]]),
+    ...mapState([["masks"], ["questions"], ["ratings"], "place"]),
   },
   watch: {
     dialogView(val) {

@@ -2,11 +2,11 @@
   <v-dialog v-model="dialogView" scrollable max-width="600px">
     <v-card>
       <v-card-title v-if="fullReview.place">
-        {{ fullReview.place.name }}
+        {{ place.name }}
       </v-card-title>
 
       <v-card-subtitle class="pt-2" v-if="fullReview.place">
-        {{ fullReview.place.formatted_address }}
+        {{ place.formatted_address }}
       </v-card-subtitle>
 
       <v-card-text>
@@ -90,7 +90,7 @@ export default {
     },
   },
   computed: {
-    ...mapState([["masks"], ["questions"], ["ratings"]]),
+    ...mapState([["masks"], ["questions"], ["ratings"], "place"]),
   },
   filters: {
     capitalize: function(value) {
