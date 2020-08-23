@@ -49,7 +49,7 @@
         0 reviews
       </v-chip>
 
-      <v-divider vertical class="ma-2">|</v-divider>
+      <v-divider vertical class="ma-2 hidden-sm-and-down">|</v-divider>
 
       <v-chip-group v-if="userLocation.lat" show-arrows class="px-0">
         <v-chip
