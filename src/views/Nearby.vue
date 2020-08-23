@@ -149,10 +149,10 @@
           <v-card class="pl-3">
             <v-row>
               <v-col
-                @click="viewPlace(place)"
                 cols="2"
                 style="cursor: pointer"
                 class="grey lighten-3 rounded-l hidden-sm-and-down"
+                @click="viewPlace(place)"
               >
                 <v-img
                   :src="place.icon"
@@ -164,7 +164,7 @@
               </v-col>
               <v-col cols="12" md="10">
                 <v-row no-gutters>
-                  <v-col cols="12" md="6">
+                  <v-col cols="12" md="6" @click="viewPlace(place)" style="cursor: pointer">
                     <v-row>
                       <v-card-title class="px-3 pt-0 pt-md-4 pb-1">{{
                         place.name
