@@ -1,12 +1,14 @@
 <template>
   <section id="placeTypes">
     <v-row v-if="userLocation.lat && !isLoadingTypes">
-      <v-col class="d-flex align-stretch">
+      <v-col cols="4" md="2" class="d-flex align-stretch">
         <v-card outlined color="#c5f9da" light width="100%">
           <v-card-text><strong>Nearby places:</strong></v-card-text>
         </v-card>
       </v-col>
       <v-col
+        cols="4"
+        md="2"
         v-for="(type, index) in typesToDisplay"
         :key="index"
         class="d-flex align-stretch"
@@ -34,12 +36,12 @@
     </v-row>
 
     <v-row v-else-if="!isLoadingTypes">
-      <v-col cols="12" sm="4" md="2" class="d-flex align-stretch">
+      <v-col cols="4" md="2" class="d-flex align-stretch">
         <v-card outlined color="#c5f9da" light width="100%">
           <v-card-text><strong>Nearby places:</strong></v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="12" sm="8" md="10" class="d-flex align-stretch">
+      <v-col cols="8" md="10" class="d-flex align-stretch">
         <v-card outlined color="grey lighten-4" width="100%">
           <v-card-text class="pb-0">
             Allow your browser to get your location in order to browse nearby
@@ -54,24 +56,24 @@
     </v-row>
 
     <v-row v-else>
-      <v-col cols="12" sm="4" md="2" class="d-flex align-stretch">
+      <v-col cols="4" md="2" class="d-flex align-stretch">
         <v-card outlined color="#c5f9da" light width="100%">
           <v-card-text><strong>Nearby places:</strong></v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="12" sm="4" md="2" class="d-flex align-stretch">
+      <v-col cols="4" md="2" class="d-flex align-stretch">
         <v-card outlined color="grey lighten-4" width="100%"></v-card>
       </v-col>
-      <v-col cols="12" sm="4" md="2" class="d-flex align-stretch">
+      <v-col cols="4" md="2" class="d-flex align-stretch">
         <v-card outlined color="grey lighten-4" width="100%"></v-card>
       </v-col>
-      <v-col cols="12" sm="4" md="2" class="d-flex align-stretch">
+      <v-col cols="4" md="2" class="d-flex align-stretch">
         <v-card outlined color="grey lighten-4" width="100%"></v-card>
       </v-col>
-      <v-col cols="12" sm="4" md="2" class="d-flex align-stretch">
+      <v-col cols="4" md="2" class="d-flex align-stretch">
         <v-card outlined color="grey lighten-4" width="100%"></v-card>
       </v-col>
-      <v-col cols="12" sm="4" md="2" class="d-flex align-stretch">
+      <v-col cols="4" md="2" class="d-flex align-stretch">
         <v-card outlined color="grey lighten-4" width="100%"></v-card>
       </v-col>
     </v-row>

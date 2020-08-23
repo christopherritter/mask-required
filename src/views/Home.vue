@@ -5,7 +5,7 @@
       <section id="home-search-card">
         <v-row>
           <v-col>
-            <v-card class="p-4 mb-16 jumbotron text-center" flat color="#c5f9da">
+            <v-card class="p-4 mb-md-16 jumbotron text-center" flat color="#c5f9da">
               <v-row>
                 <v-col cols="12" md="5" class="hidden-sm-and-down">
                   <svg-img
