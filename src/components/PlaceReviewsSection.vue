@@ -53,7 +53,7 @@
           <!-- <v-btn text @click="likeReview(review.id, review.likes)"
             >likes {{ review.likes }}</v-btn
           > -->
-          <v-btn text @click="viewReview(review)">full review</v-btn>
+          <v-btn text @click="viewReview(review)">Read review</v-btn>
           <v-spacer></v-spacer>
           <v-btn
             v-if="userReview(review)"
