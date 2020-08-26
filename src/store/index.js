@@ -22,7 +22,7 @@ const store = new Vuex.Store({
       lat: null,
       long: null,
     },
-    area: {
+    region: {
       formatted_address: null,
       geometry: null,
       name: null,
@@ -449,7 +449,7 @@ const store = new Vuex.Store({
     getField,
     getTypes: (state) => state.types,
     getUserLocation: (state) => state.userLocation,
-    getArea: (state) => state.area,
+    getRegion: (state) => state.area,
     getPlaceLocation: (state) => state.place.geometry.location,
     getGeohashRange: (state) => state.geohashRange,
     getUpperRange: (state) => state.upperRange,
@@ -478,15 +478,13 @@ const store = new Vuex.Store({
       state.userLocation.lat = val.latitude;
       state.userLocation.long = val.longitude;
     },
-    setArea(state, val) {
-      console.log("Setting area:");
+    setRegion(state, val) {
+      console.log("Setting region:")
       console.log(val)
-      state.area.formatted_address = val.formatted_address;
-      state.area.geometry = val.geometry;
-      // state.area.geometry.viewport.northeast = val.geometry.viewport.northeast;
-      // state.area.geometry.viewport.southwest = val.geometry.viewport.southwest;
-      state.area.name = val.name;
-      state.area.place_id = val.place_id;
+      state.region.formatted_address = val.formatted_address;
+      state.region.geometry = val.geometry;
+      state.region.name = val.name;
+      state.region.place_id = val.place_id;
     },
     setPlace(state, val) {
       state.place = val;
@@ -673,25 +671,27 @@ const store = new Vuex.Store({
         });
       }
     },
-    async fetchArea({ commit, getters }, place) {
+    async fetchRegion({ commit, getters }, place) {
       var apiKey = getters.getFixieKey;
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${apiKey}`;
-      var newArea = {};
+      var newRegion = {};
+      console.log("Passing place.")
       // console.log(URL)
+      console.log(place)
 
       await axios
         .get(URL)
         .then((response) => {
-          newArea = response.data.result;
+          newRegion = response.data.result;
         })
         .catch((error) => {
           console.log(error.message);
           this.errorMessage = error.message;
         });
 
-      console.log("Fetching the new area:")
-      console.log(newArea)
-      commit("setArea", newArea);
+      console.log("Committing set region:")
+      console.log(newRegion)
+      commit("setRegion", newRegion);
     },
     // async fetchArea({ state, getters }, address) {
     //   var apiKey = getters.getFixieKey;
@@ -876,11 +876,11 @@ const store = new Vuex.Store({
     },
     async getGeohashRange({ state, commit }) {
       console.log("Getting the geoHash")
-      const lowerLat = state.area.geometry.viewport.southwest.lat;
-      const lowerLon = state.area.geometry.viewport.southwest.lng;
+      const lowerLat = state.region.geometry.viewport.southwest.lat;
+      const lowerLon = state.region.geometry.viewport.southwest.lng;
 
-      const upperLat = state.area.geometry.viewport.northeast.lat;
-      const upperLon = state.area.geometry.viewport.northeast.lng;
+      const upperLat = state.region.geometry.viewport.northeast.lat;
+      const upperLon = state.region.geometry.viewport.northeast.lng;
 
       const lower = geohash.encode(lowerLat, lowerLon);
       const upper = geohash.encode(upperLat, upperLon);

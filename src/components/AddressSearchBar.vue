@@ -67,11 +67,11 @@ export default {
     this.$store.dispatch("showSearchBar", false);
   },
   methods: {
-    async getArea() {
+    async getRegion() {
       var address = this.address;
-      await this.$store.dispatch("fetchArea", address);
+      await this.$store.dispatch("fetchRegion", address);
       await this.$store.dispatch("getGeohashRange");
-      var area = this.$store.getters.getArea;
+      var region = this.$store.getters.getRegion;
       this.$router.push({ name: "nearby", params: { id: area.place_id } });
     },
   },

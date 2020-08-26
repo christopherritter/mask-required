@@ -47,7 +47,7 @@
             <v-row no-gutters>
               <v-col><strong>Enter your zip code:</strong></v-col>
               <v-col><v-text-field dense outlined v-model="address" background-color="white" hide-details></v-text-field></v-col>
-              <v-col><v-btn @click="getArea" color="teal" dark>View nearby places</v-btn></v-col>
+              <v-col><v-btn @click="getRegion" color="teal" dark>View nearby places</v-btn></v-col>
             </v-row>
           </v-card-text>
         </v-card>
@@ -126,9 +126,9 @@ export default {
     getUserLocation() {
       this.$store.dispatch("fetchUserLocation");
     },
-    async getArea() {
+    async getRegion() {
       var address = this.address;
-      await this.$store.dispatch("fetchArea", address);
+      await this.$store.dispatch("fetchRegion", address);
       await this.$store.dispatch("getGeohashRange");
       this.$router.push({ name: "nearby" });
     }

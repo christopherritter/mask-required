@@ -402,7 +402,7 @@ export default {
   data() {
     return {
       places: [],
-      area: {},
+      region: {},
       error: "",
       spinner: false,
       selected: "",
@@ -412,25 +412,29 @@ export default {
   },
   async created() {
     this.$store.dispatch("showSearchBar", true);
-    await this.fetchArea();
+    await this.fetchRegion();
     this.loading = false;
   },
   computed: {
     ...mapState([["validTypes"], ["ratings"]]),
   },
   methods: {
-    async fetchArea() {
+    async fetchRegion() {
       var placeId = await this.$route.params.id;
 
-      await this.$store.dispatch("fetchArea", {
+      console.log("Fetching region.")
+      await this.$store.dispatch("fetchRegion", {
         place_id: placeId,
       });
 
+      console.log("Getting geohash range.")
       await this.$store.dispatch("getGeohashRange");
       
-      const area = this.$store.getters.getArea;
-      this.area = area;
+      console.log("Setting region.")
+      const region = this.$store.getters.getRegion;
+      this.region = region;
 
+      console.log("Setting inside places.")
       await this.$store.dispatch("findInsidePlaces");
       const places = this.$store.getters.getPlaces;
       this.places = places;
