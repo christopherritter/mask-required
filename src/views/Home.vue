@@ -1,7 +1,7 @@
 <template>
   <v-main class="mt-0">
     <v-container>
-      <place-types-bar></place-types-bar>
+      <address-search-bar></address-search-bar>
       <section id="home-search-card">
         <v-row>
           <v-col>
@@ -31,26 +31,24 @@
           </v-col>
         </v-row>
       </section>
-      <place-types-section></place-types-section>
+      <!-- <place-types-section></place-types-section> -->
     </v-container>
   </v-main>
 </template>
 
 <script>
-import axios from "axios";
 import SvgImg from "@/components/SvgImg";
-import PlaceTypesBar from "@/components/PlaceTypesBar";
-import PlaceTypesSection from "@/components/PlaceTypesSection";
+import AddressSearchBar from "@/components/AddressSearchBar";
+// import PlaceTypesSection from "@/components/PlaceTypesSection";
 
 export default {
   name: "Home",
   data: () => ({
     address: null,
-    target: false,
-    spinner: false,
-    apiKey: process.env.VUE_APP_NOT_SECRET_CODE,
     options: {
-      types: ["establishment"],
+      types: [
+        "establishment", 
+      ],
       componentRestrictions: { country: "us" },
       fields: [
         // "formatted_address",
@@ -67,35 +65,6 @@ export default {
       await this.$store.dispatch("fetchPlace", place);
       this.$router.push("place/" + place.place_id);
     },
-    getAddressFrom(lat, long) {
-      axios
-        .get(
-          "https://cors-anywhere.herokuapp.com/" +
-            "https://maps.googleapis.com/maps/api/geocode/json?latlng=" +
-            lat +
-            "," +
-            long +
-            "&key=" +
-            this.apiKey
-        )
-        .then((response) => {
-          if (response.data.error_message) {
-            this.error = response.data.error_message;
-            console.log(response.data.error_message);
-          } else {
-            this.address = response.data.results[0].formatted_address;
-            console.log(response.data.results[0].formatted_address);
-          }
-          this.spinner = false;
-          this.target = false;
-        })
-        .catch((error) => {
-          this.error = error.message;
-          this.spinner = false;
-          this.target = false;
-          // console.log(error.message);
-        });
-    },
   },
   mounted() {
     let autocomplete = new google.maps.places.Autocomplete(
@@ -106,30 +75,14 @@ export default {
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
       this.$router.push({ name: "place", params: { id: place.place_id } });
-      // this.fetchPlace(place);
-
-      // if (place.business_status) {
-      //   if (this.$router.currentRoute.name != "place") {
-      //     this.$router.push("place");
-      //   }
-      // } else {
-      //   if (this.$router.currentRoute.name != "search") {
-      //     this.$router.push("search");
-      //   }
-      // }
-
-      // this.showUserLocationOnTheMap(
-      //   place.geometry.location.lat(),
-      //   place.geometry.location.lng()
-      // );
     });
 
     this.$store.dispatch("showSearchBar", false);
   },
   components: {
     SvgImg,
-    PlaceTypesBar,
-    PlaceTypesSection,
+    AddressSearchBar,
+    // PlaceTypesSection,
   },
 };
 </script>

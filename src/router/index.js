@@ -60,7 +60,7 @@ const routes = [
     },
   },
   {
-    path: "/nearby/:name",
+    path: "/nearby/:id",
     name: "nearby",
     component: () =>
       import(/* webpackChunkName: "nearby" */ "../views/Nearby.vue"),

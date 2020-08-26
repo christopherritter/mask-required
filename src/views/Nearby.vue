@@ -3,7 +3,7 @@
     <v-container class="py-0">
       <v-row>
         <v-col>
-          <h1>{{ $route.params.name | replaceUnderscore }} Reviews</h1>
+          <h1>{{ $route.params.name }} Reviews</h1>
         </v-col>
       </v-row>
       <v-row v-if="loading">
@@ -365,7 +365,7 @@
                       :key="index"
                       @click="findNearbyPlaces(t)"
                       :value="t"
-                      >{{ t | replaceUnderscore }}</v-chip
+                      >{{ t }}</v-chip
                     >
                   </v-chip-group>
                 </v-row>
@@ -395,8 +395,6 @@
 </template>
 
 <script>
-import geohash from "ngeohash";
-import * as fb from "../firebase";
 import { mapState } from "vuex";
 
 export default {
@@ -404,7 +402,7 @@ export default {
   data() {
     return {
       places: [],
-      address: "",
+      area: {},
       error: "",
       spinner: false,
       selected: "",
@@ -414,44 +412,45 @@ export default {
   },
   async created() {
     this.$store.dispatch("showSearchBar", true);
-    if (this.$store.state.userLocation.lat === null) {
-      await this.$store.dispatch("fetchUserLocation");
-    }
-    if (this.$store.state.upperRange === null) {
-      await this.$store.dispatch("getGeohashRange");
-    }
-
-    var currentType = this.$route.params.name;
-    await this.$store.dispatch("findNearbyPlaces", currentType);
-    this.places = this.$store.getters.getPlaces;
+    await this.fetchArea();
     this.loading = false;
   },
   computed: {
     ...mapState([["validTypes"], ["ratings"]]),
   },
   methods: {
-    async findNearbyPlaces(type) {
-      await this.$store.dispatch("findNearbyPlaces", type);
-      this.$router.push(type);
-      this.type = type;
-      this.places = this.$store.getters.getPlaces;
+    async fetchArea() {
+      var placeId = await this.$route.params.id;
+
+      await this.$store.dispatch("fetchArea", {
+        place_id: placeId,
+      });
+
+      await this.$store.dispatch("getGeohashRange");
+      
+      const area = this.$store.getters.getArea;
+      this.area = area;
+
+      await this.$store.dispatch("findInsidePlaces");
+      const places = this.$store.getters.getPlaces;
+      this.places = places;
     },
     async viewPlace(place) {
       await this.$store.dispatch("fetchPlace", place);
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
   },
-  filters: {
-    replaceUnderscore(val) {
-      var i,
-        frags = val.split("_");
-      for (i = 0; i < frags.length; i++) {
-        if (frags[i] != "of" && frags[i] != "or") {
-          frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
-        }
-      }
-      return frags.join(" ");
-    },
-  },
+  // filters: {
+  //   replaceUnderscore(val) {
+  //     var i,
+  //       frags = val.split("_");
+  //     for (i = 0; i < frags.length; i++) {
+  //       if (frags[i] != "of" && frags[i] != "or") {
+  //         frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+  //       }
+  //     }
+  //     return frags.join(" ");
+  //   },
+  // },
 };
 </script>

@@ -1,6 +1,6 @@
 <template>
   <section id="placeTypes">
-    <v-row v-if="userLocation.lat && !isLoadingTypes">
+    <!-- <v-row v-if="userLocation.lat && !isLoadingTypes">
       <v-col cols="4" md="2" class="d-flex align-stretch">
         <v-card outlined color="#c5f9da" light width="100%">
           <v-card-text><strong>Nearby places:</strong></v-card-text>
@@ -33,24 +33,23 @@
           >
         </v-card>
       </v-col>
-    </v-row>
+    </v-row> -->
 
-    <v-row v-else-if="!isLoadingTypes">
-      <v-col cols="4" md="2" class="d-flex align-stretch">
+    <v-row v-if="!isLoadingTypes">
+      <v-col cols="4" md="3" class="d-flex align-stretch">
         <v-card outlined color="#c5f9da" light width="100%">
-          <v-card-text><strong>Nearby places:</strong></v-card-text>
+          <v-card-text><strong>Browse nearby places:</strong></v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="8" md="10" class="d-flex align-stretch">
+      <v-col cols="8" md="9" class="d-flex align-stretch">
         <v-card outlined color="grey lighten-4" width="100%">
-          <v-card-text class="pb-0">
-            Allow your browser to get your location in order to browse nearby
-            places.
+          <v-card-text>
+            <v-row no-gutters>
+              <v-col><strong>Enter your zip code:</strong></v-col>
+              <v-col><v-text-field dense outlined v-model="address" background-color="white" hide-details></v-text-field></v-col>
+              <v-col><v-btn @click="getArea" color="teal" dark>View nearby places</v-btn></v-col>
+            </v-row>
           </v-card-text>
-          <v-card-actions class="pt-0">
-            <v-spacer></v-spacer>
-            <v-btn @click="getUserLocation()" text>Get your location</v-btn>
-          </v-card-actions>
         </v-card>
       </v-col>
     </v-row>
@@ -97,6 +96,7 @@ export default {
       showLessTypes: true,
       highlightedCard: null,
       hover: false,
+      address: null
     };
   },
   computed: {
@@ -126,6 +126,12 @@ export default {
     getUserLocation() {
       this.$store.dispatch("fetchUserLocation");
     },
+    async getArea() {
+      var address = this.address;
+      await this.$store.dispatch("fetchArea", address);
+      await this.$store.dispatch("getGeohashRange");
+      this.$router.push({ name: "nearby" });
+    }
   },
   filters: {
     replaceUnderscore(val) {

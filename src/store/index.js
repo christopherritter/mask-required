@@ -22,6 +22,12 @@ const store = new Vuex.Store({
       lat: null,
       long: null,
     },
+    area: {
+      formatted_address: null,
+      geometry: null,
+      name: null,
+      place_id: null,
+    },
     place: null,
     places: null,
     rating: null,
@@ -332,7 +338,7 @@ const store = new Vuex.Store({
         return pattern.test(value) || "Invalid e-mail.";
       },
       minLength: (value) => value.length >= 100 || "Min 100 characters",
-      rating: (value) => value !== null || "Leave a rating between 1 and 5."
+      rating: (value) => value !== null || "Leave a rating between 1 and 5.",
     },
     errorMessage: "",
     fields: "",
@@ -443,6 +449,7 @@ const store = new Vuex.Store({
     getField,
     getTypes: (state) => state.types,
     getUserLocation: (state) => state.userLocation,
+    getArea: (state) => state.area,
     getPlaceLocation: (state) => state.place.geometry.location,
     getGeohashRange: (state) => state.geohashRange,
     getUpperRange: (state) => state.upperRange,
@@ -466,8 +473,20 @@ const store = new Vuex.Store({
       state.userProfile = val;
     },
     setUserLocation(state, val) {
+      console.log("Setting user location:");
+      console.log(val)
       state.userLocation.lat = val.latitude;
       state.userLocation.long = val.longitude;
+    },
+    setArea(state, val) {
+      console.log("Setting area:");
+      console.log(val)
+      state.area.formatted_address = val.formatted_address;
+      state.area.geometry = val.geometry;
+      // state.area.geometry.viewport.northeast = val.geometry.viewport.northeast;
+      // state.area.geometry.viewport.southwest = val.geometry.viewport.southwest;
+      state.area.name = val.name;
+      state.area.place_id = val.place_id;
     },
     setPlace(state, val) {
       state.place = val;
@@ -645,8 +664,8 @@ const store = new Vuex.Store({
       }
     },
     async fetchUserLocation({ commit }) {
-      if(!navigator.geolocation) {
-        console.log('Geolocation is not supported by your browser');
+      if (!navigator.geolocation) {
+        console.log("Geolocation is not supported by your browser");
       } else {
         navigator.geolocation.getCurrentPosition((position) => {
           const { latitude, longitude } = position.coords;
@@ -654,6 +673,51 @@ const store = new Vuex.Store({
         });
       }
     },
+    async fetchArea({ commit, getters }, place) {
+      var apiKey = getters.getFixieKey;
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${apiKey}`;
+      var newArea = {};
+      // console.log(URL)
+
+      await axios
+        .get(URL)
+        .then((response) => {
+          newArea = response.data.result;
+        })
+        .catch((error) => {
+          console.log(error.message);
+          this.errorMessage = error.message;
+        });
+
+      console.log("Fetching the new area:")
+      console.log(newArea)
+      commit("setArea", newArea);
+    },
+    // async fetchArea({ state, getters }, address) {
+    //   var apiKey = getters.getFixieKey;
+    //   const URL = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
+    //   var place = {};
+
+    //   await axios
+    //     .get(URL)
+    //     .then((response) => {
+    //       console.log("Got a response from Google:")
+    //       console.log(response.data.results[0]);
+    //       place = response.data.results[0];
+    //     })
+    //     .catch((error) => {
+    //       console.log(error.message);
+    //       this.errorMessage = error.message;
+    //     });
+
+    //   store.commit("setArea", {
+    //     short_name: place.address_components[0].short_name,
+    //     place_id: place.place_id,
+    //     // latitude: place.geometry.location.lat,
+    //     // longitude: place.geometry.location.lng,
+    //     bounds: place.geometry.bounds,
+    //   });
+    // },
     async updateProfile({ dispatch }, user) {
       const userId = fb.auth.currentUser.uid;
       // update user object
@@ -681,7 +745,7 @@ const store = new Vuex.Store({
         .where("place_id", "==", placeId)
         .get();
       var newPlace = {};
-      
+
       if (snapshot.empty) {
         // console.log("No matching places.");
         await dispatch("createPlace", place).then((newPlace) => {
@@ -732,15 +796,14 @@ const store = new Vuex.Store({
           }
 
           newPlace.types = newTypes;
-
         })
         .catch((error) => {
-          console.log(error.message)
+          console.log(error.message);
           this.errorMessage = error.message;
         });
 
-        fb.placesCollection.add(newPlace);
-        return newPlace
+      fb.placesCollection.add(newPlace);
+      return newPlace;
     },
     async findNearbyPlaces({ state, commit, dispatch }, type) {
       // console.log("Fetching nearby places for " + type + "s.")
@@ -748,9 +811,9 @@ const store = new Vuex.Store({
 
       // Retrieve the current coordinates using the navigator API
       const places = await fb.placesFirestore
+        .where("types", "array-contains-any", [type])
         .where("geohash", ">=", state.lowerRange)
         .where("geohash", "<=", state.upperRange)
-        .where("types", "array-contains-any", [type])
         .get();
 
       if (places.empty) {
@@ -777,21 +840,78 @@ const store = new Vuex.Store({
 
       commit("setPlaces", nearbyPlaces);
     },
+    async findInsidePlaces({ state, commit, dispatch }) {
+      // console.log("Fetching nearby places for " + type + "s.")
+      const insidePlaces = [];
+
+      // Retrieve the current coordinates using the navigator API
+      const places = await fb.placesFirestore
+        .where("geohash", ">=", state.lowerRange)
+        .where("geohash", "<=", state.upperRange)
+        .get();
+
+      if (places.empty) {
+        return;
+      }
+
+      places.forEach((doc) => {
+        var searchResult = doc.data();
+
+        dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
+          if (reviews) {
+            searchResult.reviews = reviews.reviews;
+            searchResult.ratings = {};
+            searchResult.ratings.general = reviews.rating;
+            searchResult.ratings.compliance = reviews.compliance;
+            searchResult.ratings.notifications = reviews.notifications;
+            searchResult.ratings.enforcement = reviews.enforcement;
+            insidePlaces.push(searchResult);
+          } else {
+            insidePlaces.push(searchResult);
+          }
+        });
+      });
+
+      commit("setPlaces", insidePlaces);
+    },
     async getGeohashRange({ state, commit }) {
-      const lat = 0.0144927536231884; // degrees latitude per mile
-      const lon = 0.0181818181818182; // degrees longitude per mile
+      console.log("Getting the geoHash")
+      const lowerLat = state.area.geometry.viewport.southwest.lat;
+      const lowerLon = state.area.geometry.viewport.southwest.lng;
 
-      const lowerLat = state.userLocation.lat - lat * state.geohashRange;
-      const lowerLon = state.userLocation.long - lon * state.geohashRange;
-
-      const upperLat = state.userLocation.lat + lat * state.geohashRange;
-      const upperLon = state.userLocation.long + lon * state.geohashRange;
+      const upperLat = state.area.geometry.viewport.northeast.lat;
+      const upperLon = state.area.geometry.viewport.northeast.lng;
 
       const lower = geohash.encode(lowerLat, lowerLon);
       const upper = geohash.encode(upperLat, upperLon);
 
+      console.log("Geohashes coming at ya!");
+      console.log(lowerLat, lowerLon);
+      console.log(upperLat, upperLon);
+      console.log(lower, upper);
+
       commit("setRange", { lower, upper });
     },
+    // async getGeohashRange({ state, commit }) {
+    //   const lat = 0.0144927536231884; // degrees latitude per mile
+    //   const lon = 0.0181818181818182; // degrees longitude per mile
+
+    //   const lowerLat = state.userLocation.lat - lat * state.geohashRange;
+    //   const lowerLon = state.userLocation.long - lon * state.geohashRange;
+
+    //   const upperLat = state.userLocation.lat + lat * state.geohashRange;
+    //   const upperLon = state.userLocation.long + lon * state.geohashRange;
+
+    //   const lower = geohash.encode(lowerLat, lowerLon);
+    //   const upper = geohash.encode(upperLat, upperLon);
+
+    // console.log("Geohashes coming at ya!");
+    // console.log(lowerLat, lowerLon);
+    // console.log(upperLat, upperLon);
+    // console.log(lower, upper);
+
+    //   commit("setRange", { lower, upper });
+    // },
     async fetchReviewTypes({ commit }) {
       const reviews = await fb.reviewsCollection.get();
       let typesArray = [];
