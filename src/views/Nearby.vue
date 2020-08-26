@@ -435,7 +435,7 @@ export default {
       this.region = region;
 
       console.log("Setting inside places.")
-      await this.$store.dispatch("findInsidePlaces");
+      await this.$store.dispatch("findLocalPlaces");
       const places = this.$store.getters.getPlaces;
       this.places = places;
     },

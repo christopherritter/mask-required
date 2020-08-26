@@ -840,9 +840,9 @@ const store = new Vuex.Store({
 
       commit("setPlaces", nearbyPlaces);
     },
-    async findInsidePlaces({ state, commit, dispatch }) {
+    async findLocalPlaces({ state, commit, dispatch }) {
       // console.log("Fetching nearby places for " + type + "s.")
-      const insidePlaces = [];
+      const localPlaces = [];
 
       // Retrieve the current coordinates using the navigator API
       const places = await fb.placesFirestore
@@ -865,14 +865,14 @@ const store = new Vuex.Store({
             searchResult.ratings.compliance = reviews.compliance;
             searchResult.ratings.notifications = reviews.notifications;
             searchResult.ratings.enforcement = reviews.enforcement;
-            insidePlaces.push(searchResult);
+            localPlaces.push(searchResult);
           } else {
-            insidePlaces.push(searchResult);
+            localPlaces.push(searchResult);
           }
         });
       });
 
-      commit("setPlaces", insidePlaces);
+      commit("setPlaces", localPlaces);
     },
     async getGeohashRange({ state, commit }) {
       console.log("Getting the geoHash")
