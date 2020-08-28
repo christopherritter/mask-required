@@ -3,393 +3,212 @@
     <v-container class="py-0">
       <v-row>
         <v-col>
-          <h1>{{ $route.params.name }} Reviews</h1>
+          <h1>{{ region.name }} Reviews</h1>
         </v-col>
       </v-row>
-      <v-row v-if="loading">
-        <v-col>
-          <v-sheet elevation="2">
-            <v-row>
-              <v-col cols="2" class="hidden-sm-and-down"
-                ><v-skeleton-loader
-                  type="avatar"
-                  width="48"
-                  height="48"
-                  class="mt-10"
-                  style="margin-left: auto; margin-right: auto"
-                ></v-skeleton-loader
-              ></v-col>
-              <v-col cols="12" md="10">
-                <v-row>
-                  <v-col>
-                    <v-row>
-                      <v-col>
-                        <v-skeleton-loader
-                          type="heading"
-                          width="500"
-                          height="36"
-                          class="mt-md-3 mx-3"
-                        ></v-skeleton-loader>
-                      </v-col>
-                    </v-row>
-                    <v-row
-                      ><v-col
-                        ><v-skeleton-loader
-                          type="sentences"
-                          width="350"
-                          class="mx-3"
-                        ></v-skeleton-loader></v-col
-                    ></v-row>
-                  </v-col>
-                  <v-col class="d-flex justify-md-end"
-                    ><v-skeleton-loader
-                      type="paragraph"
-                      width="248"
-                      height="48"
-                      class="mt-md-4 mx-3 mr-md-6"
-                    ></v-skeleton-loader
-                  ></v-col>
-                </v-row>
-                <v-row>
-                  <v-col class="d-flex justify-start">
-                    <v-skeleton-loader
-                      type="chip"
-                      width="124"
-                      height="48"
-                      class="ml-3"
-                    ></v-skeleton-loader
-                    ><v-skeleton-loader
-                      type="chip"
-                      width="124"
-                      height="48"
-                    ></v-skeleton-loader
-                    ><v-skeleton-loader
-                      type="chip"
-                      width="124"
-                      height="48"
-                    ></v-skeleton-loader>
-                  </v-col>
-                </v-row>
-                <v-row>
-                  <v-col>
-                    <v-skeleton-loader
-                      type="paragraph"
-                      width="348"
-                      height="48"
-                      class="mt-md-6 mx-3 mb-4"
-                    ></v-skeleton-loader>
-                  </v-col>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-sheet>
-        </v-col>
-      </v-row>
-      <v-row v-if="loading">
-        <v-col>
-          <v-sheet elevation="2">
-            <v-row>
-              <v-col cols="2" class="hidden-sm-and-down"
-                ><v-skeleton-loader
-                  type="avatar"
-                  width="48"
-                  height="48"
-                  class="mt-10"
-                  style="margin-left: auto; margin-right: auto"
-                ></v-skeleton-loader
-              ></v-col>
-              <v-col cols="12" md="10">
-                <v-row>
-                  <v-col>
-                    <v-row>
-                      <v-col>
-                        <v-skeleton-loader
-                          type="heading"
-                          width="500"
-                          height="36"
-                          class="mx-3 mt-md-3"
-                        ></v-skeleton-loader>
-                      </v-col>
-                    </v-row>
-                    <v-row
-                      ><v-col>
-                        <v-skeleton-loader
-                          type="sentences"
-                          width="350"
-                          class="mx-3"
-                        ></v-skeleton-loader></v-col
-                    ></v-row>
-                  </v-col>
-                  <v-col class="d-flex justify-md-end"
-                    ><v-skeleton-loader
-                      type="paragraph"
-                      width="248"
-                      height="48"
-                      class="mx-3 mt-md-4 mr-6"
-                    ></v-skeleton-loader
-                  ></v-col>
-                </v-row>
-                <v-row>
-                  <v-col class="d-flex justify-start">
-                    <v-skeleton-loader
-                      type="chip"
-                      width="124"
-                      height="48"
-                      class="ml-3"
-                    ></v-skeleton-loader>
-                  </v-col>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-sheet>
-        </v-col>
-      </v-row>
-      <v-row v-else v-for="place in places" :key="place.place_id">
-        <v-col>
-          <v-card class="pl-3">
-            <v-row>
-              <v-col
-                cols="2"
-                style="cursor: pointer"
-                class="grey lighten-3 rounded-l hidden-sm-and-down"
-                @click="viewPlace(place)"
+      <div v-if="loading">
+        <v-skeleton-loader
+          width="450"
+          height="50"
+          type="heading"
+        ></v-skeleton-loader>
+        <v-row>
+          <v-col>
+            <v-sheet
+              style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+              ><v-skeleton-loader
+                height="200"
+                type="card-heading, list-item-two-line, list-item-two-line"
+              ></v-skeleton-loader>
+            </v-sheet>
+          </v-col>
+          <v-col>
+            <v-sheet
+              style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+              ><v-skeleton-loader
+                height="200"
+                type="card-heading, list-item-two-line, list-item-two-line"
+              ></v-skeleton-loader>
+            </v-sheet>
+          </v-col>
+          <v-col>
+            <v-sheet
+              style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+              ><v-skeleton-loader
+                height="200"
+                type="card-heading, list-item-two-line, list-item-two-line"
+              ></v-skeleton-loader>
+            </v-sheet>
+          </v-col>
+          <v-col>
+            <v-sheet
+              style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+              ><v-skeleton-loader
+                height="200"
+                type="card-heading, list-item-two-line, list-item-two-line"
+              ></v-skeleton-loader>
+            </v-sheet>
+          </v-col>
+          <v-col>
+            <v-sheet
+              style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+              ><v-skeleton-loader
+                height="200"
+                type="card-heading, list-item-two-line, list-item-two-line"
+              ></v-skeleton-loader>
+            </v-sheet>
+          </v-col>
+        </v-row>
+        <v-skeleton-loader
+          width="450"
+          height="50"
+          class="mt-6"
+          type="heading"
+        ></v-skeleton-loader>
+        <v-row>
+          <v-col>
+            <v-sheet
+              style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+              ><v-skeleton-loader
+                height="200"
+                type="card-heading, list-item-two-line, list-item-two-line"
+              ></v-skeleton-loader>
+            </v-sheet>
+          </v-col>
+          <v-col>
+            <v-sheet
+              style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+              ><v-skeleton-loader
+                height="200"
+                type="card-heading, list-item-two-line, list-item-two-line"
+              ></v-skeleton-loader>
+            </v-sheet>
+          </v-col>
+          <v-col>
+            <v-sheet
+              style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+              ><v-skeleton-loader
+                height="200"
+                type="card-heading, list-item-two-line, list-item-two-line"
+              ></v-skeleton-loader>
+            </v-sheet>
+          </v-col>
+          <v-col>
+            <v-sheet
+              style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+              ><v-skeleton-loader
+                height="200"
+                type="card-heading, list-item-two-line, list-item-two-line"
+              ></v-skeleton-loader>
+            </v-sheet>
+          </v-col>
+          <v-col>
+            <v-sheet
+              style="border: 1px solid rgba(0,0,0,0.17); border-radius: 4px"
+              ><v-skeleton-loader
+                height="200"
+                type="card-heading, list-item-two-line, list-item-two-line"
+              ></v-skeleton-loader>
+            </v-sheet>
+          </v-col>
+        </v-row>
+      </div>
+      <div
+        v-else
+        v-for="(type, index) in typesToDisplay"
+        v-bind:key="index"
+        class="place-types"
+      >
+        <h3>{{ type.name | replaceUnderscore }} reviews</h3>
+
+        <v-slide-group v-model="place" class="py-4" show-arrows>
+          <v-slide-item
+            v-for="place in type.places"
+            v-bind:key="place.place_id"
+          >
+            <v-card
+              width="250"
+              min-width="250"
+              height="200"
+              outlined
+              @mouseover.native="highlightedCard = index + place.place_id"
+              @mouseleave.native="highlightedCard = null"
+              :style="styleObject"
+              class="mr-2 mb-2"
+              :class="{
+                'teal white--text': highlightedCard == index + place.place_id,
+              }"
+              style="cursor: pointer"
+              @click="viewPlace(place)"
+            >
+              <v-card-title
+                :class="{
+                  'white--text': highlightedCard == index + place.place_id,
+                }"
               >
-                <v-img
-                  :src="place.icon"
-                  class="rounded-l d-flex justify-center"
-                  style="margin: 55px auto;"
-                  height="50"
-                  width="50"
-                ></v-img>
-              </v-col>
-              <v-col cols="12" md="10">
-                <v-row no-gutters>
-                  <v-col cols="12" md="6" @click="viewPlace(place)" style="cursor: pointer">
-                    <v-row>
-                      <v-card-title class="px-3 pt-0 pt-md-4 pb-1">{{
-                        place.name
-                      }}</v-card-title>
-                    </v-row>
-                    <v-row
-                      v-if="place.ratings"
-                      class="d-flex align-md-center justify-md-start"
-                    >
-                      <v-rating
-                        :value="place.ratings.general"
-                        background-color="yellow"
-                        color="yellow accent-4"
-                        length="5"
-                        dense
-                        half-increments
-                        hover
-                        size="18"
-                        readonly
-                        class="mb-1 ml-2"
-                      ></v-rating>
-
-                      <span
-                        class="caption ml-2"
-                        v-if="place.reviews.length >= 2"
-                      >
-                        ({{ place.reviews.length }} Reviews)
-                      </span>
-                      <span class="caption ml-2" v-else>
-                        ({{ place.reviews.length }} Review)
-                      </span>
-                    </v-row>
-                    <v-row
-                      v-else
-                      class="d-flex align-md-center justify-md-start"
-                    >
-                      <v-rating
-                        disabled
-                        background-color="gray"
-                        length="5"
-                        dense
-                        half-increments
-                        hover
-                        size="18"
-                        readonly
-                        class="mb-1 ml-2"
-                      ></v-rating>
-
-                      <span class="caption ml-2">(0 Reviews)</span>
-                    </v-row>
-                    <v-row>
-                      <v-card-text class="px-3 py-2">{{
-                        place.formatted_address
-                      }}</v-card-text>
-                    </v-row>
-                  </v-col>
-                  <v-col cols="12" md="6" v-if="place.ratings" class="mb-4">
-                    <v-row
-                      class="d-flex flex-nowrap align-md-center justify-md-end"
-                    >
-                      <v-icon
-                        v-text="ratings[0].icon"
-                        class="mt-5 mx-3"
-                        small
-                      ></v-icon>
-                      <strong class="mt-5">Compliance</strong>
-                      <v-rating
-                        :value="place.ratings.compliance"
-                        background-color="yellow"
-                        color="yellow accent-4"
-                        length="5"
-                        dense
-                        half-increments
-                        hover
-                        size="18"
-                        readonly
-                        class="mb-1 mt-5 ml-2 mr-10"
-                      ></v-rating>
-                    </v-row>
-                    <v-row
-                      class="d-flex flex-nowrap align-md-center justify-md-end"
-                    >
-                      <v-icon
-                        v-text="ratings[1].icon"
-                        class="mx-3"
-                        small
-                      ></v-icon>
-                      <strong>Notifications</strong>
-                      <v-rating
-                        :value="place.ratings.notifications"
-                        background-color="yellow"
-                        color="yellow accent-4"
-                        length="5"
-                        dense
-                        half-increments
-                        hover
-                        size="18"
-                        readonly
-                        class="mb-1 ml-2 mr-10"
-                      ></v-rating>
-                    </v-row>
-                    <v-row
-                      class="d-flex flex-nowrap align-md-center justify-md-end"
-                    >
-                      <v-icon
-                        v-text="ratings[2].icon"
-                        class="mx-3"
-                        small
-                      ></v-icon>
-                      <strong>Enforcement</strong>
-                      <v-rating
-                        :value="place.ratings.enforcement"
-                        background-color="yellow"
-                        color="yellow accent-4"
-                        length="5"
-                        dense
-                        half-increments
-                        hover
-                        size="18"
-                        readonly
-                        class="mb-1 ml-2 mr-10"
-                      ></v-rating>
-                    </v-row>
-                  </v-col>
-                  <v-col cols="12" md="6" class="mb-4" v-else>
-                    <v-row
-                      class="d-flex flex-nowrap align-md-center justify-md-end"
-                    >
-                      <v-icon
-                        v-text="ratings[0].icon"
-                        class="mt-5 mx-3"
-                        small
-                      ></v-icon>
-                      <strong class="mt-5">Compliance</strong>
-                      <v-rating
-                        disabled
-                        background-color="gray"
-                        length="5"
-                        dense
-                        half-increments
-                        hover
-                        size="18"
-                        readonly
-                        class="mb-1 mt-5 ml-2 mr-10"
-                      ></v-rating>
-                    </v-row>
-                    <v-row
-                      class="d-flex flex-nowrap align-md-center justify-md-end"
-                    >
-                      <v-icon
-                        v-text="ratings[1].icon"
-                        class="mx-3"
-                        small
-                      ></v-icon>
-                      <strong>Notifications</strong>
-                      <v-rating
-                        disabled
-                        background-color="gray"
-                        length="5"
-                        dense
-                        half-increments
-                        hover
-                        size="18"
-                        readonly
-                        class="mb-1 ml-2 mr-10"
-                      ></v-rating>
-                    </v-row>
-                    <v-row
-                      class="d-flex flex-nowrap align-md-center justify-md-end"
-                    >
-                      <v-icon
-                        v-text="ratings[1].icon"
-                        class="mx-3"
-                        small
-                      ></v-icon>
-                      <strong>Enforcement</strong>
-                      <v-rating
-                        disabled
-                        background-color="gray"
-                        length="5"
-                        dense
-                        half-increments
-                        hover
-                        size="18"
-                        readonly
-                        class="mb-1 ml-2 mr-10"
-                      ></v-rating>
-                    </v-row>
-                  </v-col>
-                </v-row>
-                <v-row v-if="place.types" no-gutters>
-                  <v-chip-group show-arrows class="mb-2" v-model="type">
-                    <v-chip
-                      medium
-                      color="gray"
-                      class="lighten-3"
-                      v-for="(t, index) in place.types"
-                      :key="index"
-                      @click="findNearbyPlaces(t)"
-                      :value="t"
-                      >{{ t }}</v-chip
-                    >
-                  </v-chip-group>
-                </v-row>
-                <v-row v-if="place.reviews">
-                  <v-col>
-                    <v-row
-                      v-for="review in place.reviews"
-                      :key="review.reviewId"
-                    >
-                      <h5 class="pl-4">Recent reviews</h5>
-                      <v-card-text v-if="review.title">
-                        &ldquo;{{ review.title }}&rdquo;
-                      </v-card-text>
-                      <v-card-text v-else>
-                        This comment lacks a title.
-                      </v-card-text>
-                    </v-row>
-                  </v-col>
-                </v-row>
-              </v-col>
-            </v-row>
-          </v-card>
-        </v-col>
-      </v-row>
+                {{ place.name | truncateWithEllipse(20) }}
+              </v-card-title>
+              <v-card-subtitle
+                class="pb-2"
+                :class="{
+                  'white--text': highlightedCard == index + place.place_id,
+                }"
+              >
+                {{ place.formatted_address }}
+              </v-card-subtitle>
+              <div
+                v-if="place.reviews && place.reviews.length > 0"
+                class="d-flex flex-row"
+              >
+                <v-rating
+                  v-model="place.ratings.general"
+                  background-color="yellow"
+                  color="yellow accent-4"
+                  length="5"
+                  dense
+                  half-increments
+                  hover
+                  size="18"
+                  readonly
+                  class="ml-4 mb-1"
+                ></v-rating>
+                <span class="text-caption mt-1 ml-2">
+                  {{ place.reviews.length }} reviews
+                </span>
+              </div>
+              <div v-else class="d-flex flex-row">
+                <v-rating
+                  background-color="gray"
+                  color="gray accent-4"
+                  length="5"
+                  dense
+                  half-increments
+                  hover
+                  size="18"
+                  readonly
+                  class="ml-4 mb-1"
+                ></v-rating>
+                <span class="text-caption mt-1 ml-2">
+                  0 reviews
+                </span>
+              </div>
+              <v-card-text
+                v-if="
+                  place.reviews &&
+                    place.reviews.length > 0 &&
+                    place.reviews[0].title.length > 0
+                "
+                class="pt-2"
+                :class="{
+                  'white--text': highlightedCard == index + place.place_id,
+                }"
+              >
+                &ldquo;{{ place.reviews[0].title }}&rdquo;
+              </v-card-text>
+            </v-card>
+          </v-slide-item>
+        </v-slide-group>
+      </div>
     </v-container>
   </v-main>
 </template>
@@ -401,60 +220,197 @@ export default {
   name: "nearby",
   data() {
     return {
+      userLocation: {
+        lat: null,
+        long: null,
+      },
+      place: {},
       places: [],
+      types: [],
       region: {},
-      error: "",
-      spinner: false,
-      selected: "",
-      type: "",
+      sortedPlaces: [],
       loading: true,
+      error: "",
+      showLessTypes: true,
+      styleObject: { "border-color": "#7dbc96" },
+      highlightedCard: null,
+      hover: false,
     };
   },
   async created() {
+    var placeId = this.$route.params.id;
+    var routerId = this.$router.currentRoute.params.id;
+
     this.$store.dispatch("showSearchBar", true);
-    await this.fetchRegion();
+
+    // console.log("Fetching region.");
+    await this.$store.dispatch("fetchRegion", {
+      place_id: placeId,
+    });
+    this.region = this.$store.getters.getRegion;
+
+    // console.log("Waiting for geohash range.");
+    await this.$store.dispatch("getGeohashRange");
+
+    // console.log("Waiting for local places.");
+    await this.$store.dispatch("findLocalPlaces");
+
+    // if (this.$store.state.types === null) {
+    await this.$store.dispatch("fetchReviewTypes");
+    // }
+
+    // console.log("Generating types.");
+    await this.sortPlacesIntoTypes();
+
+    // this.region = this.$store.getters.getRegion;
+    // this.types = this.$store.getters.getTypes;
+    // this.places = this.$store.getters.getPlaces;
     this.loading = false;
   },
   computed: {
-    ...mapState([["validTypes"], ["ratings"]]),
+    typesToDisplay: function() {
+      if (this.showLessTypes) {
+        var lessTypes = [];
+        for (let i = 0; i < this.sortedPlaces.length; i++) {
+          if (this.sortedPlaces[i].counter > 2) {
+            lessTypes.push(this.sortedPlaces[i]);
+          }
+        }
+        return lessTypes;
+      } else {
+        return this.sortedPlaces;
+      }
+    },
   },
   methods: {
-    async fetchRegion() {
-      var placeId = await this.$route.params.id;
-
-      console.log("Fetching region.")
-      await this.$store.dispatch("fetchRegion", {
-        place_id: placeId,
-      });
-
-      console.log("Getting geohash range.")
-      await this.$store.dispatch("getGeohashRange");
-      
-      console.log("Setting region.")
-      const region = this.$store.getters.getRegion;
-      this.region = region;
-
-      console.log("Setting inside places.")
-      await this.$store.dispatch("findLocalPlaces");
-      const places = this.$store.getters.getPlaces;
-      this.places = places;
+    getUserLocation() {
+      this.$store.dispatch("fetchUserLocation");
     },
     async viewPlace(place) {
       await this.$store.dispatch("fetchPlace", place);
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
+    async sortPlacesIntoTypes() {
+      var p, t;
+      const currentPlaces = this.$store.getters.getPlaces;
+      const currentTypes = this.$store.getters.getTypes;
+      var sortedPlaces = [];
+
+      // console.log("Here are the places we're categorizing:");
+      // console.log(currentPlaces);
+      // console.lo
+
+      for (t = 0; t < currentTypes.length; t++) {
+        var newType = currentTypes[t];
+        newType.places = [];
+        console.log("Here's the new type:");
+        console.log(newType)
+
+        for (p = 0; p < currentPlaces.length; p++) {
+          if ( currentPlaces[p].types.indexOf(currentTypes[t].name) > -1 ) {
+            newType.places.push(currentPlaces[p]);
+          }
+        }
+
+        // for (p = 0; p < currentPlaces.length; p++) {
+        //   console.log("Place IDs: " + currentTypes[t].name, newType.name);
+        //   if (
+        //     newType.places.filter(
+        //       (place) => place.name === currentPlaces[p].name
+        //     )
+        //   ) {
+        //     console.log("We already got one!");
+        //   } else {
+        //     newType.places.push(currentPlaces[p]);
+        //   }
+        // }
+        sortedPlaces.push(newType);
+      }
+
+      // for (p = 0; p < currentPlaces.length; p++) {
+      //   console.log("Here is the place: ");
+      //   console.log(currentPlaces[p]);
+      //   for (t = 0; t < currentTypes.length; t++) {
+      //     var newType = currentTypes[t];
+      //     newType.places = [];
+
+      //     console.log("Here is the new type:")
+      //     console.log(newType);
+
+      //     if ( newType.places.filter(place => place.place_id === currentPlaces[p].place_id) ) {
+      //       console.log("We already got one!")
+      //     } else {
+      //       newType.places.push(currentPlaces[p]);
+      //     }
+
+      //   }
+      // }
+
+      // for (p = 0; p < currentPlaces.length; p++) {
+      //   console.log("Here is the place: ");
+      //   console.log(currentPlaces[p]);
+      //   for (t = 0; t < currentPlaces[p].types.length; t++) {
+      //     console.log(currentPlaces[p].types[t]);
+      //     // if (currentPlaces[p].types.indexOf(currentPlaces[p].types[t])) {
+      //     //   return;
+      //     // }
+      //     console.log("Pushing place type: " + currentPlaces[p].types[t]);
+      //     sortedPlaces.push(currentPlaces[p].types[t]);
+      //   }
+      // }
+
+      this.sortedPlaces = sortedPlaces;
+
+      // await this.$store.dispatch("findLocalPlaces").then(() => {
+      //   var currentPlaces = this.$store.getters.getPlaces;
+      //   var currentTypes = this.$store.getters.getTypes;
+
+      //   console.log("Sorting local places.");
+      //   console.log(currentPlaces);
+      //   console.log(currentPlaces.length);
+      //   console.log(currentTypes)
+      //   console.log(currentTypes.length);
+
+      //   for (let p = 0; p < currentPlaces.length; p++) {
+      //     console.log("Here's the list of places:");
+      //     console.log(currentPlaces);
+      //     for (let t = 0; t < currentTypes.length; t++) {
+      //       console.log("Checking place for " + currentTypes[t].name);
+      //       if (currentPlaces[p].types.includes(currentTypes[t].name)) {
+      //         currentTypes.places.push(places[p]);
+      //       }
+      //     }
+      //   }
+      // });
+
+      // for (i = 0; i < currentTypes.length; i++) {
+      //   await this.$store
+      //     .dispatch("findNearbyPlaces", currentTypes[i].name)
+      //     .then(() => {
+      //       if (currentTypes[i].counter > 2)
+      //         currentTypes[i].places = this.$store.getters.getPlaces;
+      //     });
+      // }
+    },
   },
-  // filters: {
-  //   replaceUnderscore(val) {
-  //     var i,
-  //       frags = val.split("_");
-  //     for (i = 0; i < frags.length; i++) {
-  //       if (frags[i] != "of" && frags[i] != "or") {
-  //         frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
-  //       }
-  //     }
-  //     return frags.join(" ");
-  //   },
-  // },
+  filters: {
+    replaceUnderscore(val) {
+      var i,
+        frags = val.split("_");
+      for (i = 0; i < frags.length; i++) {
+        if (frags[i] != "of" && frags[i] != "or") {
+          frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+        }
+      }
+      return frags.join(" ");
+    },
+    truncateWithEllipse(val, stringLength) {
+      if (val.length > stringLength) {
+        return val.slice(0, stringLength - 1) + "...";
+      } else {
+        return val;
+      }
+    },
+  },
 };
 </script>

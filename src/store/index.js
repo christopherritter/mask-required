@@ -449,7 +449,7 @@ const store = new Vuex.Store({
     getField,
     getTypes: (state) => state.types,
     getUserLocation: (state) => state.userLocation,
-    getRegion: (state) => state.area,
+    getRegion: (state) => state.region,
     getPlaceLocation: (state) => state.place.geometry.location,
     getGeohashRange: (state) => state.geohashRange,
     getUpperRange: (state) => state.upperRange,
@@ -473,14 +473,14 @@ const store = new Vuex.Store({
       state.userProfile = val;
     },
     setUserLocation(state, val) {
-      console.log("Setting user location:");
+      // console.log("Setting user location:");
       console.log(val)
       state.userLocation.lat = val.latitude;
       state.userLocation.long = val.longitude;
     },
     setRegion(state, val) {
-      console.log("Setting region:")
-      console.log(val)
+      // console.log("Setting region:")
+      // console.log(val)
       state.region.formatted_address = val.formatted_address;
       state.region.geometry = val.geometry;
       state.region.name = val.name;
@@ -490,7 +490,10 @@ const store = new Vuex.Store({
       state.place = val;
     },
     setPlaces(state, val) {
+      console.log("Here are the places being mutated:")
+      console.log(val)
       state.places = val;
+      console.log(state.places)
     },
     setReviews(state, val) {
       state.reviews = val;
@@ -675,9 +678,9 @@ const store = new Vuex.Store({
       var apiKey = getters.getFixieKey;
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${apiKey}`;
       var newRegion = {};
-      console.log("Passing place.")
+      // console.log("Passing place.")
       // console.log(URL)
-      console.log(place)
+      // console.log(place)
 
       await axios
         .get(URL)
@@ -689,8 +692,8 @@ const store = new Vuex.Store({
           this.errorMessage = error.message;
         });
 
-      console.log("Committing set region:")
-      console.log(newRegion)
+      // console.log("Committing set region:")
+      // console.log(newRegion)
       commit("setRegion", newRegion);
     },
     // async fetchArea({ state, getters }, address) {
@@ -807,7 +810,7 @@ const store = new Vuex.Store({
     },
     async findNearbyPlaces({ state, commit, dispatch }, type) {
       // console.log("Fetching nearby places for " + type + "s.")
-      const nearbyPlaces = [];
+      var nearbyPlaces = [];
 
       // Retrieve the current coordinates using the navigator API
       const places = await fb.placesFirestore
@@ -838,17 +841,17 @@ const store = new Vuex.Store({
         });
       });
 
+      console.log("Here are the nearby places!")
+      console.log(nearbyPlaces)
       commit("setPlaces", nearbyPlaces);
     },
     async findLocalPlaces({ state, commit, dispatch }) {
-      // console.log("Fetching nearby places for " + type + "s.")
-      const localPlaces = [];
-
       // Retrieve the current coordinates using the navigator API
       const places = await fb.placesFirestore
         .where("geohash", ">=", state.lowerRange)
         .where("geohash", "<=", state.upperRange)
         .get();
+      let localPlaces = [];
 
       if (places.empty) {
         return;
@@ -872,10 +875,12 @@ const store = new Vuex.Store({
         });
       });
 
+      console.log("Here are the results of find local places:")
+      console.log(localPlaces)
       commit("setPlaces", localPlaces);
     },
     async getGeohashRange({ state, commit }) {
-      console.log("Getting the geoHash")
+      // console.log("Getting the geoHash")
       const lowerLat = state.region.geometry.viewport.southwest.lat;
       const lowerLon = state.region.geometry.viewport.southwest.lng;
 
@@ -885,10 +890,10 @@ const store = new Vuex.Store({
       const lower = geohash.encode(lowerLat, lowerLon);
       const upper = geohash.encode(upperLat, upperLon);
 
-      console.log("Geohashes coming at ya!");
-      console.log(lowerLat, lowerLon);
-      console.log(upperLat, upperLon);
-      console.log(lower, upper);
+      // console.log("Geohashes coming at ya!");
+      // console.log(lowerLat, lowerLon);
+      // console.log(upperLat, upperLon);
+      // console.log(lower, upper);
 
       commit("setRange", { lower, upper });
     },
@@ -932,47 +937,47 @@ const store = new Vuex.Store({
               counter: 1,
             };
             if (
-              name == "administrative_area_level_1" ||
-              name == "administrative_area_level_2" ||
-              name == "administrative_area_level_3" ||
-              name == "administrative_area_level_4" ||
-              name == "administrative_area_level_5" ||
-              name == "archipelago" ||
-              name == "colloquial_area" ||
-              name == "continent" ||
-              name == "country" ||
+            //   name == "administrative_area_level_1" ||
+            //   name == "administrative_area_level_2" ||
+            //   name == "administrative_area_level_3" ||
+            //   name == "administrative_area_level_4" ||
+            //   name == "administrative_area_level_5" ||
+            //   name == "archipelago" ||
+            //   name == "colloquial_area" ||
+            //   name == "continent" ||
+            //   name == "country" ||
               name == "establishment" ||
-              name == "finance" ||
-              name == "floor" ||
-              // name == "food" ||
-              name == "general_contractor" ||
-              name == "geocode" ||
-              name == "health" ||
-              name == "intersection" ||
-              name == "locality" ||
-              name == "natural_feature" ||
-              name == "place_of_worship" ||
-              name == "plus_code" ||
-              name == "point_of_interest" ||
-              name == "political" ||
-              name == "post_box" ||
-              name == "postal_code" ||
-              name == "postal_code_prefix" ||
-              name == "postal_code_suffix" ||
-              name == "postal_town" ||
-              name == "premise" ||
-              name == "room" ||
-              name == "route" ||
-              name == "store" ||
-              name == "street_address" ||
-              name == "sublocality" ||
-              name == "sublocality_level_1" ||
-              name == "sublocality_level_2" ||
-              name == "sublocality_level_3" ||
-              name == "sublocality_level_4" ||
-              name == "sublocality_level_5" ||
-              name == "subpremise" ||
-              name == "town_square"
+            //   name == "finance" ||
+            //   name == "floor" ||
+            //   // name == "food" ||
+            //   name == "general_contractor" ||
+            //   name == "geocode" ||
+            //   name == "health" ||
+            //   name == "intersection" ||
+            //   name == "locality" ||
+            //   name == "natural_feature" ||
+            //   name == "place_of_worship" ||
+            //   name == "plus_code" ||
+              name == "point_of_interest"
+            //   name == "political" ||
+            //   name == "post_box" ||
+            //   name == "postal_code" ||
+            //   name == "postal_code_prefix" ||
+            //   name == "postal_code_suffix" ||
+            //   name == "postal_town" ||
+            //   name == "premise" ||
+            //   name == "room" ||
+            //   name == "route" ||
+            //   name == "store" ||
+            //   name == "street_address" ||
+            //   name == "sublocality" ||
+            //   name == "sublocality_level_1" ||
+            //   name == "sublocality_level_2" ||
+            //   name == "sublocality_level_3" ||
+            //   name == "sublocality_level_4" ||
+            //   name == "sublocality_level_5" ||
+            //   name == "subpremise" ||
+            //   name == "town_square"
             ) {
               return;
             }
@@ -1002,7 +1007,7 @@ const store = new Vuex.Store({
           : 1
       );
 
-      store.commit("setTypes", typesArray);
+      commit("setTypes", typesArray);
 
       function containsType(type, list) {
         var i;
