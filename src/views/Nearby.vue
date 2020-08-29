@@ -304,15 +304,14 @@ export default {
   },
   watch: {
     async $route(to, from) {
-      this.empty = false;
       this.loading = true;
-      await this.$store.dispatch("clearPlaces");
-      await this.viewLocalPlaces();
-      // if (to.params.id == from.params.id) {
-      //   this.viewLocalPlaces();
-      // } else {
-      //   this.viewLocalPlaces();
-      // }
+      if (to.params.id == from.params.id) {
+        this.empty = false;
+      } else {
+        this.empty = false;
+        this.$store.dispatch("clearPlaces");
+        this.viewLocalPlaces();
+      }
       this.loading = false;
     }
   },
@@ -379,8 +378,13 @@ export default {
         });
 
         findLocationAutocomplete.addListener("place_changed", () => {
+          var region = this.region;
           let place = findLocationAutocomplete.getPlace();
-          this.$router.push({ name: "nearby", params: { id: place.place_id } });
+          
+          if (place.place_id != region.place_id) {
+            this.$router.push({ name: "nearby", params: { id: place.place_id } });
+          }
+
         });
 
         this.$store.dispatch("showSearchBar", false);
