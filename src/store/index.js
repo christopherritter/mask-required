@@ -473,14 +473,10 @@ const store = new Vuex.Store({
       state.userProfile = val;
     },
     setUserLocation(state, val) {
-      // console.log("Setting user location:");
-      // console.log(val)
       state.userLocation.lat = val.latitude;
       state.userLocation.long = val.longitude;
     },
     setRegion(state, val) {
-      // console.log("Setting region:")
-      // console.log(val)
       state.region.formatted_address = val.formatted_address;
       state.region.geometry = val.geometry;
       state.region.name = val.name;
@@ -491,7 +487,6 @@ const store = new Vuex.Store({
     },
     setPlaces(state, val) {
       state.places = val;
-      // console.log(state.places)
     },
     setReviews(state, val) {
       state.reviews = val;
@@ -694,31 +689,6 @@ const store = new Vuex.Store({
       // console.log(newRegion)
       commit("setRegion", newRegion);
     },
-    // async fetchArea({ state, getters }, address) {
-    //   var apiKey = getters.getFixieKey;
-    //   const URL = `https://maps.googleapis.com/maps/api/geocode/json?address=${address}&key=${apiKey}`;
-    //   var place = {};
-
-    //   await axios
-    //     .get(URL)
-    //     .then((response) => {
-    //       console.log("Got a response from Google:")
-    //       console.log(response.data.results[0]);
-    //       place = response.data.results[0];
-    //     })
-    //     .catch((error) => {
-    //       console.log(error.message);
-    //       this.errorMessage = error.message;
-    //     });
-
-    //   store.commit("setArea", {
-    //     short_name: place.address_components[0].short_name,
-    //     place_id: place.place_id,
-    //     // latitude: place.geometry.location.lat,
-    //     // longitude: place.geometry.location.lng,
-    //     bounds: place.geometry.bounds,
-    //   });
-    // },
     async updateProfile({ dispatch }, user) {
       const userId = fb.auth.currentUser.uid;
       // update user object
@@ -876,6 +846,10 @@ const store = new Vuex.Store({
       // console.log("Here are the results of find local places:")
       // console.log(localPlaces)
       commit("setPlaces", localPlaces);
+    },
+    clearPlaces({ commit }) {
+      commit("setPlaces", null);
+      commit("setRange", { lower: null, upper: null });
     },
     async getGeohashRange({ state, commit }) {
       // console.log("Getting the geoHash")

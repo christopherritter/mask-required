@@ -219,6 +219,9 @@
           </v-slide-item>
         </v-slide-group>
       </div>
+      <div v-if="empty">
+        <h2>Enter search bar here.</h2>
+      </div>
     </v-container>
   </v-main>
 </template>
@@ -240,6 +243,7 @@ export default {
       region: {},
       sortedPlaces: [],
       loading: true,
+      empty: false,
       error: "",
       showLessTypes: true,
       styleObject: { "border-color": "#7dbc96" },
@@ -251,7 +255,8 @@ export default {
     var placeId = this.$route.params.id;
     var routerId = this.$router.currentRoute.params.id;
 
-    this.$store.dispatch("showSearchBar", true);
+    // FEATURE: don't clear places if the ID is the same.
+    this.$store.dispatch("clearPlaces");
 
     await this.$store.dispatch("fetchRegion", {
       place_id: placeId,
@@ -293,6 +298,15 @@ export default {
       const currentPlaces = this.$store.getters.getPlaces;
       var sortedPlaces = [];
       var sortedTypes = [];
+
+      if (!currentPlaces) {
+        this.$store.dispatch("showSearchBar", false);
+        this.empty = true;
+        return;
+      }
+
+      this.$store.dispatch("showSearchBar", true);
+      this.empty = false;
 
       for (p = 0; p < currentPlaces.length; p++) {
         var newPlace = currentPlaces[p];
