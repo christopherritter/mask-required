@@ -243,28 +243,16 @@ export default {
 
     this.$store.dispatch("showSearchBar", true);
 
-    // console.log("Fetching region.");
     await this.$store.dispatch("fetchRegion", {
       place_id: placeId,
     });
     this.region = this.$store.getters.getRegion;
 
-    // console.log("Waiting for geohash range.");
     await this.$store.dispatch("getGeohashRange");
-
-    // console.log("Waiting for local places.");
     await this.$store.dispatch("findLocalPlaces");
-
-    // if (this.$store.state.types === null) {
     await this.$store.dispatch("fetchReviewTypes");
-    // }
-
-    // console.log("Generating types.");
     await this.sortPlacesIntoTypes();
-
-    // this.region = this.$store.getters.getRegion;
-    // this.types = this.$store.getters.getTypes;
-    // this.places = this.$store.getters.getPlaces;
+    
     this.loading = false;
   },
   computed: {
@@ -293,153 +281,54 @@ export default {
     async sortPlacesIntoTypes() {
       var p, t, s;
       const currentPlaces = this.$store.getters.getPlaces;
-      // const currentTypes = this.$store.getters.getTypes;
       var sortedPlaces = [];
       var sortedTypes = [];
 
       for (p = 0; p < currentPlaces.length; p++) {
         var newPlace = currentPlaces[p];
-
+        
         // create an updated list of types
         for (t = 0; t < newPlace.types.length; t++) {
-          if (!sortedTypes.includes(newPlace.types[t])) {
-            sortedTypes.push(newPlace.types[t]);
+          var newType = {
+            name: newPlace.types[t],
+            counter: 1,
+            places: [],
+          };
+
+          if ( sortedTypes.filter((type) => type.name === newType.name).length > 0 ) {
+            var pos = sortedTypes.map(function(e) {
+              return e.name;
+            }).indexOf(newType.name);
+            sortedTypes[pos].counter = sortedTypes[pos].counter + 1;
+          } else {
+            sortedTypes.push(newType);
           }
         }
       }
 
-      console.log("Sorted types:");
-      console.log(sortedTypes);
+      console.log(sortedTypes)
 
       // sort the places into types
       for (s = 0; s < sortedTypes.length; s++) {
-        var sortedType = {
-          name: sortedTypes[s],
-          counter: 1,
-          places: [],
-        };
+        var currentType = sortedTypes[s];
 
         for (p = 0; p < currentPlaces.length; p++) {
           var currentPlace = currentPlaces[p];
 
-          if (currentPlace.types.includes(sortedTypes[s])) {
-            sortedType.places.push(currentPlace)
+          if (currentPlace.types.includes(sortedTypes[s].name)) {
+            sortedTypes[s].places.push(currentPlace)
           }
         }
 
-        // console.log("Checking for sorted type: " + sortedTypes[s])
-        // console.log(newPlace.types)
-        // if (newPlace.types.includes(sortedTypes[s])) {
-        //   console.log("Sorted type found in new place.");
-        //   sortedType.places.push(newPlace);
-        // }
-
-        if ( sortedPlaces.filter((type) => type.name === sortedTypes[s]).length > 0 ) {
-          var pos = sortedPlaces.map(function(e) {
-              return e.name;
-            }).indexOf(sortedTypes[s]);
-          sortedPlaces[pos].counter++;
+        if ( sortedPlaces.filter((type) => type.name === sortedTypes[s].name).length > 0 ) {
+          console.log("Found something.")
+          
         } else {
-          sortedPlaces.push(sortedType);
+          sortedPlaces.push(sortedTypes[s]);
         }
       }
 
       this.sortedPlaces = sortedPlaces;
-
-      // console.log("Here are the places we're categorizing:");
-      // console.log(currentPlaces);
-      // console.lo
-
-      // for (t = 0; t < currentTypes.length; t++) {
-      //   var newType = currentTypes[t];
-      //   newType.places = [];
-      //   console.log("Here's the new type:");
-      //   console.log(newType)
-
-      //   for (p = 0; p < currentPlaces.length; p++) {
-      //     if ( currentPlaces[p].types.indexOf(currentTypes[t].name) > -1 ) {
-      //       newType.places.push(currentPlaces[p]);
-      //     }
-      //   }
-
-      // for (p = 0; p < currentPlaces.length; p++) {
-      //   console.log("Place IDs: " + currentTypes[t].name, newType.name);
-      //   if (
-      //     newType.places.filter(
-      //       (place) => place.name === currentPlaces[p].name
-      //     )
-      //   ) {
-      //     console.log("We already got one!");
-      //   } else {
-      //     newType.places.push(currentPlaces[p]);
-      //   }
-      // }
-
-      //   sortedPlaces.push(newType);
-      // }
-
-      // for (p = 0; p < currentPlaces.length; p++) {
-      //   console.log("Here is the place: ");
-      //   console.log(currentPlaces[p]);
-      //   for (t = 0; t < currentTypes.length; t++) {
-      //     var newType = currentTypes[t];
-      //     newType.places = [];
-
-      //     console.log("Here is the new type:")
-      //     console.log(newType);
-
-      //     if ( newType.places.filter(place => place.place_id === currentPlaces[p].place_id) ) {
-      //       console.log("We already got one!")
-      //     } else {
-      //       newType.places.push(currentPlaces[p]);
-      //     }
-
-      //   }
-      // }
-
-      // for (p = 0; p < currentPlaces.length; p++) {
-      //   console.log("Here is the place: ");
-      //   console.log(currentPlaces[p]);
-      //   for (t = 0; t < currentPlaces[p].types.length; t++) {
-      //     console.log(currentPlaces[p].types[t]);
-      //     // if (currentPlaces[p].types.indexOf(currentPlaces[p].types[t])) {
-      //     //   return;
-      //     // }
-      //     console.log("Pushing place type: " + currentPlaces[p].types[t]);
-      //     sortedPlaces.push(currentPlaces[p].types[t]);
-      //   }
-      // }
-
-      // await this.$store.dispatch("findLocalPlaces").then(() => {
-      //   var currentPlaces = this.$store.getters.getPlaces;
-      //   var currentTypes = this.$store.getters.getTypes;
-
-      //   console.log("Sorting local places.");
-      //   console.log(currentPlaces);
-      //   console.log(currentPlaces.length);
-      //   console.log(currentTypes)
-      //   console.log(currentTypes.length);
-
-      //   for (let p = 0; p < currentPlaces.length; p++) {
-      //     console.log("Here's the list of places:");
-      //     console.log(currentPlaces);
-      //     for (let t = 0; t < currentTypes.length; t++) {
-      //       console.log("Checking place for " + currentTypes[t].name);
-      //       if (currentPlaces[p].types.includes(currentTypes[t].name)) {
-      //         currentTypes.places.push(places[p]);
-      //       }
-      //     }
-      //   }
-      // });
-
-      // for (i = 0; i < currentTypes.length; i++) {
-      //   await this.$store
-      //     .dispatch("findNearbyPlaces", currentTypes[i].name)
-      //     .then(() => {
-      //       if (currentTypes[i].counter > 2)
-      //         currentTypes[i].places = this.$store.getters.getPlaces;
-      //     });
-      // }
     },
   },
   filters: {
