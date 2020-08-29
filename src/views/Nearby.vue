@@ -123,13 +123,15 @@
           </v-col>
         </v-row>
       </div>
-      <div
+      <v-row
         v-else
         v-for="(type, index) in sortedPlaces"
         v-bind:key="index"
         class="place-types"
       >
-        <h3>{{ type.name | replaceUnderscore }} reviews</h3>
+        <v-col cols="12">
+          <h3>{{ type.name | replaceUnderscore }} reviews</h3>
+        </v-col>
 
         <v-slide-group v-model="place" class="py-4" show-arrows>
           <v-slide-item
@@ -218,10 +220,41 @@
             </v-card>
           </v-slide-item>
         </v-slide-group>
-      </div>
-      <div v-if="empty">
-        <h2>Enter search bar here.</h2>
-      </div>
+      </v-row>
+      <v-row v-show="empty">
+        <v-col>
+          <h3>No reviews for that location.</h3>
+        </v-col>
+      </v-row>
+      <v-row v-show="empty">
+        <v-col>
+          <v-card outlined>
+            <h3 class="mt-12 text-center">Find another location.</h3>
+            <v-text-field
+              class="px-10 pt-2 pb-14"
+              v-model="findLocationAddress"
+              id="find-location-autocomplete"
+              outlined
+              hide-details
+              label="City, state, or zip code."
+              placeholder=""
+            ></v-text-field>
+          </v-card>
+        </v-col>
+        <v-col>
+          <v-card outlined color="#c5f9da">
+            <h3 class="mt-12 text-center">Create your own review.</h3>
+            <v-text-field
+              class="px-10 pt-2 pb-8"
+              v-model="findPlaceAddress"
+              id="find-place-autocomplete"
+              solo
+              label="Business name or category"
+              placeholder=""
+            ></v-text-field>
+          </v-card>
+        </v-col>
+      </v-row>
     </v-container>
   </v-main>
 </template>
@@ -249,6 +282,18 @@ export default {
       styleObject: { "border-color": "#7dbc96" },
       highlightedCard: null,
       hover: false,
+      findPlaceAddress: null,
+      findLocationAddress: null,
+      findPlaceOptions: {
+        types: ["establishment"],
+        componentRestrictions: { country: "us" },
+        fields: ["place_id"],
+      },
+      findLocationOptions: {
+        types: ["(regions)"],
+        componentRestrictions: { country: "us" },
+        fields: ["place_id"],
+      },
     };
   },
   async created() {
@@ -300,8 +345,30 @@ export default {
       var sortedTypes = [];
 
       if (!currentPlaces) {
-        this.$store.dispatch("showSearchBar", false);
         this.empty = true;
+
+        let findPlaceAutocomplete = new google.maps.places.Autocomplete(
+          document.getElementById("find-place-autocomplete"),
+          this.findPlaceOptions
+        );
+
+        findPlaceAutocomplete.addListener("place_changed", () => {
+          let place = findPlaceAutocomplete.getPlace();
+          this.$router.push({ name: "place", params: { id: place.place_id } });
+        });
+
+        let findLocationAutocomplete = new google.maps.places.Autocomplete(
+          document.getElementById("find-location-autocomplete"),
+          this.findLocationOptions
+        );
+
+        findLocationAutocomplete.addListener("place_changed", () => {
+          let place = findLocationAutocomplete.getPlace();
+          this.$router.push({ name: "nearby", params: { id: place.place_id } });
+        });
+
+        this.$store.dispatch("showSearchBar", false);
+
         return;
       }
 

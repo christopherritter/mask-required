@@ -21,6 +21,7 @@
                   background-color="white"
                   hide-details
                   label="Enter city, state, or zip code."
+                  placeholder=""
                 ></v-text-field
               ></v-col>
             </v-row>
