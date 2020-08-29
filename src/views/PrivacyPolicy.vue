@@ -58,7 +58,7 @@
             they use such information.
           </p>
 
-          <!-- <h3>Cookies</h3>
+          <h3>Cookies</h3>
 
           <p>
             Cookies are files with small amount of data, which may include an
@@ -67,11 +67,15 @@
           </p>
 
           <p>
-            We use "cookies" to collect information. You can instruct your
-            browser to refuse all cookies or to indicate when a cookie is being
-            sent. However, if you do not accept cookies, you may not be able to
-            use some portions of our Service.
-          </p> -->
+            You can prevent the installation of cookies by adjusting the
+            settings in your browser software accordingly; please note though
+            that you may not be able to use all the features of MaskRequired.US
+            in full as a result. Google also offers so-called deactivation tools
+            for some web browsers, where you can opt out of your user behavior
+            being recorded and analyzed. You will find more information and
+            download options for these tools here:
+            http://tools.google.com/dlpage/gaoptout?hl=en-GB
+          </p>
 
           <!-- <h3>Service Providers</h3>
 
