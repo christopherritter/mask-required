@@ -252,7 +252,7 @@ export default {
     await this.$store.dispatch("findLocalPlaces");
     await this.$store.dispatch("fetchReviewTypes");
     await this.sortPlacesIntoTypes();
-    
+
     this.loading = false;
   },
   computed: {
@@ -286,7 +286,7 @@ export default {
 
       for (p = 0; p < currentPlaces.length; p++) {
         var newPlace = currentPlaces[p];
-        
+
         // create an updated list of types
         for (t = 0; t < newPlace.types.length; t++) {
           var newType = {
@@ -295,18 +295,20 @@ export default {
             places: [],
           };
 
-          if ( sortedTypes.filter((type) => type.name === newType.name).length > 0 ) {
-            var pos = sortedTypes.map(function(e) {
-              return e.name;
-            }).indexOf(newType.name);
+          if (
+            sortedTypes.filter((type) => type.name === newType.name).length > 0
+          ) {
+            var pos = sortedTypes
+              .map(function(e) {
+                return e.name;
+              })
+              .indexOf(newType.name);
             sortedTypes[pos].counter = sortedTypes[pos].counter + 1;
           } else {
             sortedTypes.push(newType);
           }
         }
       }
-
-      console.log(sortedTypes)
 
       // sort the places into types
       for (s = 0; s < sortedTypes.length; s++) {
@@ -316,19 +318,35 @@ export default {
           var currentPlace = currentPlaces[p];
 
           if (currentPlace.types.includes(sortedTypes[s].name)) {
-            sortedTypes[s].places.push(currentPlace)
+            sortedTypes[s].places.push(currentPlace);
           }
         }
 
-        if ( sortedPlaces.filter((type) => type.name === sortedTypes[s].name).length > 0 ) {
-          console.log("Found something.")
-          
+        if (
+          sortedPlaces.filter((type) => type.name === sortedTypes[s].name)
+            .length > 0
+        ) {
+          console.log("Found something.");
         } else {
           sortedPlaces.push(sortedTypes[s]);
         }
       }
 
-      this.sortedPlaces = sortedPlaces;
+      this.sortedPlaces = sortedPlaces.sort(compareCounters);
+
+      function compareCounters(a, b) {
+        // Use toUpperCase() to ignore character casing
+        const typeA = a.counter;
+        const typeB = b.counter;
+
+        let comparison = 0;
+        if (typeA > typeB) {
+          comparison = -1;
+        } else if (typeA < typeB) {
+          comparison = 1;
+        }
+        return comparison;
+      }
     },
   },
   filters: {
