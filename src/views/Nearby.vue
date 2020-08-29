@@ -297,9 +297,11 @@ export default {
     };
   },
   async created() {
-    // FEATURE: don't clear places if the ID is the same.
-    this.$store.dispatch("clearPlaces");
-    this.viewLocalPlaces();
+    var routerId = this.$router.currentRoute.params.id;
+    if (this.region.place_id != routerId) {
+      this.$store.dispatch("clearPlaces");
+      this.viewLocalPlaces();
+    }
     this.loading = false;
   },
   watch: {
