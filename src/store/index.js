@@ -474,7 +474,7 @@ const store = new Vuex.Store({
     },
     setUserLocation(state, val) {
       // console.log("Setting user location:");
-      console.log(val)
+      // console.log(val)
       state.userLocation.lat = val.latitude;
       state.userLocation.long = val.longitude;
     },
@@ -490,10 +490,8 @@ const store = new Vuex.Store({
       state.place = val;
     },
     setPlaces(state, val) {
-      console.log("Here are the places being mutated:")
-      console.log(val)
       state.places = val;
-      console.log(state.places)
+      // console.log(state.places)
     },
     setReviews(state, val) {
       state.reviews = val;
@@ -841,8 +839,8 @@ const store = new Vuex.Store({
         });
       });
 
-      console.log("Here are the nearby places!")
-      console.log(nearbyPlaces)
+      // console.log("Here are the nearby places!")
+      // console.log(nearbyPlaces)
       commit("setPlaces", nearbyPlaces);
     },
     async findLocalPlaces({ state, commit, dispatch }) {
@@ -875,8 +873,8 @@ const store = new Vuex.Store({
         });
       });
 
-      console.log("Here are the results of find local places:")
-      console.log(localPlaces)
+      // console.log("Here are the results of find local places:")
+      // console.log(localPlaces)
       commit("setPlaces", localPlaces);
     },
     async getGeohashRange({ state, commit }) {

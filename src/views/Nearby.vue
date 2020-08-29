@@ -115,7 +115,7 @@
       </div>
       <div
         v-else
-        v-for="(type, index) in typesToDisplay"
+        v-for="(type, index) in sortedPlaces"
         v-bind:key="index"
         class="place-types"
       >
@@ -291,41 +291,92 @@ export default {
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
     async sortPlacesIntoTypes() {
-      var p, t;
+      var p, t, s;
       const currentPlaces = this.$store.getters.getPlaces;
-      const currentTypes = this.$store.getters.getTypes;
+      // const currentTypes = this.$store.getters.getTypes;
       var sortedPlaces = [];
+      var sortedTypes = [];
+
+      for (p = 0; p < currentPlaces.length; p++) {
+        var newPlace = currentPlaces[p];
+
+        // create an updated list of types
+        for (t = 0; t < newPlace.types.length; t++) {
+          if (!sortedTypes.includes(newPlace.types[t])) {
+            sortedTypes.push(newPlace.types[t]);
+          }
+        }
+      }
+
+      console.log("Sorted types:");
+      console.log(sortedTypes);
+
+      // sort the places into types
+      for (s = 0; s < sortedTypes.length; s++) {
+        var sortedType = {
+          name: sortedTypes[s],
+          counter: 1,
+          places: [],
+        };
+
+        for (p = 0; p < currentPlaces.length; p++) {
+          var currentPlace = currentPlaces[p];
+
+          if (currentPlace.types.includes(sortedTypes[s])) {
+            sortedType.places.push(currentPlace)
+          }
+        }
+
+        // console.log("Checking for sorted type: " + sortedTypes[s])
+        // console.log(newPlace.types)
+        // if (newPlace.types.includes(sortedTypes[s])) {
+        //   console.log("Sorted type found in new place.");
+        //   sortedType.places.push(newPlace);
+        // }
+
+        if ( sortedPlaces.filter((type) => type.name === sortedTypes[s]).length > 0 ) {
+          var pos = sortedPlaces.map(function(e) {
+              return e.name;
+            }).indexOf(sortedTypes[s]);
+          sortedPlaces[pos].counter++;
+        } else {
+          sortedPlaces.push(sortedType);
+        }
+      }
+
+      this.sortedPlaces = sortedPlaces;
 
       // console.log("Here are the places we're categorizing:");
       // console.log(currentPlaces);
       // console.lo
 
-      for (t = 0; t < currentTypes.length; t++) {
-        var newType = currentTypes[t];
-        newType.places = [];
-        console.log("Here's the new type:");
-        console.log(newType)
+      // for (t = 0; t < currentTypes.length; t++) {
+      //   var newType = currentTypes[t];
+      //   newType.places = [];
+      //   console.log("Here's the new type:");
+      //   console.log(newType)
 
-        for (p = 0; p < currentPlaces.length; p++) {
-          if ( currentPlaces[p].types.indexOf(currentTypes[t].name) > -1 ) {
-            newType.places.push(currentPlaces[p]);
-          }
-        }
+      //   for (p = 0; p < currentPlaces.length; p++) {
+      //     if ( currentPlaces[p].types.indexOf(currentTypes[t].name) > -1 ) {
+      //       newType.places.push(currentPlaces[p]);
+      //     }
+      //   }
 
-        // for (p = 0; p < currentPlaces.length; p++) {
-        //   console.log("Place IDs: " + currentTypes[t].name, newType.name);
-        //   if (
-        //     newType.places.filter(
-        //       (place) => place.name === currentPlaces[p].name
-        //     )
-        //   ) {
-        //     console.log("We already got one!");
-        //   } else {
-        //     newType.places.push(currentPlaces[p]);
-        //   }
-        // }
-        sortedPlaces.push(newType);
-      }
+      // for (p = 0; p < currentPlaces.length; p++) {
+      //   console.log("Place IDs: " + currentTypes[t].name, newType.name);
+      //   if (
+      //     newType.places.filter(
+      //       (place) => place.name === currentPlaces[p].name
+      //     )
+      //   ) {
+      //     console.log("We already got one!");
+      //   } else {
+      //     newType.places.push(currentPlaces[p]);
+      //   }
+      // }
+
+      //   sortedPlaces.push(newType);
+      // }
 
       // for (p = 0; p < currentPlaces.length; p++) {
       //   console.log("Here is the place: ");
@@ -358,8 +409,6 @@ export default {
       //     sortedPlaces.push(currentPlaces[p].types[t]);
       //   }
       // }
-
-      this.sortedPlaces = sortedPlaces;
 
       // await this.$store.dispatch("findLocalPlaces").then(() => {
       //   var currentPlaces = this.$store.getters.getPlaces;
