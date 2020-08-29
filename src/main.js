@@ -5,6 +5,7 @@ import store from './store'
 import { auth } from './firebase'
 import './assets/scss/app.scss'
 import vuetify from './plugins/vuetify';
+import VueAnalytics from 'vue-analytics';
 
 Vue.config.productionTip = false
 
