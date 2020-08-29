@@ -10,17 +10,17 @@
         <v-card outlined color="grey lighten-4" width="100%">
           <v-card-text>
             <v-row no-gutters>
-              <v-col><strong>Enter your zip code:</strong></v-col>
-              <v-col
+              <!-- <v-col cols="4">Enter city, state, or zip code.</v-col> -->
+              <v-col cols="12"
                 ><v-text-field
-                  class="px-4 pb-2 jumbotron-search"
+                  class="px-4 py-0 jumbotron-search"
                   v-model="address"
                   id="address-search-bar-autocomplete"
                   dense
                   outlined
                   background-color="white"
                   hide-details
-                  placeholder="Enter business name or category"
+                  label="Enter city, state, or zip code."
                 ></v-text-field
               ></v-col>
             </v-row>
