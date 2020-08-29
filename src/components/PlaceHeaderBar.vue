@@ -91,12 +91,12 @@ export default {
   props: {
     place: Object,
   },
-  async created() {
-    if (this.$store.state.userLocation.lat === null) {
-      await this.$store.dispatch("fetchUserLocation");
-    }
-    this.userLocation = this.$store.getters.getUserLocation;
-  },
+  // async created() {
+  //   if (this.$store.state.userLocation.lat === null) {
+  //     await this.$store.dispatch("fetchUserLocation");
+  //   }
+  //   this.userLocation = this.$store.getters.getUserLocation;
+  // },
   methods: {
     async findNearbyPlaces(type) {
       await this.$store.dispatch("findNearbyPlaces", type);

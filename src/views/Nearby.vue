@@ -1,9 +1,19 @@
 <template>
   <v-main>
     <v-container class="py-0">
-      <v-row>
+      <v-row v-if="loading">
         <v-col>
-          <h1>{{ region.name }} Reviews</h1>
+          <v-skeleton-loader
+            width="650"
+            height="75"
+            type="heading"
+            class="mt-6"
+          ></v-skeleton-loader>
+        </v-col>
+      </v-row>
+      <v-row v-else>
+        <v-col>
+          <h1>{{ region.name }}</h1>
         </v-col>
       </v-row>
       <div v-if="loading">
