@@ -297,23 +297,24 @@ export default {
     };
   },
   async created() {
-    var placeId = this.$route.params.id;
-    var routerId = this.$router.currentRoute.params.id;
-
     // FEATURE: don't clear places if the ID is the same.
     this.$store.dispatch("clearPlaces");
-
-    await this.$store.dispatch("fetchRegion", {
-      place_id: placeId,
-    });
-    this.region = this.$store.getters.getRegion;
-
-    await this.$store.dispatch("getGeohashRange");
-    await this.$store.dispatch("findLocalPlaces");
-    await this.$store.dispatch("fetchReviewTypes");
-    await this.sortPlacesIntoTypes();
-
+    this.viewLocalPlaces();
     this.loading = false;
+  },
+  watch: {
+    async $route(to, from) {
+      this.empty = false;
+      this.loading = true;
+      await this.$store.dispatch("clearPlaces");
+      await this.viewLocalPlaces();
+      // if (to.params.id == from.params.id) {
+      //   this.viewLocalPlaces();
+      // } else {
+      //   this.viewLocalPlaces();
+      // }
+      this.loading = false;
+    }
   },
   computed: {
     typesToDisplay: function() {
@@ -334,6 +335,21 @@ export default {
     getUserLocation() {
       this.$store.dispatch("fetchUserLocation");
     },
+    async viewLocalPlaces() {
+      var placeId = this.$route.params.id;
+      var routerId = this.$router.currentRoute.params.id;
+
+      await this.$store.dispatch("fetchRegion", {
+        place_id: placeId,
+      });
+      this.region = this.$store.getters.getRegion;
+
+      await this.$store.dispatch("getGeohashRange");
+      await this.$store.dispatch("findLocalPlaces");
+      await this.$store.dispatch("fetchReviewTypes");
+      await this.sortPlacesIntoTypes();
+      return;
+    },
     async viewPlace(place) {
       await this.$store.dispatch("fetchPlace", place);
       this.$router.push({ name: "place", params: { id: place.place_id } });
@@ -352,15 +368,15 @@ export default {
           this.findPlaceOptions
         );
 
-        findPlaceAutocomplete.addListener("place_changed", () => {
-          let place = findPlaceAutocomplete.getPlace();
-          this.$router.push({ name: "place", params: { id: place.place_id } });
-        });
-
         let findLocationAutocomplete = new google.maps.places.Autocomplete(
           document.getElementById("find-location-autocomplete"),
           this.findLocationOptions
         );
+
+        findPlaceAutocomplete.addListener("place_changed", () => {
+          let place = findPlaceAutocomplete.getPlace();
+          this.$router.push({ name: "place", params: { id: place.place_id } });
+        });
 
         findLocationAutocomplete.addListener("place_changed", () => {
           let place = findLocationAutocomplete.getPlace();
