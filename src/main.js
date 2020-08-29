@@ -8,6 +8,11 @@ import vuetify from './plugins/vuetify';
 
 Vue.config.productionTip = false
 
+Vue.use(VueAnalytics, {
+  id: 'G-7RX1GPNRBV',
+  router
+});
+
 let app
 auth.onAuthStateChanged(user => {
   if (!app) {
@@ -22,4 +27,4 @@ auth.onAuthStateChanged(user => {
   if (user) {
     store.dispatch('fetchUserProfile', user)
   }
-})
+});
