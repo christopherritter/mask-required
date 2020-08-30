@@ -379,8 +379,6 @@ export default {
           this.type = "view_all";
           this.showLessTypes = false;
           this.empty = false;
-          await this.$store.dispatch("clearPlaces");
-          await this.viewLocalPlaces();
         } else if (to.params.type == from.params.type) {
           this.showLessTypes = true;
           this.empty = false;
