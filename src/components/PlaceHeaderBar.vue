@@ -55,13 +55,23 @@
         <v-chip
           small
           color="white"
+          :ripple="false"
+          v-for="(type, index) in place.types"
+          :key="index"
+          >{{ type | replaceUnderscore }}</v-chip
+        >
+      </v-chip-group>
+      <!-- <v-chip-group show-arrows class="px-0">
+        <v-chip
+          small
+          color="white"
           v-for="(type, index) in place.types"
           :key="index"
           @click="findNearbyPlaces(type)"
           :value="type"
           >{{ type | replaceUnderscore }}</v-chip
         >
-      </v-chip-group>
+      </v-chip-group> -->
     </v-row>
   </section>
 </template>
@@ -71,25 +81,63 @@ export default {
   name: "place-header",
   data() {
     return {
-      userLocation: {
-        lat: null,
-        long: null,
-      },
+      // userLocation: {
+      //   lat: null,
+      //   long: null,
+      // },
     };
   },
   props: {
     place: Object,
   },
   // async created() {
-  //   if (this.$store.state.userLocation.lat === null) {
-  //     await this.$store.dispatch("fetchUserLocation");
+  //   // find address component with locality and administrative_area_level_1 type
+  //   var a, t, addressComponents = this.place.address_components;
+
+  //   function findLocality() {
+  //     for (a = 0; a < addressComponents.length; a++) {
+  //       for (t = 0; t < addressComponents[a].types.length; t++) {
+  //         if ((addressComponents[a].types[t] == "locality")) {
+  //           return addressComponents[a]
+  //         }
+  //       }
+  //     }
   //   }
-  //   this.userLocation = this.$store.getters.getUserLocation;
+
+  //   function findState() {
+  //     for (a = 0; a < addressComponents.length; a++) {
+  //       for (t = 0; t < addressComponents[a].types.length; t++) {
+  //         if ((addressComponents[a].types[t] == "administrative_area_level_1")) {
+  //           return addressComponents[a]
+  //         }
+  //       }
+  //     }
+  //   }
+
+  //   var localityObj = findLocality();
+  //   var stateObj = findState();
+
+  //   console.log("Here's the locality:")
+  //   console.log(localityObj.long_name);
+
+  //   console.log("Here's the state:")
+  //   console.log(stateObj.long_name);
+
+  //   // get the location of the locality and administrative_area_level_1 from Google Places
+
+  //   console.log("Fetching region by address.");
+
+  //   await this.$store.dispatch("fetchRegionByAddress", { locality: localityObj, state: stateObj } );
+  //   var newRegion = this.$store.getters.getRegion;
+  //   // set the location of the locality and administrative_area_level_1 in store
   // },
   methods: {
     async findNearbyPlaces(type) {
       await this.$store.dispatch("findNearbyPlaces", type);
-      this.$router.push({ name: "nearby-places-type", params: { id: this.place.place_id, name: type } });
+      this.$router.push({
+        name: "nearby-places-type",
+        params: { id: this.place.place_id, name: type },
+      });
     },
   },
   filters: {

@@ -689,6 +689,34 @@ const store = new Vuex.Store({
       // console.log(newRegion)
       commit("setRegion", newRegion);
     },
+    async fetchRegionByAddress({ commit, getters }, address) {
+      var apiKey = getters.getFixieKey;
+      var addressLocality = address.locality.long_name;
+      var addressState = address.state.long_name;
+      console.log(address)
+      console.log("Address locality " + addressLocality)
+      console.log("Address state " + addressState)
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${addressLocality}%20${addressState}&types=(regions)&fields=place_id&key=${apiKey}`;
+      var newRegion = {};
+      console.log("Passing address.")
+      console.log(URL)
+      // console.log(place)
+
+      await axios
+        .get(URL)
+        .then((response) => {
+          newRegion = response.data.result;
+          console.log(newRegion)
+        })
+        .catch((error) => {
+          console.log(error.message);
+          this.errorMessage = error.message;
+        });
+
+      console.log("Committing set region:")
+      console.log(newRegion)
+      commit("setRegion", newRegion);
+    },
     async updateProfile({ dispatch }, user) {
       const userId = fb.auth.currentUser.uid;
       // update user object
