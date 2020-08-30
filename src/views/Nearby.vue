@@ -18,13 +18,23 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-chip-group show-arrows class="px-0">
+          <v-chip-group show-arrows class="px-0" mandatory active-class="teal--text">
+            <v-chip
+              color="white"
+              value="view_all"
+              @click="
+                $router.push({
+                  name: 'nearby-places',
+                  params: { id: region.place_id },
+                })
+              "
+            >View All</v-chip>
             <v-chip
               color="white"
               v-for="(type, index) in sortedPlaces"
               :key="index"
-              @click="findNearbyPlaces(type)"
-              :value="type"
+              @click="filterByType(type)"
+              :value="type.name"
               >{{ type.name | replaceUnderscore }}</v-chip
             >
           </v-chip-group>
@@ -139,7 +149,7 @@
       </div>
       <v-row
         v-else
-        v-for="(type, index) in sortedPlaces"
+        v-for="(type, index) in typesToDisplay"
         v-bind:key="index"
         class="place-types"
       >
@@ -286,13 +296,14 @@ export default {
       },
       place: {},
       places: [],
+      type: "view_all",
       types: [],
       region: {},
       sortedPlaces: [],
       loading: true,
       empty: false,
       error: "",
-      showLessTypes: true,
+      showLessTypes: false,
       styleObject: { "border-color": "#7dbc96" },
       highlightedCard: null,
       hover: false,
@@ -312,6 +323,13 @@ export default {
   },
   async created() {
     var routerId = this.$router.currentRoute.params.id;
+    var routerType = this.$router.currentRoute.params.type;
+
+    if (routerType) {
+      this.type = routerType;
+      this.showLessTypes = true;
+    }
+
     if (this.region.place_id != routerId) {
       this.$store.dispatch("clearPlaces");
       this.viewLocalPlaces();
@@ -320,23 +338,43 @@ export default {
   },
   watch: {
     async $route(to, from) {
+      var routerId = this.$router.currentRoute.params.id;
+      var routerType = this.$router.currentRoute.params.type;
+
       this.loading = true;
+
       if (to.params.id == from.params.id) {
-        this.empty = false;
+        if (!to.params.type) {
+          this.type = "view_all";
+          this.showLessTypes = false;
+          this.empty = false;
+          this.$store.dispatch("clearPlaces");
+          this.viewLocalPlaces();
+        } else if (to.params.type == from.params.type) {
+          this.showLessTypes = true;
+          this.empty = false;
+        } else {
+          this.type = to.params.type;
+          this.showLessTypes = true;
+          this.empty = false;
+        }
       } else {
+        this.type = null;
+        this.showLessTypes = false;
         this.empty = false;
         this.$store.dispatch("clearPlaces");
         this.viewLocalPlaces();
       }
+
       this.loading = false;
-    }
+    },
   },
   computed: {
     typesToDisplay: function() {
       if (this.showLessTypes) {
         var lessTypes = [];
         for (let i = 0; i < this.sortedPlaces.length; i++) {
-          if (this.sortedPlaces[i].counter > 2) {
+          if (this.sortedPlaces[i].name == this.type) {
             lessTypes.push(this.sortedPlaces[i]);
           }
         }
@@ -364,6 +402,12 @@ export default {
       await this.$store.dispatch("fetchReviewTypes");
       await this.sortPlacesIntoTypes();
       return;
+    },
+    async filterByType(type) {
+      this.$router.push({
+        name: "nearby-places-type",
+        params: { id: this.region.place_id, type: type.name },
+      });
     },
     async viewPlace(place) {
       await this.$store.dispatch("fetchPlace", place);
@@ -396,11 +440,13 @@ export default {
         findLocationAutocomplete.addListener("place_changed", () => {
           var region = this.region;
           let place = findLocationAutocomplete.getPlace();
-          
-          if (place.place_id != region.place_id) {
-            this.$router.push({ name: "nearby-places", params: { id: place.place_id } });
-          }
 
+          if (place.place_id != region.place_id) {
+            this.$router.push({
+              name: "nearby-places",
+              params: { id: place.place_id },
+            });
+          }
         });
 
         this.$store.dispatch("showSearchBar", false);
