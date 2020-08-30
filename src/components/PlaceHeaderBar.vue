@@ -51,7 +51,7 @@
 
       <v-divider vertical class="ma-2 hidden-sm-and-down">|</v-divider>
 
-      <v-chip-group v-if="userLocation.lat" show-arrows class="px-0">
+      <v-chip-group show-arrows class="px-0">
         <v-chip
           small
           color="white"
@@ -59,17 +59,6 @@
           :key="index"
           @click="findNearbyPlaces(type)"
           :value="type"
-          >{{ type | replaceUnderscore }}</v-chip
-        >
-      </v-chip-group>
-
-      <v-chip-group v-else show-arrows class="px-0">
-        <v-chip
-          disabled
-          small
-          color="white"
-          v-for="(type, index) in place.types"
-          :key="index"
           >{{ type | replaceUnderscore }}</v-chip
         >
       </v-chip-group>
@@ -100,7 +89,7 @@ export default {
   methods: {
     async findNearbyPlaces(type) {
       await this.$store.dispatch("findNearbyPlaces", type);
-      this.$router.push({ name: "nearby-places", params: { name: type } });
+      this.$router.push({ name: "nearby-places-type", params: { id: this.place.place_id, name: type } });
     },
   },
   filters: {

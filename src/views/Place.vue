@@ -108,10 +108,12 @@ export default {
       this.loading = false;
     },
     async place(newValue, oldValue) {
-      await this.$store.dispatch("fetchReviews", oldValue.place_id);
+      await this.$store.dispatch("fetchReviews", newValue.place_id);
       const newPlace = this.$store.getters.getPlace;
-      if (newPlace.reviews.length != oldValue.reviews.length) {
-        this.fetchPlace();
+      if (newPlace.reviews) {
+        if (newPlace.reviews.length != newValue.reviews.length) {
+          this.fetchPlace();
+        }
       }
     },
   },
