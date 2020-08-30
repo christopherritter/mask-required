@@ -121,7 +121,7 @@ export default {
   },
   methods: {
     async viewNearby(type) {
-      this.$router.push({ name: "nearby", params: { name: type.name } });
+      this.$router.push({ name: "nearby-places", params: { name: type.name } });
     },
     getUserLocation() {
       this.$store.dispatch("fetchUserLocation");

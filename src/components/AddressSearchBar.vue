@@ -62,7 +62,7 @@ export default {
 
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
-      this.$router.push({ name: "nearby", params: { id: place.place_id } });
+      this.$router.push({ name: "nearby-places", params: { id: place.place_id } });
     });
 
     this.$store.dispatch("showSearchBar", false);
@@ -73,7 +73,7 @@ export default {
       await this.$store.dispatch("fetchRegion", address);
       await this.$store.dispatch("getGeohashRange");
       var region = this.$store.getters.getRegion;
-      this.$router.push({ name: "nearby", params: { id: area.place_id } });
+      this.$router.push({ name: "nearby-places", params: { id: area.place_id } });
     },
   },
 };

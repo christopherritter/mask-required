@@ -100,7 +100,7 @@ export default {
   methods: {
     async findNearbyPlaces(type) {
       await this.$store.dispatch("findNearbyPlaces", type);
-      this.$router.push({ name: "nearby", params: { name: type } });
+      this.$router.push({ name: "nearby-places", params: { name: type } });
     },
   },
   filters: {

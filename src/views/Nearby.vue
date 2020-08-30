@@ -11,11 +11,25 @@
           ></v-skeleton-loader>
         </v-col>
       </v-row>
-      <v-row v-else>
-        <v-col>
-          <h1>{{ region.name }}</h1>
-        </v-col>
-      </v-row>
+      <div v-else>
+        <v-row>
+          <v-col>
+            <h1>{{ region.name }}</h1>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-chip-group show-arrows class="px-0">
+            <v-chip
+              color="white"
+              v-for="(type, index) in sortedPlaces"
+              :key="index"
+              @click="findNearbyPlaces(type)"
+              :value="type"
+              >{{ type.name | replaceUnderscore }}</v-chip
+            >
+          </v-chip-group>
+        </v-row>
+      </div>
       <div v-if="loading">
         <v-skeleton-loader
           width="450"
@@ -384,7 +398,7 @@ export default {
           let place = findLocationAutocomplete.getPlace();
           
           if (place.place_id != region.place_id) {
-            this.$router.push({ name: "nearby", params: { id: place.place_id } });
+            this.$router.push({ name: "nearby-places", params: { id: place.place_id } });
           }
 
         });

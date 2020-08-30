@@ -61,11 +61,24 @@ const routes = [
   },
   {
     path: "/nearby/:id",
-    name: "nearby",
+    name: "nearby-places",
     component: () =>
       import(/* webpackChunkName: "nearby" */ "../views/Nearby.vue"),
     meta: {
-      title: "Find nearby places to shop safely on MaskRequired.US.",
+      title: "Find different types of nearby places to shop safely on MaskRequired.US.",
+    },
+    // beforeEnter: (to, from, next) => {
+    //   if (store.state.place.name) next();
+    //   else next({ name: "home" });
+    // },
+  },
+  {
+    path: "/nearby/:id/:type",
+    name: "nearby-places-type",
+    component: () =>
+      import(/* webpackChunkName: "nearby" */ "../views/Nearby.vue"),
+    meta: {
+      title: "Find a specific type of nearby places to shop safely on MaskRequired.US.",
     },
     // beforeEnter: (to, from, next) => {
     //   if (store.state.place.name) next();
