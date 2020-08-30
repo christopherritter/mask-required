@@ -11,35 +11,59 @@
           ></v-skeleton-loader>
         </v-col>
       </v-row>
-      <div v-else>
-        <v-row>
-          <v-col>
-            <h1>{{ region.name }}</h1>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-chip-group show-arrows class="px-0" mandatory active-class="teal--text">
-            <v-chip
-              color="white"
-              value="view_all"
-              @click="
-                $router.push({
-                  name: 'nearby-places',
-                  params: { id: region.place_id },
-                })
-              "
-            >View All</v-chip>
-            <v-chip
-              color="white"
-              v-for="(type, index) in sortedPlaces"
-              :key="index"
-              @click="filterByType(type)"
-              :value="type.name"
-              >{{ type.name | replaceUnderscore }}</v-chip
-            >
-          </v-chip-group>
-        </v-row>
-      </div>
+      <v-row v-else>
+        <v-col>
+          <h1>{{ region.name }}</h1>
+        </v-col>
+      </v-row>
+      <v-row v-if="loading" class="d-flex flex-row pb-4">
+        <v-skeleton-loader
+          width="115"
+          height="45"
+          type="chip"
+          class="pl-3"
+        ></v-skeleton-loader>
+        <v-skeleton-loader
+          width="115"
+          height="45"
+          type="chip"
+          class="pl-3"
+        ></v-skeleton-loader>
+        <v-skeleton-loader
+          width="115"
+          height="45"
+          type="chip"
+          class="pl-3"
+        ></v-skeleton-loader>
+      </v-row>
+      <v-row v-else>
+        <v-chip-group
+          show-arrows
+          class="px-0"
+          mandatory
+          active-class="teal--text"
+        >
+          <v-chip
+            color="white"
+            value="view_all"
+            @click="
+              $router.push({
+                name: 'nearby-places',
+                params: { id: region.place_id },
+              })
+            "
+            >View All</v-chip
+          >
+          <v-chip
+            color="white"
+            v-for="(type, index) in sortedPlaces"
+            :key="index"
+            @click="filterByType(type)"
+            :value="type.name"
+            >{{ type.name | replaceUnderscore }}</v-chip
+          >
+        </v-chip-group>
+      </v-row>
       <div v-if="loading">
         <v-skeleton-loader
           width="450"
@@ -331,8 +355,8 @@ export default {
     }
 
     if (this.region.place_id != routerId) {
-      this.$store.dispatch("clearPlaces");
-      this.viewLocalPlaces();
+      await this.$store.dispatch("clearPlaces");
+      await this.viewLocalPlaces();
     }
     this.loading = false;
   },
@@ -348,8 +372,8 @@ export default {
           this.type = "view_all";
           this.showLessTypes = false;
           this.empty = false;
-          this.$store.dispatch("clearPlaces");
-          this.viewLocalPlaces();
+          await this.$store.dispatch("clearPlaces");
+          await this.viewLocalPlaces();
         } else if (to.params.type == from.params.type) {
           this.showLessTypes = true;
           this.empty = false;
@@ -362,8 +386,8 @@ export default {
         this.type = null;
         this.showLessTypes = false;
         this.empty = false;
-        this.$store.dispatch("clearPlaces");
-        this.viewLocalPlaces();
+        await this.$store.dispatch("clearPlaces");
+        await this.viewLocalPlaces();
       }
 
       this.loading = false;
