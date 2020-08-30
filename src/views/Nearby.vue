@@ -5,15 +5,22 @@
         <v-col>
           <v-skeleton-loader
             width="650"
-            height="75"
+            height="50"
             type="heading"
-            class="mt-6"
+            class="mt-8"
+          ></v-skeleton-loader>
+          <v-skeleton-loader
+            width="350"
+            height="40"
+            type="heading"
+            class="my-1"
           ></v-skeleton-loader>
         </v-col>
       </v-row>
       <v-row v-else>
         <v-col>
-          <h1>{{ region.name }}</h1>
+          <h1 style="line-height:4rem" class="mt-8">{{ region.name }}</h1>
+          <h4 class="font-weight-medium mb-1">{{ region.formatted_address }}</h4>
         </v-col>
       </v-row>
       <v-row v-if="loading" class="d-flex flex-row pb-4">
