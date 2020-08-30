@@ -743,7 +743,7 @@ const store = new Vuex.Store({
     },
     async createPlace({ state, getters }, place) {
       var apiKey = getters.getFixieKey;
-      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${apiKey}`;
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types,address_component&key=${apiKey}`;
       var newPlace = {};
       // console.log(URL)
 
