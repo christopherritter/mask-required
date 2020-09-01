@@ -1,6 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/analytics";
 
 // firebase init - add your own config here
 const firebaseConfig = {
@@ -9,14 +10,16 @@ const firebaseConfig = {
   databaseURL: "https://mask-required.firebaseio.com",
   projectId: "mask-required",
   storageBucket: "mask-required.appspot.com",
-  messagingSenderId: process.env.VUE_APP_MESSAGING_SENDER,
-  appId: process.env.VUE_APP_APP_ID,
+  messagingSenderId: "783326866906",
+  appId: "1:783326866906:web:80587a7cde78e644f924e3",
+  measurementId: "G-7RX1GPNRBV"
 };
 firebase.initializeApp(firebaseConfig);
 
 // utils
 const db = firebase.firestore();
 const auth = firebase.auth();
+const analytics = firebase.analytics();
 
 // collection references
 // const commentsCollection = db.collection("comments");
@@ -34,6 +37,7 @@ export default firebase;
 export {
   db,
   auth,
+  analytics,
   placesCollection,
   likesCollection,
   reviewsCollection,
