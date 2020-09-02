@@ -17,7 +17,7 @@
     ></DeleteReviewDialog>
     <v-card v-if="place.reviews && place.reviews.length > 0">
       <v-row>
-        <v-col>
+        <v-col class="d-none d-md-flex">
           <v-card-title
             >Reviews
             <span class="reviews-length"
