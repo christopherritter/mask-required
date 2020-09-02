@@ -1,19 +1,21 @@
 <template>
   <section id="address-search-bar">
     <v-row>
-      <v-col cols="4" md="3" class="d-flex align-stretch">
+      <v-col cols="4" md="3" class="d-none d-md-flex">
         <v-card outlined color="#c5f9da" light width="100%">
           <v-card-text><strong>Browse nearby places:</strong></v-card-text>
         </v-card>
       </v-col>
-      <v-col cols="8" md="9" class="d-flex align-stretch">
+      <v-col cols="12" md="9" class="d-flex align-stretch">
         <v-card outlined color="grey lighten-4" width="100%">
           <v-card-text>
             <v-row no-gutters>
-              <!-- <v-col cols="4">Enter city, state, or zip code.</v-col> -->
+              <v-col cols="12" class="d-flex d-md-none">
+                <strong class="mb-1">Browse nearby places:</strong>
+              </v-col>
               <v-col cols="12"
                 ><v-text-field
-                  class="px-4 py-0 jumbotron-search"
+                  class="py-md-0 jumbotron-search"
                   v-model="address"
                   id="address-search-bar-autocomplete"
                   dense

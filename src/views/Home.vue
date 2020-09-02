@@ -14,10 +14,10 @@
                   ></svg-img>
                 </v-col>
                 <v-col md="7">
-                  <div class="jumbotron-text">
-                    <h2 class="jumbotron-header">Find a safe place to shop.</h2>
+                  <div class="jumbotron-text pt-6 pt-md-10 pl-5 pr-2">
+                    <h2 class="jumbotron-header mb-6">Find a safe place to shop.</h2>
                     <v-text-field
-                      class="px-4 pb-2 jumbotron-search"
+                      class="pb-2 pb-md-0 jumbotron-search"
                       v-model="address"
                       id="home-autocomplete"
                       solo
