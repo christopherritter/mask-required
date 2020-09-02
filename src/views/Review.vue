@@ -38,7 +38,7 @@
                 outlined
                 name="review-text"
                 label="Tell us more about your experience."
-                v-model.trim="review.content"
+                v-model="review.content"
                 required
               ></v-textarea>
 
