@@ -19,7 +19,7 @@ firebase.initializeApp(firebaseConfig);
 // utils
 const db = firebase.firestore();
 const auth = firebase.auth();
-const analytics = firebase.analytics();
+const ga = firebase.analytics();
 
 // collection references
 // const commentsCollection = db.collection("comments");
@@ -37,7 +37,7 @@ export default firebase;
 export {
   db,
   auth,
-  analytics,
+  ga,
   placesCollection,
   likesCollection,
   reviewsCollection,

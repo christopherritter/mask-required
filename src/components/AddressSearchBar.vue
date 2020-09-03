@@ -76,6 +76,7 @@ export default {
       await this.$store.dispatch("getGeohashRange");
       var region = this.$store.getters.getRegion;
       this.$router.push({ name: "nearby-places", params: { id: area.place_id } });
+      this.$ga.event('FindRegion', 'click', 'Selected Region');
     },
   },
 };

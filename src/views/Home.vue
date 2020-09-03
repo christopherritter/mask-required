@@ -75,6 +75,7 @@ export default {
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
       this.$router.push({ name: "place", params: { id: place.place_id } });
+      this.$ga.event('FindPlace', 'click', 'Selected Place');
     });
 
     this.$store.dispatch("showSearchBar", false);
