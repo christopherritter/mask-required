@@ -5,7 +5,11 @@
       <section id="home-search-card">
         <v-row>
           <v-col>
-            <v-card class="p-4 mb-md-16 jumbotron text-center" flat color="#c5f9da">
+            <v-card
+              class="p-4 mb-md-16 jumbotron text-center"
+              flat
+              color="#c5f9da"
+            >
               <v-row>
                 <v-col cols="12" md="5" class="hidden-sm-and-down">
                   <svg-img
@@ -15,7 +19,9 @@
                 </v-col>
                 <v-col md="7">
                   <div class="jumbotron-text pt-8 pt-md-12 pl-5 pr-2">
-                    <h2 class="jumbotron-header mb-5 mb-sm-3">Find a safe place to shop.</h2>
+                    <h2 class="jumbotron-header mb-5 mb-sm-3">
+                      Find a safe place to shop.
+                    </h2>
                     <v-text-field
                       class="pb-0 jumbotron-search"
                       v-model="address"
@@ -46,9 +52,7 @@ export default {
   data: () => ({
     address: null,
     options: {
-      types: [
-        "establishment", 
-      ],
+      types: ["establishment"],
       componentRestrictions: { country: "us" },
       fields: [
         // "formatted_address",
@@ -58,7 +62,7 @@ export default {
         // "types",
       ],
     },
-    error: ""
+    error: "",
   }),
   methods: {
     async fetchPlace(place) {
@@ -75,7 +79,9 @@ export default {
     autocomplete.addListener("place_changed", () => {
       let place = autocomplete.getPlace();
       this.$router.push({ name: "place", params: { id: place.place_id } });
-      this.$ga.event('FindPlace', 'click', 'Selected Place');
+      this.$ga.event("FindPlace", "click", "Selected Place", {
+        cookie_flags: "max-age=7200;secure;samesite=none",
+      });
     });
 
     this.$store.dispatch("showSearchBar", false);
