@@ -133,6 +133,15 @@ const routes = [
     },
   },
   {
+    path: "/the-new-autocomplete",
+    name: "the-new-autocomplete",
+    component: () =>
+      import(/* webpackChunkName: "social-login" */ "../views/TheNewAutocomplete.vue"),
+    meta: {
+      title: "The New Autocomplete Experiment",
+    },
+  },
+  {
     path: "/social-login",
     name: "social-login",
     component: () =>
