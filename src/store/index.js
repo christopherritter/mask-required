@@ -14,10 +14,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   state: {
     user: {},
-    userProfile: {
-      name: "",
-      nickname: "",
-    },
+    userProfile: {},
     userLocation: {
       lat: null,
       long: null,
