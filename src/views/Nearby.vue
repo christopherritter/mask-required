@@ -289,7 +289,14 @@
         <v-col>
           <v-card outlined>
             <h3 class="mt-12 text-center">Find another location.</h3>
-            <v-text-field
+            <vg-autocomplete
+              class="px-10 pt-2 pb-14"
+              id="find-location-autocomplete"
+              :outlined="true"
+              :label="'City, state, or zip code.'"
+              :placeholder="''"
+            ></vg-autocomplete>
+            <!-- <v-text-field
               class="px-10 pt-2 pb-14"
               v-model="findLocationAddress"
               id="find-location-autocomplete"
@@ -297,20 +304,27 @@
               hide-details
               label="City, state, or zip code."
               placeholder=""
-            ></v-text-field>
+            ></v-text-field> -->
           </v-card>
         </v-col>
         <v-col>
           <v-card outlined color="#c5f9da">
             <h3 class="mt-12 text-center">Create your own review.</h3>
-            <v-text-field
+            <vg-autocomplete
+              class="px-10 pt-2 pb-16"
+              id="find-place-autocomplete"
+              :solo="true"
+              :label="'Business name or category'"
+              :placeholder="''"
+            ></vg-autocomplete>
+            <!-- <v-text-field
               class="px-10 pt-2 pb-8"
               v-model="findPlaceAddress"
               id="find-place-autocomplete"
               solo
               label="Business name or category"
               placeholder=""
-            ></v-text-field>
+            ></v-text-field> -->
           </v-card>
         </v-col>
       </v-row>
@@ -320,6 +334,7 @@
 
 <script>
 import { mapState } from "vuex";
+import VgAutocomplete from "@/components/VgAutocomplete";
 
 export default {
   name: "nearby",
@@ -554,6 +569,9 @@ export default {
         return comparison;
       }
     },
+  },
+  components: {
+    VgAutocomplete,
   },
   filters: {
     replaceUnderscore(val) {

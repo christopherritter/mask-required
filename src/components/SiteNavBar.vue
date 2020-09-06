@@ -46,7 +46,6 @@
         :hide-details="true"
         :label="'Search'"
         :placeholder="''"
-        :append-icon="''"
         :types="options.types"
       ></vg-autocomplete>
 

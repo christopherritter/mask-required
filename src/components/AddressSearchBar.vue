@@ -22,7 +22,6 @@
                   :hideDetails="true"
                   :label="'Enter city, state, or zip code.'"
                   :placeholder="''"
-                  :append-icon="''"
                   :types="options.types"
                 ></vg-autocomplete>
                 <!-- <v-text-field

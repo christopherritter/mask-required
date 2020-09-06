@@ -20,7 +20,7 @@
     :solo="solo"
     :hide-selected="hideSelected"
     hide-no-data
-    :append-icon="appendIcon"
+    append-icon=""
     :prepend-inner-icon="prependInnerIcon"
     :flat="flat"
     :solo-inverted="soloInverted"

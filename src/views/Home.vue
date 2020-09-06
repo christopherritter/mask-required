@@ -28,7 +28,6 @@
                       :solo="true"
                       :prepend-inner-icon="'mdi-magnify'"
                       :placeholder="'Enter business name or category'"
-                      :append-icon="''"
                       :types="options.types"
                     ></vg-autocomplete>
                   </div>
