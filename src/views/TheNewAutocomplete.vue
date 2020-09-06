@@ -21,7 +21,6 @@
               :label="'Public APIs'"
               :placeholder="'Start typing to Search'"
               :prepend-icon="'mdi-database-search'"
-              :return-object="true"
               :hide-selected="true"
               :hide-no-data="true"
               :types="types"

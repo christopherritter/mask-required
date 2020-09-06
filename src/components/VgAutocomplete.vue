@@ -13,7 +13,7 @@
     :label="label"
     :placeholder="placeholder"
     :prepend-icon="prependIcon"
-    :return-object="returnObject"
+    return-object
     :solo="solo"
     :hide-selected="hideSelected"
     :hide-no-data="hideNoData"
@@ -40,7 +40,6 @@ export default {
     "label",
     "placeholder",
     "prependIcon",
-    "returnObject",
     "hideSelected",
     "hideNoData",
     "appendIcon",
