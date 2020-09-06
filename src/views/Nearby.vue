@@ -295,16 +295,8 @@
               :outlined="true"
               :label="'City, state, or zip code.'"
               :placeholder="''"
+              :types="locationOptions.types"
             ></vg-autocomplete>
-            <!-- <v-text-field
-              class="px-10 pt-2 pb-14"
-              v-model="findLocationAddress"
-              id="find-location-autocomplete"
-              outlined
-              hide-details
-              label="City, state, or zip code."
-              placeholder=""
-            ></v-text-field> -->
           </v-card>
         </v-col>
         <v-col>
@@ -316,15 +308,8 @@
               :solo="true"
               :label="'Business name or category'"
               :placeholder="''"
+              :types="placeOptions.types"
             ></vg-autocomplete>
-            <!-- <v-text-field
-              class="px-10 pt-2 pb-8"
-              v-model="findPlaceAddress"
-              id="find-place-autocomplete"
-              solo
-              label="Business name or category"
-              placeholder=""
-            ></v-text-field> -->
           </v-card>
         </v-col>
       </v-row>
@@ -357,17 +342,27 @@ export default {
       styleObject: { "border-color": "#7dbc96" },
       highlightedCard: null,
       hover: false,
-      findPlaceAddress: null,
-      findLocationAddress: null,
-      findPlaceOptions: {
+      placeOptions: {
         types: ["establishment"],
         componentRestrictions: { country: "us" },
-        fields: ["place_id"],
+        fields: [
+          // "formatted_address",
+          // "geometry",
+          // "name",
+          "place_id",
+          // "types",
+        ],
       },
-      findLocationOptions: {
+      locationOptions: {
         types: ["(regions)"],
         componentRestrictions: { country: "us" },
-        fields: ["place_id"],
+        fields: [
+          // "formatted_address",
+          // "geometry",
+          // "name",
+          "place_id",
+          // "types",
+        ],
       },
     };
   },
@@ -469,36 +464,7 @@ export default {
 
       if (!currentPlaces) {
         this.empty = true;
-
-        let findPlaceAutocomplete = new google.maps.places.Autocomplete(
-          document.getElementById("find-place-autocomplete"),
-          this.findPlaceOptions
-        );
-
-        let findLocationAutocomplete = new google.maps.places.Autocomplete(
-          document.getElementById("find-location-autocomplete"),
-          this.findLocationOptions
-        );
-
-        findPlaceAutocomplete.addListener("place_changed", () => {
-          let place = findPlaceAutocomplete.getPlace();
-          this.$router.push({ name: "place", params: { id: place.place_id } });
-        });
-
-        findLocationAutocomplete.addListener("place_changed", () => {
-          var region = this.region;
-          let place = findLocationAutocomplete.getPlace();
-
-          if (place.place_id != region.place_id) {
-            this.$router.push({
-              name: "nearby-places",
-              params: { id: place.place_id },
-            });
-          }
-        });
-
         this.$store.dispatch("showSearchBar", false);
-
         return;
       }
 

@@ -64,7 +64,7 @@
 
       <v-spacer></v-spacer>
 
-      <v-btn v-show="showSearchBar" class="hidden-sm-and-up" icon @click="addReview">
+      <v-btn v-show="false" class="hidden-sm-and-up" icon @click="addReview">
         <v-icon>mdi-magnify</v-icon>
       </v-btn>
 
