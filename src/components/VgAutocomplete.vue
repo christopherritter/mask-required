@@ -1,11 +1,14 @@
 <template>
   <v-autocomplete
     v-model="model"
+    :value="search"
     item-text="Description"
     item-value="PlaceId"
     :items="items"
     :loading="isLoading"
     :search-input.sync="search"
+    clear-icon="mdi-close-box"
+    clearable
     :dense="dense"
     :outlined="outlined"
     :background-color="backgroundColor"
@@ -16,9 +19,11 @@
     return-object
     :solo="solo"
     :hide-selected="hideSelected"
-    :hide-no-data="hideNoData"
+    hide-no-data
     :append-icon="appendIcon"
     :prepend-inner-icon="prependInnerIcon"
+    :flat="flat"
+    :solo-inverted="soloInverted"
   ></v-autocomplete>
 </template>
 
@@ -41,11 +46,12 @@ export default {
     "placeholder",
     "prependIcon",
     "hideSelected",
-    "hideNoData",
     "appendIcon",
     "types",
     "solo",
-    "prependInnerIcon"
+    "prependInnerIcon",
+    "flat",
+    "soloInverted",
   ],
   computed: {
     fields() {
@@ -72,9 +78,6 @@ export default {
   },
   watch: {
     search(val) {
-      // Items have already been loaded
-      // if (this.items.length > 0) return;
-
       // Items have already been requested
       if (this.isLoading) return;
 
@@ -86,33 +89,26 @@ export default {
       }
 
       this.getPlacePredictions(this.search);
-
-      // // Lazily load input items
-      // fetch("https://api.publicapis.org/entries")
-      //   .then((res) => res.json())
-      //   .then((res) => {
-      //     const { count, entries } = res;
-      //     this.count = count;
-      //     this.entries = entries;
-      //   })
-      //   .catch((err) => {
-      //     console.log(err);
-      //   })
-      //   .finally(() => (this.isLoading = false));
     },
     model(newVal, oldVal) {
-      var isGeocode = newVal.types.includes("geocode");
-      var isEstablishment = newVal.types.includes("establishment");
-      if (isGeocode) {
-        this.$router.push({
-          name: "nearby-places",
-          params: { id: newVal.place_id },
-        });
-      } else if (isEstablishment) {
-        this.$router.push({
-          name: "place",
-          params: { id: newVal.place_id },
-        });
+      if (newVal) {
+        var isGeocode = newVal.types.includes("geocode");
+        var isEstablishment = newVal.types.includes("establishment");
+
+        if (isGeocode) {
+          this.$router.push({
+            name: "nearby-places",
+            params: { id: newVal.place_id },
+          });
+        } else if (isEstablishment) {
+          this.$router.push({
+            name: "place",
+            params: { id: newVal.place_id },
+          });
+        }
+      } else {
+        this.model = null;
+        this.entries = [];
       }
     },
   },
@@ -122,13 +118,11 @@ export default {
     getPlacePredictions(search) {
       var autocompleteService = new google.maps.places.AutocompleteService();
 
-      this.entries = [];
-
       autocompleteService.getPlacePredictions(
         {
           input: search,
           types: this.types,
-          componentRestrictions: { country: "us" }
+          componentRestrictions: { country: "us" },
         },
         this.callback
       );

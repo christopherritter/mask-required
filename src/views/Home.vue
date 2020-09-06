@@ -63,12 +63,6 @@ export default {
     },
     error: "",
   }),
-  methods: {
-    async fetchPlace(place) {
-      await this.$store.dispatch("fetchPlace", place);
-      this.$router.push("place/" + place.place_id);
-    },
-  },
   mounted() {
     this.$store.dispatch("showSearchBar", false);
   },

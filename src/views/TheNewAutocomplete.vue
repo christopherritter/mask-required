@@ -22,7 +22,6 @@
               :placeholder="'Start typing to Search'"
               :prepend-icon="'mdi-database-search'"
               :hide-selected="true"
-              :hide-no-data="true"
               :types="types"
             ></vg-autocomplete>
           </v-card-text>

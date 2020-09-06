@@ -37,7 +37,20 @@
         Mask Required
       </v-toolbar-title>
 
-      <v-text-field
+      <vg-autocomplete
+        v-show="showSearchBar"
+        class="pl-4 hidden hidden-sm-and-down"
+        id="navbar-autocomplete"
+        :flat="true"
+        :solo-inverted="true"
+        :hide-details="true"
+        :label="'Search'"
+        :placeholder="''"
+        :append-icon="''"
+        :types="options.types"
+      ></vg-autocomplete>
+
+      <!-- <v-text-field
         v-show="showSearchBar"
         class="pl-4 hidden hidden-sm-and-down"
         v-model="address"
@@ -48,7 +61,7 @@
         prepend-inner-icon="mdi-magnify"
         label="Search"
         placeholder=""
-      ></v-text-field>
+      ></v-text-field> -->
 
       <v-spacer></v-spacer>
 
@@ -90,6 +103,7 @@
 <script>
 import { mapState } from "vuex";
 import SvgImg from "@/components/SvgImg";
+import VgAutocomplete from "@/components/VgAutocomplete";
 
 export default {
   data: () => ({
@@ -97,7 +111,7 @@ export default {
     drawer: false,
     group: null,
     options: {
-      types: ["establishment"],
+      types: ["establishment", "geocode"],
       componentRestrictions: { country: "us" },
       fields: [
         // "formatted_address",
@@ -109,19 +123,11 @@ export default {
     },
   }),
   mounted() {
-    let autocomplete = new google.maps.places.Autocomplete(
-      document.getElementById("navbar-autocomplete"),
-      this.options
-    );
-    autocomplete.addListener("place_changed", () => {
-      let place = autocomplete.getPlace();
-      this.fetchPlace(place);
-    });
-
     this.$store.dispatch("showSearchBar", false);
   },
   components: {
     SvgImg,
+    VgAutocomplete,
   },
   methods: {
     async fetchPlace(place) {
