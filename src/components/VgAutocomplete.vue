@@ -101,10 +101,19 @@ export default {
       //   .finally(() => (this.isLoading = false));
     },
     model(newVal, oldVal) {
-      this.$router.push({
-        name: "nearby-places",
-        params: { id: newVal.place_id },
-      });
+      var isGeocode = newVal.types.includes("geocode");
+      var isEstablishment = newVal.types.includes("establishment");
+      if (isGeocode) {
+        this.$router.push({
+          name: "nearby-places",
+          params: { id: newVal.place_id },
+        });
+      } else if (isEstablishment) {
+        this.$router.push({
+          name: "place",
+          params: { id: newVal.place_id },
+        });
+      }
     },
   },
 
