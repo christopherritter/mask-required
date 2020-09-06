@@ -22,14 +22,15 @@
                     <h2 class="jumbotron-header mb-5 mb-sm-3">
                       Find a safe place to shop.
                     </h2>
-                    <v-text-field
-                      class="pb-0 jumbotron-search"
-                      v-model="address"
+                    <vg-autocomplete
+                      class="pb-0"
                       id="home-autocomplete"
-                      solo
-                      prepend-inner-icon="mdi-magnify"
-                      placeholder="Enter business name or category"
-                    ></v-text-field>
+                      :solo="true"
+                      :prepend-inner-icon="'mdi-magnify'"
+                      :placeholder="'Enter business name or category'"
+                      :append-icon="''"
+                      :types="options.types"
+                    ></vg-autocomplete>
                   </div>
                 </v-col>
               </v-row>
@@ -44,11 +45,11 @@
 <script>
 import SvgImg from "@/components/SvgImg";
 import AddressSearchBar from "@/components/AddressSearchBar";
+import VgAutocomplete from "@/components/VgAutocomplete";
 
 export default {
   name: "Home",
   data: () => ({
-    address: null,
     options: {
       types: ["establishment"],
       componentRestrictions: { country: "us" },
@@ -74,6 +75,7 @@ export default {
   components: {
     SvgImg,
     AddressSearchBar,
+    VgAutocomplete,
   },
 };
 </script>

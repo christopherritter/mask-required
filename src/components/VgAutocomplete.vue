@@ -14,9 +14,11 @@
     :placeholder="placeholder"
     :prepend-icon="prependIcon"
     :return-object="returnObject"
+    :solo="solo"
     :hide-selected="hideSelected"
     :hide-no-data="hideNoData"
     :append-icon="appendIcon"
+    :prepend-inner-icon="prependInnerIcon"
   ></v-autocomplete>
 </template>
 
@@ -42,7 +44,9 @@ export default {
     "hideSelected",
     "hideNoData",
     "appendIcon",
-    "types"
+    "types",
+    "solo",
+    "prependInnerIcon"
   ],
   computed: {
     fields() {
