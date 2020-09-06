@@ -37,7 +37,6 @@
           </v-col>
         </v-row>
       </section>
-      <!-- <place-types-section></place-types-section> -->
     </v-container>
   </v-main>
 </template>
@@ -45,7 +44,6 @@
 <script>
 import SvgImg from "@/components/SvgImg";
 import AddressSearchBar from "@/components/AddressSearchBar";
-// import PlaceTypesSection from "@/components/PlaceTypesSection";
 
 export default {
   name: "Home",
@@ -71,25 +69,11 @@ export default {
     },
   },
   mounted() {
-    let autocomplete = new google.maps.places.Autocomplete(
-      document.getElementById("home-autocomplete"),
-      this.options
-    );
-
-    autocomplete.addListener("place_changed", () => {
-      let place = autocomplete.getPlace();
-      this.$router.push({ name: "place", params: { id: place.place_id } });
-      this.$ga.event("FindPlace", "click", "Selected Place", {
-        cookie_flags: "max-age=7200;secure;samesite=none",
-      });
-    });
-
     this.$store.dispatch("showSearchBar", false);
   },
   components: {
     SvgImg,
     AddressSearchBar,
-    // PlaceTypesSection,
   },
 };
 </script>
