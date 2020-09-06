@@ -13,8 +13,19 @@
               <v-col cols="12" class="d-flex d-md-none">
                 <strong class="mb-1">Browse nearby places:</strong>
               </v-col>
-              <v-col cols="12"
-                ><v-text-field
+              <v-col cols="12">
+                <vg-autocomplete
+                  class="py-md-0"
+                  :dense="true"
+                  :outlined="true"
+                  :backgroundColor="'white'"
+                  :hideDetails="true"
+                  :label="'Enter city, state, or zip code.'"
+                  :placeholder="''"
+                  :append-icon="''"
+                  :types="options.types"
+                ></vg-autocomplete>
+                <!-- <v-text-field
                   class="py-md-0 jumbotron-search"
                   v-model="address"
                   id="address-search-bar-autocomplete"
@@ -24,8 +35,8 @@
                   hide-details
                   label="Enter city, state, or zip code."
                   placeholder=""
-                ></v-text-field
-              ></v-col>
+                ></v-text-field> -->
+              </v-col>
             </v-row>
           </v-card-text>
         </v-card>
@@ -36,6 +47,7 @@
 
 <script>
 import { mapState } from "vuex";
+import VgAutocomplete from "@/components/VgAutocomplete";
 
 export default {
   name: "address-search-bar",
@@ -57,35 +69,10 @@ export default {
     };
   },
   mounted() {
-    let autocomplete = new google.maps.places.Autocomplete(
-      document.getElementById("address-search-bar-autocomplete"),
-      this.options
-    );
-
-    autocomplete.addListener("place_changed", () => {
-      let place = autocomplete.getPlace();
-      this.$router.push({
-        name: "nearby-places",
-        params: { id: place.place_id },
-      });
-    });
-
     this.$store.dispatch("showSearchBar", false);
   },
-  methods: {
-    async getRegion() {
-      var address = this.address;
-      await this.$store.dispatch("fetchRegion", address);
-      await this.$store.dispatch("getGeohashRange");
-      var region = this.$store.getters.getRegion;
-      this.$router.push({
-        name: "nearby-places",
-        params: { id: area.place_id },
-      });
-      this.$ga.event("FindRegion", "click", "Selected Region", {
-        cookie_flags: "max-age=7200;secure;samesite=none",
-      });
-    },
+  components: {
+    VgAutocomplete,
   },
 };
 </script>
