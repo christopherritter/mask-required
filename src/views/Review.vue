@@ -168,7 +168,7 @@
         <!-- List of reviews -->
 
         <v-col cols="12" md="4">
-          <v-card v-if="currentPlace.reviews.length">
+          <v-card v-if="currentPlace.reviews">
             <div
               v-for="review in currentPlace.reviews"
               :key="'review-' + review.id"
