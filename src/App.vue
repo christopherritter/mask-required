@@ -39,12 +39,3 @@ export default {
   },
 };
 </script>
-
-<style lang="scss">
-.pac-container .pac-item {
-  padding: 0.4rem 0.75rem;
-  .pac-item-query {
-    font-size: 1.25em;
-  }
-}
-</style>
