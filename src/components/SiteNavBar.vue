@@ -93,7 +93,8 @@
       </v-menu>
 
       <v-btn v-if="!loggedIn" class="ml-1" @click="$router.push({ name: 'login' })">
-        <span class="hidden-sm-and-down">Signup /&nbsp;</span>Login
+        <span class="hidden-sm-and-down">Signup or Login</span>
+        <span class="hidden-md-and-up">Login</span>
       </v-btn>
     </v-app-bar>
   </div>
