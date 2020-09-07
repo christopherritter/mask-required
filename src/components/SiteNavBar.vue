@@ -92,8 +92,8 @@
         </v-list>
       </v-menu>
 
-      <v-btn v-if="!loggedIn" @click="$router.push('login')">
-        Signup / Login
+      <v-btn v-if="!loggedIn" class="ml-1" @click="$router.push('login')">
+        <span class="hidden-sm-and-down">Signup /&nbsp;</span>Login
       </v-btn>
     </v-app-bar>
   </div>
