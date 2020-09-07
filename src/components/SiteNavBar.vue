@@ -1,37 +1,11 @@
 <template>
   <div id="site-nav-bar">
-    <!-- <v-navigation-drawer
-      v-model="drawer"
-      :clipped="$vuetify.breakpoint.lgAndUp"
-      app
-    >
-      <v-list dense>
-        <v-list-item link>
-          <v-list-item-title @click="$router.push('user-location')">
-            User Location
-          </v-list-item-title>
-        </v-list-item>
-
-        <v-list-item link>
-          <v-list-item-title @click="$router.push('close-buy')">
-            Close Buy
-          </v-list-item-title>
-        </v-list-item>
-
-        <v-list-item link>
-          <v-list-item-title @click="$router.push('nearby')">
-            Nearby
-          </v-list-item-title>
-        </v-list-item>
-      </v-list>
-    </v-navigation-drawer> -->
     <v-app-bar
       color="grey darken-4"
       :clipped-left="$vuetify.breakpoint.lgAndUp"
       dark
       app
     >
-      <!-- <v-app-bar-nav-icon @click.stop="drawer = !drawer"></v-app-bar-nav-icon> -->
       <svg-img @click="goHome" icon="logo2" class="logo pr-4" :style="showPointer"></svg-img>
       <v-toolbar-title @click="goHome" class="ml-0 p-3" :style="showPointer">
         Mask Required
@@ -49,24 +23,11 @@
         :types="options.types"
       ></vg-autocomplete>
 
-      <!-- <v-text-field
-        v-show="showSearchBar"
-        class="pl-4 hidden hidden-sm-and-down"
-        v-model="address"
-        id="navbar-autocomplete"
-        flat
-        solo-inverted
-        hide-details
-        prepend-inner-icon="mdi-magnify"
-        label="Search"
-        placeholder=""
-      ></v-text-field> -->
-
       <v-spacer></v-spacer>
 
-      <v-btn v-show="false" class="hidden-sm-and-up" icon @click="addReview">
+      <!-- <v-btn class="hidden-sm-and-up" icon @click="addReview">
         <v-icon>mdi-magnify</v-icon>
-      </v-btn>
+      </v-btn> -->
 
       <!-- <v-btn icon>
         <v-icon>mdi-heart</v-icon>
