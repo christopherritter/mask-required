@@ -5,7 +5,7 @@
     <v-footer class="font-weight-light" :class="{ 'mt-12': showNavBar }">
       <v-col class="text-center" cols="12">
         &copy; {{ new Date().getFullYear() }} <strong>MaskRequired.US</strong>.
-        Read our <a @click="$router.push('privacy-policy')">privacy policy</a>.
+        Read our <a @click="$router.push({ name: 'privacy-policy' })">privacy policy</a>.
       </v-col>
     </v-footer>
   </v-app>

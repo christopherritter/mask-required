@@ -92,7 +92,7 @@
         </v-list>
       </v-menu>
 
-      <v-btn v-if="!loggedIn" class="ml-1" @click="$router.push('login')">
+      <v-btn v-if="!loggedIn" class="ml-1" @click="$router.push({ name: 'login' })">
         <span class="hidden-sm-and-down">Signup /&nbsp;</span>Login
       </v-btn>
     </v-app-bar>
@@ -144,10 +144,10 @@ export default {
     },
     addReview() {
       if (this.place && this.place.business_status) {
-        this.$router.push("review");
+        this.$router.push({ name: "review" });
       } else {
         if (this.$router.currentRoute.name != "search") {
-          this.$router.push("search");
+          this.$router.push({ name: "search" });
         }
       }
     },
