@@ -1,6 +1,6 @@
 <template>
   <v-app id="app">
-    <site-nav-bar v-if="showNavBar"></site-nav-bar>
+    <site-nav-bar></site-nav-bar>
     <router-view />
     <v-footer class="font-weight-light" :class="{ 'mt-12': showNavBar }">
       <v-col class="text-center" cols="12">
@@ -15,27 +15,8 @@
 import SiteNavBar from "@/components/SiteNavBar";
 
 export default {
-  data() {
-    return {
-      showNavBar: true,
-    };
-  },
   components: {
     SiteNavBar,
-  },
-  async created() {
-    var routerName = await this.$router.currentRoute.name;
-    if (routerName == "login") {
-      this.showNavBar = false;
-    }
-  },
-  watch: {
-    async $route(to, from) {
-      var routerName = await this.$router.currentRoute.name;
-      if (routerName == "login") {
-        this.showNavBar = false;
-      }
-    },
   },
 };
 </script>

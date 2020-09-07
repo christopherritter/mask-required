@@ -1,5 +1,5 @@
 <template>
-  <div id="site-nav-bar">
+  <div id="site-nav-bar" v-if="showNavBar">
     <v-app-bar
       color="grey darken-4"
       :clipped-left="$vuetify.breakpoint.lgAndUp"
@@ -68,9 +68,7 @@ import VgAutocomplete from "@/components/VgAutocomplete";
 
 export default {
   data: () => ({
-    address: null,
-    drawer: false,
-    group: null,
+    showNavBar: true,
     options: {
       types: ["establishment", "geocode"],
       componentRestrictions: { country: "us" },
@@ -136,8 +134,13 @@ export default {
     },
   },
   watch: {
-    group() {
-      this.drawer = false;
+    async $route(to, from) {
+      var routerName = await this.$router.currentRoute.name;
+      if (routerName == "login") {
+        this.showNavBar = false;
+      } else {
+        this.showNavBar = true;
+      }
     },
   },
 };
