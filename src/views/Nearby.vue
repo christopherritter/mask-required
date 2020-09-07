@@ -216,7 +216,7 @@
                     'white--text': highlightedCard == index + place.place_id,
                   }"
                 >
-                  {{ place.name | truncateWithEllipse(20) }}
+                  {{ place.name | truncateWithEllipse(18) }}
                 </v-card-title>
                 <v-card-subtitle
                   class="pb-2"
@@ -268,7 +268,7 @@
                       place.reviews.length > 0 &&
                       place.reviews[0].title.length > 0
                   "
-                  class="pt-2"
+                  class="pt-2 hidden-sm-and-down"
                   :class="{
                     'white--text': highlightedCard == index + place.place_id,
                   }"
