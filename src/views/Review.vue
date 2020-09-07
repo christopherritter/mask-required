@@ -168,17 +168,15 @@
         <!-- List of reviews -->
 
         <v-col cols="12" md="4">
-          <v-card v-if="reviews.length">
+          <v-card v-if="currentPlace.reviews.length">
             <div
-              v-for="review in reviews"
+              v-for="review in currentPlace.reviews"
               :key="'review-' + review.id"
               class="review"
             >
-              <v-card-text
-                ><h4>{{ review.title }}</h4>
-                {{ review.createdOn | formatDate }}</v-card-text
-              >
-              <v-card-text>{{ review.content | trimLength }}</v-card-text>
+              <v-card-title class="text-body-1">{{ review.title }}</v-card-title>
+              <v-card-subtitle>{{ review.createdOn | formatDate }}</v-card-subtitle>
+              <v-card-text class="text-caption">{{ review.content | trimLength }}</v-card-text>
               <!-- <v-card-actions>
                 <v-btn text @click="likeReview(review.id, review.likes)"
                   >likes {{ review.likes }}</v-btn
@@ -188,7 +186,7 @@
             </div>
           </v-card>
           <v-card v-else>
-            <v-card-text class="no-results"
+            <v-card-text class="text-caption no-results"
               >There are currently no reviews.</v-card-text
             >
           </v-card>
@@ -206,7 +204,7 @@ export default {
   name: "review",
   data() {
     return {
-      address: null,
+      currentPlace: {},
       review: {
         rating: null,
         title: "",
@@ -247,8 +245,16 @@ export default {
       valid: true,
     };
   },
-  mounted() {
+  async created() {
     this.$store.dispatch("showSearchBar", true);
+    await this.$store.dispatch("fetchPlace", {
+      place_id: this.place.place_id,
+    });
+
+    await this.$store.dispatch("fetchReviews", this.place.place_id);
+
+    const newPlace = this.$store.getters.getPlace;
+    this.currentPlace = newPlace;
   },
   computed: {
     ...mapState([
