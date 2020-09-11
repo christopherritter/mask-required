@@ -378,7 +378,6 @@ export default {
     if (this.region.place_id != routerId) {
       await this.$store.dispatch("clearPlaces");
       await this.viewLocalPlaces();
-      this.sortedPlaces = [];
     }
     this.loading = false;
   },
