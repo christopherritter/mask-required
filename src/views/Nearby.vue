@@ -378,6 +378,7 @@ export default {
     if (this.region.place_id != routerId) {
       await this.$store.dispatch("clearPlaces");
       await this.viewLocalPlaces();
+      this.sortedPlaces = [];
     }
     this.loading = false;
   },
@@ -391,22 +392,14 @@ export default {
       if (to.params.id == from.params.id) {
         if (!to.params.type) {
           this.type = "view_all";
-          this.showLessTypes = false;
-          this.empty = false;
-        } else if (to.params.type == from.params.type) {
-          this.showLessTypes = true;
-          this.empty = false;
         } else {
           this.type = to.params.type;
-          this.showLessTypes = true;
-          this.empty = false;
         }
       } else {
         this.type = null;
-        this.showLessTypes = false;
-        this.empty = false;
         await this.$store.dispatch("clearPlaces");
-        await this.viewLocalPlaces();
+        this.sortedPlaces = [];
+        this.viewLocalPlaces();
       }
 
       this.loading = false;
