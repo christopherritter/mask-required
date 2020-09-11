@@ -690,28 +690,28 @@ const store = new Vuex.Store({
       var apiKey = getters.getFixieKey;
       var addressLocality = address.locality.long_name;
       var addressState = address.state.long_name;
-      console.log(address)
-      console.log("Address locality " + addressLocality)
-      console.log("Address state " + addressState)
+      console.log(address);
+      console.log("Address locality " + addressLocality);
+      console.log("Address state " + addressState);
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${addressLocality}%20${addressState}&types=(regions)&fields=place_id&key=${apiKey}`;
       var newRegion = {};
-      console.log("Passing address.")
-      console.log(URL)
+      console.log("Passing address.");
+      console.log(URL);
       // console.log(place)
 
       await axios
         .get(URL)
         .then((response) => {
           newRegion = response.data.result;
-          console.log(newRegion)
+          console.log(newRegion);
         })
         .catch((error) => {
           console.log(error.message);
           this.errorMessage = error.message;
         });
 
-      console.log("Committing set region:")
-      console.log(newRegion)
+      console.log("Committing set region:");
+      console.log(newRegion);
       commit("setRegion", newRegion);
     },
     async updateProfile({ dispatch }, user) {
@@ -737,7 +737,7 @@ const store = new Vuex.Store({
     async fetchPlace({ dispatch, commit }, place) {
       // console.log(place)
       var placeId = place.place_id;
-      const snapshot = await fb.placesCollection
+      const snapshot = await fb.placesGeoFirestore
         .where("place_id", "==", placeId)
         .get();
       var newPlace = {};
@@ -784,6 +784,10 @@ const store = new Vuex.Store({
           newPlace.createdOn = new Date();
           newPlace.geohash = newGeohash;
           newPlace.review = 0;
+          newPlace.coordinates = new firebase.firestore.GeoPoint(
+            latitude,
+            longitude
+          );
 
           for (let i = 0; i < newPlace.types.length; i++) {
             if (state.validTypes.includes(newPlace.types[i])) {
@@ -798,7 +802,7 @@ const store = new Vuex.Store({
           this.errorMessage = error.message;
         });
 
-      fb.placesCollection.add(newPlace);
+      fb.placesGeoFirestore.add(newPlace);
       return newPlace;
     },
     async findNearbyPlaces({ state, commit, dispatch }, type) {
@@ -839,11 +843,18 @@ const store = new Vuex.Store({
       commit("setPlaces", nearbyPlaces);
     },
     async findLocalPlaces({ state, commit, dispatch }) {
+      const latitude = state.region.geometry.location.lat;
+      const longitude = state.region.geometry.location.lng;
+      const query = fb.placesGeoFirestore.near({
+        center: new firebase.firestore.GeoPoint(latitude, longitude),
+        radius: 4,
+      });
       // Retrieve the current coordinates using the navigator API
-      const places = await fb.placesGeoFirestore
-        .where("geohash", ">=", state.lowerRange)
-        .where("geohash", "<=", state.upperRange)
-        .get();
+      const places = await query.get();
+      // const places = await fb.placesFirestore
+      //   .where("geohash", ">=", state.lowerRange)
+      //   .where("geohash", "<=", state.upperRange)
+      //   .get();
       let localPlaces = [];
 
       if (places.empty) {
@@ -934,47 +945,47 @@ const store = new Vuex.Store({
               counter: 1,
             };
             if (
-            //   name == "administrative_area_level_1" ||
-            //   name == "administrative_area_level_2" ||
-            //   name == "administrative_area_level_3" ||
-            //   name == "administrative_area_level_4" ||
-            //   name == "administrative_area_level_5" ||
-            //   name == "archipelago" ||
-            //   name == "colloquial_area" ||
-            //   name == "continent" ||
-            //   name == "country" ||
+              //   name == "administrative_area_level_1" ||
+              //   name == "administrative_area_level_2" ||
+              //   name == "administrative_area_level_3" ||
+              //   name == "administrative_area_level_4" ||
+              //   name == "administrative_area_level_5" ||
+              //   name == "archipelago" ||
+              //   name == "colloquial_area" ||
+              //   name == "continent" ||
+              //   name == "country" ||
               name == "establishment" ||
-            //   name == "finance" ||
-            //   name == "floor" ||
-            //   // name == "food" ||
-            //   name == "general_contractor" ||
-            //   name == "geocode" ||
-            //   name == "health" ||
-            //   name == "intersection" ||
-            //   name == "locality" ||
-            //   name == "natural_feature" ||
-            //   name == "place_of_worship" ||
-            //   name == "plus_code" ||
+              //   name == "finance" ||
+              //   name == "floor" ||
+              //   // name == "food" ||
+              //   name == "general_contractor" ||
+              //   name == "geocode" ||
+              //   name == "health" ||
+              //   name == "intersection" ||
+              //   name == "locality" ||
+              //   name == "natural_feature" ||
+              //   name == "place_of_worship" ||
+              //   name == "plus_code" ||
               name == "point_of_interest"
-            //   name == "political" ||
-            //   name == "post_box" ||
-            //   name == "postal_code" ||
-            //   name == "postal_code_prefix" ||
-            //   name == "postal_code_suffix" ||
-            //   name == "postal_town" ||
-            //   name == "premise" ||
-            //   name == "room" ||
-            //   name == "route" ||
-            //   name == "store" ||
-            //   name == "street_address" ||
-            //   name == "sublocality" ||
-            //   name == "sublocality_level_1" ||
-            //   name == "sublocality_level_2" ||
-            //   name == "sublocality_level_3" ||
-            //   name == "sublocality_level_4" ||
-            //   name == "sublocality_level_5" ||
-            //   name == "subpremise" ||
-            //   name == "town_square"
+              //   name == "political" ||
+              //   name == "post_box" ||
+              //   name == "postal_code" ||
+              //   name == "postal_code_prefix" ||
+              //   name == "postal_code_suffix" ||
+              //   name == "postal_town" ||
+              //   name == "premise" ||
+              //   name == "room" ||
+              //   name == "route" ||
+              //   name == "store" ||
+              //   name == "street_address" ||
+              //   name == "sublocality" ||
+              //   name == "sublocality_level_1" ||
+              //   name == "sublocality_level_2" ||
+              //   name == "sublocality_level_3" ||
+              //   name == "sublocality_level_4" ||
+              //   name == "sublocality_level_5" ||
+              //   name == "subpremise" ||
+              //   name == "town_square"
             ) {
               return;
             }
