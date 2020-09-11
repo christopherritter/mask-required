@@ -2,6 +2,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
 import "firebase/analytics";
+import * as geofirestore from 'geofirestore';
 
 // firebase init - add your own config here
 const firebaseConfig = {
@@ -20,6 +21,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const auth = firebase.auth();
 const ga = firebase.analytics();
+const GeoFirestore = geofirestore.initializeApp(db);
 
 // collection references
 // const commentsCollection = db.collection("comments");
@@ -27,8 +29,10 @@ const placesCollection = db.collection("places");
 const likesCollection = db.collection("likes");
 const reviewsCollection = db.collection("reviews");
 const usersCollection = db.collection("users");
-
 const placesFirestore = firebase.firestore().collection('places');
+
+// Create a GeoCollection reference
+const placesGeoFirestore = GeoFirestore.collection('places');
 
 // export default
 export default firebase;
@@ -38,9 +42,11 @@ export {
   db,
   auth,
   ga,
+  GeoFirestore,
   placesCollection,
   likesCollection,
   reviewsCollection,
   usersCollection,
-  placesFirestore
+  placesFirestore,
+  placesGeoFirestore
 };

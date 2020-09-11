@@ -806,7 +806,7 @@ const store = new Vuex.Store({
       var nearbyPlaces = [];
 
       // Retrieve the current coordinates using the navigator API
-      const places = await fb.placesFirestore
+      const places = await fb.placesGeoFirestore
         .where("types", "array-contains-any", [type])
         .where("geohash", ">=", state.lowerRange)
         .where("geohash", "<=", state.upperRange)
@@ -840,7 +840,7 @@ const store = new Vuex.Store({
     },
     async findLocalPlaces({ state, commit, dispatch }) {
       // Retrieve the current coordinates using the navigator API
-      const places = await fb.placesFirestore
+      const places = await fb.placesGeoFirestore
         .where("geohash", ">=", state.lowerRange)
         .where("geohash", "<=", state.upperRange)
         .get();
