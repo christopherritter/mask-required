@@ -150,10 +150,10 @@
               <v-card flat>
                 <p class="text-subtitle-2">
                   This review is based on my own experience and is my genuine
-                  opinion of this restaurant. I have no personal or business
-                  relationship with this establishment, and have not been
-                  offered any incentive or payment originating from the
-                  establishment to write this review.
+                  opinion of this business. I have no personal or professional
+                  relationship with this business, and have not been offered any
+                  incentive or payment originating from the business to write
+                  this review.
                 </p>
 
                 <v-checkbox
@@ -185,7 +185,12 @@
             >
               Submit review
             </v-btn>
-            <v-btn @click="cancelReview(place)" class="mt-4 ml-2" :block="isMobile" text>
+            <v-btn
+              @click="cancelReview(place)"
+              class="mt-4 ml-2"
+              :block="isMobile"
+              text
+            >
               Cancel review
             </v-btn>
           </v-col>
@@ -276,7 +281,7 @@ export default {
     ]),
     isMobile() {
       return this.$vuetify.breakpoint.smAndDown;
-    }
+    },
   },
   methods: {
     onInput(val) {
