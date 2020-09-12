@@ -220,7 +220,7 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "place-types-section",
+  name: "popular-types",
   data() {
     return {
       place: null,
