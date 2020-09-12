@@ -143,6 +143,7 @@
           <template>
             <v-stepper-step step="5" editable>
               Certify your review
+              <small class="red--text">Required</small>
             </v-stepper-step>
 
             <v-stepper-content :key="`5-content`" step="5">
