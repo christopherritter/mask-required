@@ -1,198 +1,196 @@
 <template>
   <v-main>
-    <v-container id="place">
-      <v-row>
-        <v-col cols="12" md="8">
-          <div class="create-review">
-            <v-form ref="form" v-model="valid" lazy-validation>
-              <!-- Place header -->
-              <div class="place-header">
-                <h3>{{ place.name }}</h3>
-                <p>{{ place.formatted_address }}</p>
-              </div>
+    <v-form ref="form" v-model="valid" lazy-validation>
+      <v-container>
+        <v-row id="review-header">
+          <v-col class="px-6">
+            <h3>{{ place.name }}</h3>
+            <p>{{ place.formatted_address }}</p>
+          </v-col>
+        </v-row>
+        <v-stepper v-model="stepper" vertical>
+          <template>
+            <v-stepper-step step="1" editable>
+              Review your customer experience.
+            </v-stepper-step>
 
-              <!-- Content of review -->
-              <h4 class="mt-10 mb-4">Review your shopping experience.</h4>
-              <v-select
-                v-model="review.rating"
-                outlined
-                :items="value"
-                :rules="[rules.required, rules.rating]"
-                label="How would you rate this place?"
-                required
-              ></v-select>
+            <v-stepper-content :key="`1-content`" step="1">
+              <v-card flat>
+                <v-select
+                  v-model="review.rating"
+                  outlined
+                  :items="value"
+                  :rules="[rules.required, rules.rating]"
+                  label="How would you rate this place?"
+                  required
+                ></v-select>
+                <v-text-field
+                  :rules="[rules.required, rules.counter]"
+                  outlined
+                  counter
+                  maxlength="80"
+                  name="review-title"
+                  label="How would you summarize your visit?"
+                  v-model="review.title"
+                  required
+                ></v-text-field>
+                <v-textarea
+                  outlined
+                  name="review-text"
+                  label="Tell us more about your experience."
+                  v-model="review.content"
+                ></v-textarea>
+              </v-card>
+            </v-stepper-content>
+          </template>
+          <template>
+            <v-stepper-step step="2" editable>
+              Who was wearing masks?
+            </v-stepper-step>
 
-              <!-- Title of review -->
-              <v-text-field
-                :rules="[rules.required, rules.counter]"
-                outlined
-                counter
-                maxlength="80"
-                name="review-title"
-                label="How would you summarize your visit?"
-                v-model="review.title"
-                required
-              ></v-text-field>
-              <v-textarea
-                :rules="[rules.required, rules.minLength]"
-                outlined
-                name="review-text"
-                label="Tell us more about your experience."
-                v-model="review.content"
-                required
-              ></v-textarea>
+            <v-stepper-content :key="`2-content`" step="2">
+              <v-card flat>
+                <v-select
+                  :items="masks.employees"
+                  v-model="review.masks.employees"
+                  label="Were employees wearing masks?"
+                  outlined
+                ></v-select>
 
-              <h4 class="mb-4">Who was wearing masks?</h4>
+                <v-select
+                  :items="masks.customers"
+                  v-model="review.masks.customers"
+                  label="Were customers wearing masks?"
+                  outlined
+                ></v-select>
+              </v-card>
+            </v-stepper-content>
+          </template>
+          <template>
+            <v-stepper-step step="3" editable>
+              Could you say a little more about it?
+            </v-stepper-step>
 
-              <v-select
-                :items="masks.employees"
-                v-model="review.masks.employees"
-                label="Were employees wearing masks?"
-                outlined
-              ></v-select>
+            <v-stepper-content :key="`3-content`" step="3">
+              <v-card flat>
+                <v-row
+                  v-for="question in questions"
+                  :key="'question-' + question.id"
+                >
+                  <v-col sm="12" md="6">
+                    {{ question.text }}
+                  </v-col>
+                  <v-col sm="12" md="6" class="d-flex justify-end">
+                    <v-radio-group
+                      row
+                      v-model="review.questions[question.id].value"
+                    >
+                      <v-radio
+                        v-for="answer in question.answers"
+                        :key="'answer-' + answer.id"
+                        :label="answer.label"
+                        :value="answer.value"
+                      ></v-radio>
+                    </v-radio-group>
+                  </v-col>
+                </v-row>
+              </v-card>
+            </v-stepper-content>
+          </template>
+          <template>
+            <v-stepper-step step="4" editable>
+              Click to leave a rating
+            </v-stepper-step>
 
-              <v-select
-                :items="masks.customers"
-                v-model="review.masks.customers"
-                label="Were customers wearing masks?"
-                outlined
-              ></v-select>
-
-              <!-- Optional ratings -->
-
-              <h4 class="mb-2">
-                Could you say a little more about it?
-              </h4>
-
-              <v-row
-                v-for="question in questions"
-                :key="'question-' + question.id"
-              >
-                <v-col sm="12" md="6">
-                  {{ question.text }}
-                </v-col>
-                <v-col sm="12" md="6" class="d-flex justify-end">
-                  <v-radio-group
-                    row
-                    v-model="review.questions[question.id].value"
+            <v-stepper-content :key="`4-content`" step="4">
+              <v-card flat>
+                <v-row
+                  v-for="rating in ratings"
+                  :key="'rating-' + rating.id"
+                  style="flex-wrap: nowrap;"
+                >
+                  <v-col
+                    sm="12"
+                    md="6"
+                    class="d-flex align-stretch flex-grow-0 flex-shrink-1"
                   >
-                    <v-radio
-                      v-for="answer in question.answers"
-                      :key="'answer-' + answer.id"
-                      :label="answer.label"
-                      :value="answer.value"
-                    ></v-radio>
-                  </v-radio-group>
-                </v-col>
-              </v-row>
+                    {{ rating.label }}
+                  </v-col>
+                  <v-col sm="12" md="6" class="flex-grow-1 flex-shrink-0">
+                    <v-rating
+                      :rules="[rules.required]"
+                      v-model="review.ratings[rating.id].value"
+                      dark
+                      size="30"
+                    ></v-rating>
+                  </v-col>
+                  <v-col class="flex-grow-0 flex-shrink-1"
+                    ><v-list-item-icon class="mr-2">
+                      <v-tooltip right>
+                        <template v-slot:activator="{ on, attrs }">
+                          <v-icon v-bind="attrs" v-on="on" small
+                            >mdi-information</v-icon
+                          >
+                        </template>
+                        <span>{{ rating.description }}</span>
+                      </v-tooltip>
+                    </v-list-item-icon></v-col
+                  >
+                </v-row>
+              </v-card>
+            </v-stepper-content>
+          </template>
+          <template>
+            <v-stepper-step step="5" editable>
+              Certify your review
+            </v-stepper-step>
 
-              <!-- Specific ratings -->
+            <v-stepper-content :key="`5-content`" step="5">
+              <v-card flat>
+                <p class="text-subtitle-2">
+                  This review is based on my own experience and is my genuine
+                  opinion of this restaurant. I have no personal or business
+                  relationship with this establishment, and have not been
+                  offered any incentive or payment originating from the
+                  establishment to write this review.
+                </p>
 
-              <h4 class="mb-2">Click to leave a rating</h4>
-
-              <v-row
-                v-for="rating in ratings"
-                :key="'rating-' + rating.id"
-                style="flex-wrap: nowrap;"
-              >
-                <v-col
-                  sm="12"
-                  md="6"
-                  class="d-flex align-stretch flex-grow-0 flex-shrink-1"
-                >
-                  {{ rating.label }}
-                </v-col>
-                <v-col sm="12" md="6" class="flex-grow-1 flex-shrink-0">
-                  <v-rating
-                    :rules="[rules.required]"
-                    v-model="review.ratings[rating.id].value"
-                    dark
-                    size="30"
-                  ></v-rating>
-                </v-col>
-                <v-col class="flex-grow-0 flex-shrink-1"
-                  ><v-list-item-icon class="mr-2">
-                    <v-tooltip right>
-                      <template v-slot:activator="{ on, attrs }">
-                        <v-icon v-bind="attrs" v-on="on" small
-                          >mdi-information</v-icon
-                        >
-                      </template>
-                      <span>{{ rating.description }}</span>
-                    </v-tooltip>
-                  </v-list-item-icon></v-col
-                >
-              </v-row>
-
-              <!-- I certify this review -->
-
-              <h4 class="mb-4">Certify your review</h4>
-
-              <p class="text-subtitle-2">
-                This review is based on my own experience and is my genuine
-                opinion of this restaurant. I have no personal or business
-                relationship with this establishment, and have not been offered
-                any incentive or payment originating from the establishment to
-                write this review.
-              </p>
-
-              <v-checkbox
-                v-model="review.agreement"
-                label="I certify the above statement is true."
-              ></v-checkbox>
-
-              <!-- Create Post button -->
-
-              <div class="d-flex justify-start">
-                <v-btn
-                  @click="createReview(place)"
-                  class="mt-4"
-                  :disabled="!review.agreement"
-                  color="primary"
-                >
-                  Submit your review
-                </v-btn>
-                <v-spacer></v-spacer>
-                <v-btn
-                  @click="cancelReview(place)"
-                  class="mt-4"
-                  color="blue-grey lighten-5"
-                >
-                  Cancel review
-                </v-btn>
-              </div>
-            </v-form>
-          </div>
-        </v-col>
-
-        <!-- List of reviews -->
-
-        <v-col cols="12" md="4">
-          <v-card v-if="currentPlace.reviews">
-            <div
-              v-for="review in currentPlace.reviews"
-              :key="'review-' + review.id"
-              class="review"
+                <v-checkbox
+                  v-model="review.agreement"
+                  label="I certify the above statement is true."
+                ></v-checkbox>
+              </v-card>
+            </v-stepper-content>
+          </template>
+        </v-stepper>
+        <v-row>
+          <v-col class="d-md-flex flex-row">
+            <v-btn
+              class="mt-4"
+              @click="nextStep"
+              color="green darken-2"
+              dark
+              :block="isMobile"
             >
-              <v-card-title class="text-body-1">{{ review.title }}</v-card-title>
-              <v-card-subtitle>{{ review.createdOn | formatDate }}</v-card-subtitle>
-              <v-card-text class="text-caption">{{ review.content | trimLength }}</v-card-text>
-              <!-- <v-card-actions>
-                <v-btn text @click="likeReview(review.id, review.likes)"
-                  >likes {{ review.likes }}</v-btn
-                >
-              </v-card-actions> -->
-              <v-divider></v-divider>
-            </div>
-          </v-card>
-          <v-card v-else>
-            <v-card-text class="text-caption no-results"
-              >There are currently no reviews.</v-card-text
+              Next step
+            </v-btn>
+            <v-spacer class="hidden-sm-and-down"></v-spacer>
+            <v-btn
+              @click="createReview(place)"
+              class="mt-4 ml-md-2"
+              :disabled="!review.agreement"
+              color="primary"
+              :block="isMobile"
             >
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+              Submit review
+            </v-btn>
+            <v-btn @click="cancelReview(place)" class="mt-4 ml-2" :block="isMobile" text>
+              Cancel review
+            </v-btn>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-form>
   </v-main>
 </template>
 
@@ -205,6 +203,8 @@ export default {
   data() {
     return {
       currentPlace: {},
+      stepper: 1,
+      steps: 5,
       review: {
         rating: null,
         title: "",
@@ -256,6 +256,13 @@ export default {
     const newPlace = this.$store.getters.getPlace;
     this.currentPlace = newPlace;
   },
+  watch: {
+    steps(val) {
+      if (this.stepper > val) {
+        this.stepper = val;
+      }
+    },
+  },
   computed: {
     ...mapState([
       "userProfile",
@@ -266,8 +273,21 @@ export default {
       ["ratings"],
       "rules",
     ]),
+    isMobile() {
+      return this.$vuetify.breakpoint.smAndDown;
+    }
   },
   methods: {
+    onInput(val) {
+      this.steps = parseInt(val);
+    },
+    nextStep() {
+      if (this.stepper === this.steps) {
+        this.stepper = 1;
+      } else {
+        this.stepper++;
+      }
+    },
     fetchPlace(place) {
       this.$store.dispatch("fetchPlace", place);
     },
