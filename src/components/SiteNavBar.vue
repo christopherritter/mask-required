@@ -21,6 +21,7 @@
         :label="'Search'"
         :placeholder="''"
         :types="options.types"
+        :append-outer-icon="outerIcon"
       ></vg-autocomplete>
 
       <v-spacer></v-spacer>
@@ -116,7 +117,7 @@ export default {
     },
   },
   computed: {
-    ...mapState([["userProfile"], ["place"], "showSearchBar"]),
+    ...mapState([["userProfile"], ["userLocation"], ["place"], "showSearchBar"]),
     showPointer() {
       let currentRoute = this.$router.currentRoute.name;
       if (currentRoute == "home") {
@@ -130,6 +131,13 @@ export default {
         return true
       } else {
         return false
+      }
+    },
+    outerIcon() {
+      if (this.userLocation.lat) {
+        return 'mdi-crosshairs-gps'
+      } else {
+        return 'mdi-crosshairs'
       }
     },
   },
