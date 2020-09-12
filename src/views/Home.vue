@@ -29,6 +29,7 @@
                       :prepend-inner-icon="'mdi-magnify'"
                       :placeholder="'Enter business name or category'"
                       :types="options.types"
+                      :append-outer-icon="outerIcon"
                     ></vg-autocomplete>
                   </div>
                 </v-col>
@@ -42,6 +43,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 import SvgImg from "@/components/SvgImg";
 import AddressSearchBar from "@/components/AddressSearchBar";
 import VgAutocomplete from "@/components/VgAutocomplete";
@@ -49,6 +51,7 @@ import VgAutocomplete from "@/components/VgAutocomplete";
 export default {
   name: "Home",
   data: () => ({
+    currentLocation: null,
     options: {
       types: ["establishment"],
       componentRestrictions: { country: "us" },
@@ -64,6 +67,16 @@ export default {
   }),
   mounted() {
     this.$store.dispatch("showSearchBar", false);
+  },
+  computed: {
+    ...mapState(["userLocation"]),
+    outerIcon() {
+      if (this.userLocation.lat) {
+        return 'mdi-crosshairs-gps'
+      } else {
+        return 'mdi-crosshairs'
+      }
+    }
   },
   components: {
     SvgImg,

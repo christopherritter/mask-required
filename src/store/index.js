@@ -664,6 +664,12 @@ const store = new Vuex.Store({
         });
       }
     },
+    async clearUserLocation({ commit }) {
+      commit("setUserLocation", {
+        lat: null,
+        long: null,
+      });
+    },
     async fetchRegion({ commit, getters }, place) {
       var apiKey = getters.getFixieKey;
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${apiKey}`;

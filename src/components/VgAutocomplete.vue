@@ -21,13 +21,17 @@
     :hide-selected="hideSelected"
     hide-no-data
     append-icon=""
+    :append-outer-icon="appendOuterIcon"
     :prepend-inner-icon="prependInnerIcon"
     :flat="flat"
     :solo-inverted="soloInverted"
+    @click:append-outer="getUserLocation"
   ></v-autocomplete>
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   data: () => ({
     descriptionLimit: 60,
@@ -36,6 +40,8 @@ export default {
     isLoading: false,
     model: null,
     search: null,
+    error: "",
+    spinner: false,
   }),
   props: [
     "dense",
@@ -52,8 +58,10 @@ export default {
     "prependInnerIcon",
     "flat",
     "soloInverted",
+    "appendOuterIcon",
   ],
   computed: {
+    ...mapState(["userLocation"]),
     fields() {
       if (!this.model) return [];
 
@@ -112,20 +120,47 @@ export default {
       }
     },
   },
-
   methods: {
+    // Get user location
+    async getUserLocation() {
+      this.spinner = true;
+      if (!this.userLocation.lat) {
+        // console.log("Fetching user location.");
+        await this.$store.dispatch("fetchUserLocation");
+      } else {
+        // console.log("Forgetting user location.");
+        await this.$store.dispatch("clearUserLocation");
+      }
+      this.spinner = false;
+    },
+
     // Get place predictions
     getPlacePredictions(search) {
       var autocompleteService = new google.maps.places.AutocompleteService();
 
-      autocompleteService.getPlacePredictions(
-        {
-          input: search,
-          types: this.types,
-          componentRestrictions: { country: "us" },
-        },
-        this.callback
-      );
+      if (this.userLocation.lat) {
+        autocompleteService.getPlacePredictions(
+          {
+            origin: new google.maps.LatLng(
+              this.userLocation.lat,
+              this.userLocation.long
+            ),
+            input: search,
+            types: this.types,
+            componentRestrictions: { country: "us" },
+          },
+          this.callback
+        );
+      } else {
+        autocompleteService.getPlacePredictions(
+          {
+            input: search,
+            types: this.types,
+            componentRestrictions: { country: "us" },
+          },
+          this.callback
+        );
+      }
     },
 
     // Get place details
