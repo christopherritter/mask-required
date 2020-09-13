@@ -692,33 +692,30 @@ const store = new Vuex.Store({
       // console.log(newRegion)
       commit("setRegion", newRegion);
     },
-    async fetchRegionByAddress({ commit, getters }, address) {
+    async fetchRegionId({ getters }, address) {
+      console.log("Received address:")
+      console.log(address)
+
       var apiKey = getters.getFixieKey;
-      var addressLocality = address.locality.long_name;
-      var addressState = address.state.long_name;
-      console.log(address);
-      console.log("Address locality " + addressLocality);
-      console.log("Address state " + addressState);
-      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${addressLocality}%20${addressState}&types=(regions)&fields=place_id&key=${apiKey}`;
+      var locality = address.name;
+      var state = address.state;
+      var country = address.country;
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/queryautocomplete/json?input=${locality},%20${state},%20${country}&key=${apiKey}`;
       var newRegion = {};
-      console.log("Passing address.");
-      console.log(URL);
-      // console.log(place)
 
       await axios
         .get(URL)
         .then((response) => {
-          newRegion = response.data.result;
-          console.log(newRegion);
+          newRegion = response.data;
         })
         .catch((error) => {
           console.log(error.message);
           this.errorMessage = error.message;
         });
 
-      console.log("Committing set region:");
-      console.log(newRegion);
-      commit("setRegion", newRegion);
+      console.log("Received response:")
+      console.log(newRegion)
+      return newRegion.predictions[0].place_id;
     },
     async updateProfile({ dispatch }, user) {
       const userId = fb.auth.currentUser.uid;
@@ -950,7 +947,7 @@ const store = new Vuex.Store({
 
       snapshot.forEach((doc) => {
         var place = doc.data();
-        
+
         for (let a = 0; a < place.address_components.length; a++) {
           // console.log(place.address_components[a]);
           for (let t = 0; t < place.address_components[a].types.length; t++) {
@@ -958,8 +955,14 @@ const store = new Vuex.Store({
             if (place.address_components[a].types[t] == "locality") {
               locality.name = place.address_components[a].long_name;
             }
-            if (place.address_components[a].types[t] == "administrative_area_level_1") {
+            if (
+              place.address_components[a].types[t] ==
+              "administrative_area_level_1"
+            ) {
               locality.state = place.address_components[a].short_name;
+            }
+            if (place.address_components[a].types[t] == "country") {
+              locality.country = place.address_components[a].short_name;
             }
           }
         }
@@ -967,26 +970,6 @@ const store = new Vuex.Store({
 
       return locality;
     },
-    // async getGeohashRange({ state, commit }) {
-    //   const lat = 0.0144927536231884; // degrees latitude per mile
-    //   const lon = 0.0181818181818182; // degrees longitude per mile
-
-    //   const lowerLat = state.userLocation.lat - lat * state.geohashRange;
-    //   const lowerLon = state.userLocation.long - lon * state.geohashRange;
-
-    //   const upperLat = state.userLocation.lat + lat * state.geohashRange;
-    //   const upperLon = state.userLocation.long + lon * state.geohashRange;
-
-    //   const lower = geohash.encode(lowerLat, lowerLon);
-    //   const upper = geohash.encode(upperLat, upperLon);
-
-    // console.log("Geohashes coming at ya!");
-    // console.log(lowerLat, lowerLon);
-    // console.log(upperLat, upperLon);
-    // console.log(lower, upper);
-
-    //   commit("setRange", { lower, upper });
-    // },
     async fetchReviewTypes({ commit }) {
       const reviews = await fb.reviewsCollection.get();
       let typesArray = [];

@@ -5,7 +5,13 @@
     </v-row>
 
     <v-row no-gutters>
-      <v-card-text class="pa-0">{{ place.formatted_address }}</v-card-text>
+      <v-card-text class="pa-0">
+        {{ place.formatted_address }}
+        <v-chip @click="viewRegion(place.place_id)" class="ma-2" small>
+          <v-icon left>mdi-magnify</v-icon>
+          View Region
+        </v-chip>
+      </v-card-text>
     </v-row>
 
     <v-row no-gutters align="center" justify="start">
@@ -81,56 +87,82 @@ export default {
   name: "place-header",
   data() {
     return {
-      // userLocation: {
-      //   lat: null,
-      //   long: null,
-      // },
+      isLoading: true,
+      region: {},
     };
   },
   props: {
     place: Object,
   },
-  // async created() {
-  //   // find address component with locality and administrative_area_level_1 type
-  //   var a, t, addressComponents = this.place.address_components;
+  async created() {
+    // find address component with locality and administrative_area_level_1 type
+    var a,
+      t,
+      addressComponents = this.place.address_components;
 
-  //   function findLocality() {
-  //     for (a = 0; a < addressComponents.length; a++) {
-  //       for (t = 0; t < addressComponents[a].types.length; t++) {
-  //         if ((addressComponents[a].types[t] == "locality")) {
-  //           return addressComponents[a]
-  //         }
-  //       }
-  //     }
-  //   }
+    function findLocality() {
+      for (a = 0; a < addressComponents.length; a++) {
+        for (t = 0; t < addressComponents[a].types.length; t++) {
+          if (addressComponents[a].types[t] == "locality") {
+            return addressComponents[a];
+          }
+        }
+      }
+    }
 
-  //   function findState() {
-  //     for (a = 0; a < addressComponents.length; a++) {
-  //       for (t = 0; t < addressComponents[a].types.length; t++) {
-  //         if ((addressComponents[a].types[t] == "administrative_area_level_1")) {
-  //           return addressComponents[a]
-  //         }
-  //       }
-  //     }
-  //   }
+    function findState() {
+      for (a = 0; a < addressComponents.length; a++) {
+        for (t = 0; t < addressComponents[a].types.length; t++) {
+          if (addressComponents[a].types[t] == "administrative_area_level_1") {
+            return addressComponents[a];
+          }
+        }
+      }
+    }
 
-  //   var localityObj = findLocality();
-  //   var stateObj = findState();
+    function findCountry() {
+      for (a = 0; a < addressComponents.length; a++) {
+        for (t = 0; t < addressComponents[a].types.length; t++) {
+          if (addressComponents[a].types[t] == "country") {
+            return addressComponents[a];
+          }
+        }
+      }
+    }
 
-  //   console.log("Here's the locality:")
-  //   console.log(localityObj.long_name);
+    var localityObj = findLocality();
+    var stateObj = findState();
+    var countryObj = findCountry();
 
-  //   console.log("Here's the state:")
-  //   console.log(stateObj.long_name);
+    console.log("Here's the locality:");
+    console.log(localityObj.long_name);
 
-  //   // get the location of the locality and administrative_area_level_1 from Google Places
+    console.log("Here's the state:");
+    console.log(stateObj.long_name);
 
-  //   console.log("Fetching region by address.");
+    console.log("Here's the country:");
+    console.log(countryObj.short_name);
 
-  //   await this.$store.dispatch("fetchRegionByAddress", { locality: localityObj, state: stateObj } );
-  //   var newRegion = this.$store.getters.getRegion;
-  //   // set the location of the locality and administrative_area_level_1 in store
-  // },
+    this.getPlacePredictions(localityObj.long_name + ", " + stateObj.long_name + ", " + countryObj.short_name + "A");
+ 
+    // this.$store
+    //   .dispatch("fetchRegionId", {
+    //     name: localityObj,
+    //     state: stateObj,
+    //     country: countryObj,
+    //   })
+    //   .then((id) => {
+    //     console.log(id);
+    //   });
+
+    // get the location of the locality and administrative_area_level_1 from Google Places
+
+    // console.log("Fetching region by address.");
+
+    // await this.$store.dispatch("fetchRegionId", { locality: localityObj, state: stateObj } );
+    // var newRegion = this.$store.getters.getRegion;
+    // set the location of the locality and administrative_area_level_1 in store
+  },
   methods: {
     async findNearbyPlaces(type) {
       await this.$store.dispatch("findNearbyPlaces", type);
@@ -138,6 +170,56 @@ export default {
         name: "nearby-places-type",
         params: { id: this.place.place_id, name: type },
       });
+    },
+
+    viewRegion() {
+      this.$router.push({ name: "nearby-places", params: { id: this.region.place_id } })
+    },
+
+    // Get place predictions
+    getPlacePredictions(search) {
+      var autocompleteService = new google.maps.places.AutocompleteService();
+
+      autocompleteService.getPlacePredictions(
+        {
+          input: search,
+          types: this.types,
+          componentRestrictions: { country: "us" },
+        },
+        this.callback
+      );
+    },
+
+    // Place search callback
+    callback(predictions, status) {
+      // Empty entries container
+      this.entries = [];
+
+      // Place service status error
+      if (status != google.maps.places.PlacesServiceStatus.OK) {
+        this.entries.push({
+          description: "Your search returned no result. Status: " + status,
+        });
+      }
+
+      // Build output for each prediction
+      for (var i = 0, prediction; (prediction = predictions[i]); i++) {
+        // Insert output in results container
+        this.entries.push(prediction);
+      }
+
+      var items = document.getElementsByClassName("pac-item");
+
+      // Results items click
+      for (var i = 0, item; (item = items[i]); i++) {
+        item.onclick = function() {
+          if (this.dataset.placeid) {
+            getPlaceDetails(this.dataset.placeid);
+          }
+        };
+      }
+      this.region = this.entries[0];
+      this.isLoading = false;
     },
   },
   filters: {
