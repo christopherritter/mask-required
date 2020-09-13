@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section id="popular-type-section">
     <v-row>
       <v-col class="d-flex align-center"
         ><v-divider class="mb-1"></v-divider
@@ -30,7 +30,7 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "popular-types-section",
+  name: "popular-type-section",
   data() {
     return {
       type: {},

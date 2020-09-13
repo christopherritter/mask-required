@@ -39,7 +39,7 @@ import SvgImg from "@/components/util/SvgImg";
 import VgAutocomplete from "@/components/util/VgAutocomplete";
 
 export default {
-  name: "Home",
+  name: "primary-search-bar",
   data: () => ({
     currentLocation: null,
     options: {
