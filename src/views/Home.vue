@@ -45,10 +45,10 @@
 
 <script>
 import { mapState } from "vuex";
-import SvgImg from "@/components/SvgImg";
-import AddressSearchBar from "@/components/AddressSearchBar";
-import VgAutocomplete from "@/components/VgAutocomplete";
-import PopularTypeSection from "@/components/PopularTypeSection";
+import SvgImg from "@/components/util/SvgImg";
+import AddressSearchBar from "@/components/home/AddressSearchBar";
+import VgAutocomplete from "@/components/util/VgAutocomplete";
+import PopularTypeSection from "@/components/home/PopularTypeSection";
 
 export default {
   name: "Home",

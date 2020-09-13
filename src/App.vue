@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import SiteNavBar from "@/components/SiteNavBar";
+import SiteNavBar from "@/components/global/SiteNavBar";
 
 export default {
   components: {

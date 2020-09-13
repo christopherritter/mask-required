@@ -54,7 +54,7 @@ export default {
 
 <template>
   <div
-    v-html="require(`!html-loader!../assets/svg/${icon}.svg`)"
+    v-html="require(`!html-loader!../../assets/svg/${icon}.svg`)"
     class="svg-container"
   ></div>
 </template>

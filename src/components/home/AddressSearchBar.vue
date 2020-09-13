@@ -46,7 +46,7 @@
 
 <script>
 import { mapState } from "vuex";
-import VgAutocomplete from "@/components/VgAutocomplete";
+import VgAutocomplete from "@/components/util/VgAutocomplete";
 
 export default {
   name: "address-search-bar",

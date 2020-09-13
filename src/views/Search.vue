@@ -45,7 +45,7 @@
 
 <script>
 import { mapState } from "vuex";
-import SvgImg from "@/components/SvgImg";
+import SvgImg from "@/components/util/SvgImg";
 
 export default {
   data: () => ({

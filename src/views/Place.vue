@@ -75,10 +75,10 @@
 <script>
 import { mapState } from "vuex";
 
-import PlaceHeaderBar from "@/components/PlaceHeaderBar";
-import PlaceRatingsCard from "@/components/PlaceRatingsCard";
-import PlaceLocationCard from "@/components/PlaceLocationCard";
-import PlaceReviewsSection from "@/components/PlaceReviewsSection";
+import PlaceHeaderBar from "@/components/place/PlaceHeaderBar";
+import PlaceRatingsCard from "@/components/place/PlaceRatingsCard";
+import PlaceLocationCard from "@/components/place/PlaceLocationCard";
+import PlaceReviewsSection from "@/components/place/PlaceReviewsSection";
 
 export default {
   name: "place",

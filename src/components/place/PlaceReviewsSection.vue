@@ -96,9 +96,9 @@
 import { mapState } from "vuex";
 import moment from "moment";
 
-import ViewReviewDialog from "@/components/ViewReviewDialog";
-import EditReviewDialog from "@/components/EditReviewDialog";
-import DeleteReviewDialog from "@/components/DeleteReviewDialog";
+import ViewReviewDialog from "@/components/place/ViewReviewDialog";
+import EditReviewDialog from "@/components/place/EditReviewDialog";
+import DeleteReviewDialog from "@/components/place/DeleteReviewDialog";
 
 export default {
   name: "place-reviews-section",

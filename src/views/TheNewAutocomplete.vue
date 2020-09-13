@@ -56,7 +56,7 @@
 </template>
 
 <script>
-import VgAutocomplete from "@/components/VgAutocomplete";
+import VgAutocomplete from "@/components/util/VgAutocomplete";
 export default {
   name: "the-new-autocomplete",
   data() {

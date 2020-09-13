@@ -64,8 +64,8 @@
 
 <script>
 import { mapState } from "vuex";
-import SvgImg from "@/components/SvgImg";
-import VgAutocomplete from "@/components/VgAutocomplete";
+import SvgImg from "@/components/util/SvgImg";
+import VgAutocomplete from "@/components/util/VgAutocomplete";
 
 export default {
   data: () => ({
