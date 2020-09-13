@@ -811,6 +811,37 @@ const store = new Vuex.Store({
       fb.placesGeoFirestore.add(newPlace);
       return newPlace;
     },
+    async fetchPlaces({ commit, dispatch }, type) {
+      var placesArray = [];
+
+      const places = await fb.placesGeoFirestore
+        .where("types", "array-contains-any", [type])
+        .get();
+
+      if (places.empty) {
+        return;
+      }
+
+      await places.forEach((doc) => {
+        var searchResult = doc.data();
+        
+        dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
+          if (reviews) {
+            searchResult.reviews = reviews.reviews;
+            searchResult.ratings = {};
+            searchResult.ratings.general = reviews.rating;
+            searchResult.ratings.compliance = reviews.compliance;
+            searchResult.ratings.notifications = reviews.notifications;
+            searchResult.ratings.enforcement = reviews.enforcement;
+            placesArray.push(searchResult);
+          } else {
+            placesArray.push(searchResult);
+          }
+        });
+      });
+
+      commit("setPlaces", placesArray);
+    },
     async findNearbyPlaces({ state, commit, dispatch }, type) {
       // console.log("Fetching nearby places for " + type + "s.")
       var nearbyPlaces = [];
@@ -963,7 +994,7 @@ const store = new Vuex.Store({
               name == "establishment" ||
               //   name == "finance" ||
               //   name == "floor" ||
-              //   // name == "food" ||
+              name == "food" ||
               //   name == "general_contractor" ||
               //   name == "geocode" ||
               //   name == "health" ||

@@ -37,6 +37,7 @@
             </v-card>
           </v-col>
         </v-row>
+        <popular-type-section></popular-type-section>
       </section>
     </v-container>
   </v-main>
@@ -47,6 +48,7 @@ import { mapState } from "vuex";
 import SvgImg from "@/components/SvgImg";
 import AddressSearchBar from "@/components/AddressSearchBar";
 import VgAutocomplete from "@/components/VgAutocomplete";
+import PopularTypeSection from "@/components/PopularTypeSection";
 
 export default {
   name: "Home",
@@ -82,6 +84,7 @@ export default {
     SvgImg,
     AddressSearchBar,
     VgAutocomplete,
+    PopularTypeSection
   },
 };
 </script>
