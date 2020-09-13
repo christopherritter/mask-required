@@ -824,7 +824,7 @@ const store = new Vuex.Store({
 
       await places.forEach((doc) => {
         var searchResult = doc.data();
-        
+
         dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
           if (reviews) {
             searchResult.reviews = reviews.reviews;
@@ -1133,6 +1133,27 @@ const store = new Vuex.Store({
         notifications: await dispatch("averageRating", notificationRatings),
         enforcement: await dispatch("averageRating", enforcementRatings),
       };
+    },
+    async fetchTopReviews({ dispatch }) {
+      const snapshot = await fb.reviewsCollection
+        .orderBy("createdOn")
+        .limitToLast(3)
+        .get();
+
+      let reviewsArray = [];
+
+      if (snapshot.empty) {
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        let review = doc.data();
+        review.id = doc.id;
+
+        reviewsArray.push(review);
+      });
+
+      return reviewsArray;
     },
     async likeReview({ commit }, review) {
       const userId = fb.auth.currentUser.uid;
