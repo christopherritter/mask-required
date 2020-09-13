@@ -942,6 +942,31 @@ const store = new Vuex.Store({
 
       commit("setRange", { lower, upper });
     },
+    async fetchLocality({}, placeId) {
+      const snapshot = await fb.placesGeoFirestore
+        .where("place_id", "==", placeId)
+        .get();
+      var locality = {};
+
+      snapshot.forEach((doc) => {
+        var place = doc.data();
+        
+        for (let a = 0; a < place.address_components.length; a++) {
+          // console.log(place.address_components[a]);
+          for (let t = 0; t < place.address_components[a].types.length; t++) {
+            // console.log(place.address_components[a].types[t]);
+            if (place.address_components[a].types[t] == "locality") {
+              locality.name = place.address_components[a].long_name;
+            }
+            if (place.address_components[a].types[t] == "administrative_area_level_1") {
+              locality.state = place.address_components[a].short_name;
+            }
+          }
+        }
+      });
+
+      return locality;
+    },
     // async getGeohashRange({ state, commit }) {
     //   const lat = 0.0144927536231884; // degrees latitude per mile
     //   const lon = 0.0181818181818182; // degrees longitude per mile

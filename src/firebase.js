@@ -29,6 +29,9 @@ const placesCollection = db.collection("places");
 const likesCollection = db.collection("likes");
 const reviewsCollection = db.collection("reviews");
 const usersCollection = db.collection("users");
+const regionsCollection = db.collection("regions");
+
+// Create a Firestore collection reference
 const placesFirestore = firebase.firestore().collection('places');
 
 // Create a GeoCollection reference
@@ -47,6 +50,7 @@ export {
   likesCollection,
   reviewsCollection,
   usersCollection,
+  regionsCollection,
   placesFirestore,
   placesGeoFirestore
 };

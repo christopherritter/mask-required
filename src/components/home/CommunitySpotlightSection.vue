@@ -16,6 +16,11 @@
 
 <script>
 export default {
-  name: "community-spotlight-section"
-}
+  name: "community-spotlight-section",
+  async created() {
+    await this.$store.dispatch("fetchLocality", "ChIJ0XIEzwmAjlQRUXl9squHIAA").then((place) => {
+      console.log(place);
+    });
+  },
+};
 </script>
