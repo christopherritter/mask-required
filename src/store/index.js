@@ -679,6 +679,7 @@ const store = new Vuex.Store({
         .get(URL)
         .then((response) => {
           newRegion = response.data.result;
+          newRegion.createdOn = new Date();
         })
         .catch((error) => {
           console.log(error.message);
@@ -737,6 +738,31 @@ const store = new Vuex.Store({
       console.log("Received response:")
       console.log(newRegion)
       return newRegion.predictions[0].place_id;
+    },
+    async fetchActiveRegions() {
+      const snapshot = await fb.regionsCollection
+        .orderBy("createdOn")
+        .limitToLast(4)
+        .get();
+
+      let regionsArray = [];
+
+      if (snapshot.empty) {
+        // console.log("No results.")
+        return;
+      }
+
+      // console.log("Gathering regions:")
+      snapshot.forEach((doc) => {
+        let region = doc.data();
+        region.id = doc.id;
+        // console.log(region)
+        regionsArray.push(region);
+      });
+
+      console.log("Sending regions:")
+      console.log(regionsArray)
+      return regionsArray;
     },
     async updateProfile({ dispatch }, user) {
       const userId = fb.auth.currentUser.uid;
