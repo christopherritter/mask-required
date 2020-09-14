@@ -203,16 +203,6 @@ export default {
         this.entries.push(prediction);
       }
 
-      var items = document.getElementsByClassName("pac-item");
-
-      // Results items click
-      for (var i = 0, item; (item = items[i]); i++) {
-        item.onclick = function() {
-          if (this.dataset.placeid) {
-            getPlaceDetails(this.dataset.placeid);
-          }
-        };
-      }
       this.isLoading = false;
     },
   },

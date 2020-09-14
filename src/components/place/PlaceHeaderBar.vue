@@ -144,24 +144,6 @@ export default {
     console.log(countryObj.short_name);
 
     this.getPlacePredictions(localityObj.long_name + ", " + stateObj.long_name + ", " + countryObj.short_name + "A");
- 
-    // this.$store
-    //   .dispatch("fetchRegionId", {
-    //     name: localityObj,
-    //     state: stateObj,
-    //     country: countryObj,
-    //   })
-    //   .then((id) => {
-    //     console.log(id);
-    //   });
-
-    // get the location of the locality and administrative_area_level_1 from Google Places
-
-    // console.log("Fetching region by address.");
-
-    // await this.$store.dispatch("fetchRegionId", { locality: localityObj, state: stateObj } );
-    // var newRegion = this.$store.getters.getRegion;
-    // set the location of the locality and administrative_area_level_1 in store
   },
   methods: {
     async findNearbyPlaces(type) {

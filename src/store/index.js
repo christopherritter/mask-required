@@ -737,38 +737,6 @@ const store = new Vuex.Store({
         });
       });
     },
-    async fetchPlace({ dispatch, commit }, place) {
-      // console.log(place)
-      var placeId = place.place_id;
-      const snapshot = await fb.placesGeoFirestore
-        .where("place_id", "==", placeId)
-        .get();
-      var newPlace = {};
-
-      if (snapshot.empty) {
-        // console.log("No matching places.");
-        await dispatch("createPlace", place).then((newPlace) => {
-          commit("setPlace", newPlace);
-        });
-        return;
-      }
-
-      snapshot.forEach((doc) => {
-        newPlace = doc.data();
-        dispatch("fetchReviews", newPlace.place_id).then((reviews) => {
-          if (reviews) {
-            newPlace.reviews = reviews.reviews;
-            newPlace.ratings = {};
-            newPlace.ratings.general = reviews.rating;
-            newPlace.ratings.compliance = reviews.compliance;
-            newPlace.ratings.notifications = reviews.notifications;
-            newPlace.ratings.enforcement = reviews.enforcement;
-          }
-        });
-      });
-
-      commit("setPlace", newPlace);
-    },
     async createPlace({ state, getters }, place) {
       var apiKey = getters.getFixieKey;
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types,address_component&key=${apiKey}`;
@@ -807,6 +775,38 @@ const store = new Vuex.Store({
 
       fb.placesGeoFirestore.add(newPlace);
       return newPlace;
+    },
+    async fetchPlace({ dispatch, commit }, place) {
+      // console.log(place)
+      var placeId = place.place_id;
+      const snapshot = await fb.placesGeoFirestore
+        .where("place_id", "==", placeId)
+        .get();
+      var newPlace = {};
+
+      if (snapshot.empty) {
+        console.log("No matching places.");
+        await dispatch("createPlace", place).then((newPlace) => {
+          commit("setPlace", newPlace);
+        });
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        newPlace = doc.data();
+        dispatch("fetchReviews", newPlace.place_id).then((reviews) => {
+          if (reviews) {
+            newPlace.reviews = reviews.reviews;
+            newPlace.ratings = {};
+            newPlace.ratings.general = reviews.rating;
+            newPlace.ratings.compliance = reviews.compliance;
+            newPlace.ratings.notifications = reviews.notifications;
+            newPlace.ratings.enforcement = reviews.enforcement;
+          }
+        });
+      });
+
+      commit("setPlace", newPlace);
     },
     async fetchPlaces({ commit, dispatch }, type) {
       var placesArray = [];
@@ -938,37 +938,6 @@ const store = new Vuex.Store({
       // console.log(lower, upper);
 
       commit("setRange", { lower, upper });
-    },
-    async fetchLocality({}, placeId) {
-      const snapshot = await fb.placesGeoFirestore
-        .where("place_id", "==", placeId)
-        .get();
-      var locality = {};
-
-      snapshot.forEach((doc) => {
-        var place = doc.data();
-
-        for (let a = 0; a < place.address_components.length; a++) {
-          // console.log(place.address_components[a]);
-          for (let t = 0; t < place.address_components[a].types.length; t++) {
-            // console.log(place.address_components[a].types[t]);
-            if (place.address_components[a].types[t] == "locality") {
-              locality.name = place.address_components[a].long_name;
-            }
-            if (
-              place.address_components[a].types[t] ==
-              "administrative_area_level_1"
-            ) {
-              locality.state = place.address_components[a].short_name;
-            }
-            if (place.address_components[a].types[t] == "country") {
-              locality.country = place.address_components[a].short_name;
-            }
-          }
-        }
-      });
-
-      return locality;
     },
     async fetchReviewTypes({ commit }) {
       const reviews = await fb.reviewsCollection.get();
