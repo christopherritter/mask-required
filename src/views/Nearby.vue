@@ -368,23 +368,25 @@ export default {
   },
   async created() {
     var routerId = this.$router.currentRoute.params.id;
-    var routerType = this.$router.currentRoute.params.type;
+    // var routerType = this.$router.currentRoute.params.type;
 
-    if (routerType) {
-      this.type = routerType;
-      this.showLessTypes = true;
-    }
+    await this.setRegion(routerId);
+
+    // if (routerType) {
+    //   this.type = routerType;
+    //   this.showLessTypes = true;
+    // }
 
     if (this.region.place_id != routerId) {
       await this.$store.dispatch("clearPlaces");
-      await this.viewLocalPlaces();
     }
+
+    await this.viewLocalPlaces();
     this.loading = false;
   },
   watch: {
     async $route(to, from) {
       var routerId = this.$router.currentRoute.params.id;
-      var routerType = this.$router.currentRoute.params.type;
 
       this.loading = true;
 
@@ -422,6 +424,12 @@ export default {
   methods: {
     getUserLocation() {
       this.$store.dispatch("fetchUserLocation");
+    },
+    async setRegion(routerId) {
+      await this.$store.dispatch("fetchRegion", {
+        place_id: routerId,
+      });
+      this.region = this.$store.getters.getRegion;
     },
     async viewLocalPlaces() {
       var placeId = this.$route.params.id;

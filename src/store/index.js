@@ -670,13 +670,10 @@ const store = new Vuex.Store({
         long: null,
       });
     },
-    async fetchRegion({ commit, getters }, place) {
+    async createRegion({ commit, getters }, place) {
       var apiKey = getters.getFixieKey;
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${apiKey}`;
       var newRegion = {};
-      // console.log("Passing place.")
-      // console.log(URL)
-      // console.log(place)
 
       await axios
         .get(URL)
@@ -690,6 +687,30 @@ const store = new Vuex.Store({
 
       // console.log("Committing set region:")
       // console.log(newRegion)
+      // commit("setRegion", newRegion);
+      fb.regionsCollection.add(newRegion);
+      return newRegion;
+    },
+    async fetchRegion({ dispatch, commit }, place) {
+      // console.log(place)
+      var regionId = place.place_id;
+      const snapshot = await fb.regionsCollection
+        .where("place_id", "==", regionId)
+        .get();
+      var newRegion = {};
+
+      if (snapshot.empty) {
+        console.log("No matching regions.");
+        await dispatch("createRegion", place).then((region) => {
+          commit("setRegion", region);
+        });
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        newRegion = doc.data();
+      });
+
       commit("setRegion", newRegion);
     },
     async fetchRegionId({ getters }, address) {
@@ -741,7 +762,6 @@ const store = new Vuex.Store({
       var apiKey = getters.getFixieKey;
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types,address_component&key=${apiKey}`;
       var newPlace = {};
-      // console.log(URL)
 
       await axios
         .get(URL)
