@@ -5,14 +5,14 @@
         ><v-divider class="mb-1"></v-divider
       ></v-col>
       <v-col>
-        <h3 class="text-center">Popular {{ type.name + "s" }}</h3>
+        <h3 class="text-center">Popular {{ type.name + "s" | replaceUnderscore }}</h3>
       </v-col>
       <v-col class="d-flex align-center"
         ><v-divider class="mb-1"></v-divider
       ></v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="12" md="4" lg="3" style="font-size: 1.25rem">Here are some popular {{ type.name + "s" }} that people are currently searching for.</v-col>
+      <v-col cols="12" sm="12" md="4" lg="3" style="font-size: 1.25rem">Here are some popular {{ type.name  + "s" | replaceUnderscore }} that people are currently searching for.</v-col>
       <v-col cols="12" sm="12" md="8" lg="9">
         <v-row>
           <v-col cols="12" sm="6" md="6" lg="4" v-for="place in placesToDisplay" :key="place.place_id">
@@ -86,7 +86,7 @@ export default {
         frags = val.split("_");
       for (i = 0; i < frags.length; i++) {
         if (frags[i] != "of" && frags[i] != "or") {
-          frags[i] = frags[i].charAt(0).toUpperCase() + frags[i].slice(1);
+          frags[i] = frags[i].slice(0);
         }
       }
       return frags.join(" ");
