@@ -12,9 +12,9 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="6" md="4" lg="3" v-for="region in regions" :key="region.place_id">
+      <v-col cols="12" sm="6" md="4" v-for="region in regions" :key="region.place_id">
         <v-card>
-          <v-img :src="`https://maps.googleapis.com/maps/api/staticmap?center=${region.geometry.location.lat + ',' + region.geometry.location.lng}&zoom=14&size=400x400&key=${apiKey}`" aspect-ratio="1.7"></v-img>
+          <v-img :src="`https://maps.googleapis.com/maps/api/staticmap?center=${region.geometry.location.lat + ',' + region.geometry.location.lng}&zoom=14&size=400x400&key=${apiKey}`" aspect-ratio="2"></v-img>
           <v-card-title>{{ region.name }}</v-card-title>
           <v-card-subtitle>{{ region.formatted_address }}</v-card-subtitle>
         </v-card>
