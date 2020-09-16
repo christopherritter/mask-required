@@ -27,7 +27,7 @@
                 
                 <v-row no-gutters>
                   <v-col cols="3" class="hidden-md-and-down">
-                    <v-avatar color="teal" size="64">
+                    <v-avatar class="mt-2" color="teal" size="64">
                       <span class="white--text headline">{{
                         review.rating
                       }}</span>
