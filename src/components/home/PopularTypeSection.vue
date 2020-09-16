@@ -6,7 +6,7 @@
       </v-col>
       <v-col>
         <h3 class="text-center">
-          Popular {{ (type.name + "s") | replaceUnderscore }}
+          Popular Places
         </h3>
       </v-col>
       <v-col class="d-flex align-center">
