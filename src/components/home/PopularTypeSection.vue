@@ -14,10 +14,10 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="12" md="4" lg="3" style="font-size: 1.25rem"
-        >Here are some popular {{ (type.name + "s") | replaceUnderscore }} that
-        people are currently searching for.</v-col
-      >
+      <v-col cols="12" sm="12" md="4" lg="3" style="font-size: 1.25rem">
+        Here are some popular {{ (type.name + "s") | replaceUnderscore }} that
+        people are currently searching for.
+      </v-col>
       <v-col cols="12" sm="12" md="8" lg="9">
         <v-row>
           <v-col
