@@ -116,7 +116,7 @@
 import { mapState } from "vuex";
 
 export default {
-  name: "popular-type-section",
+  name: "popular-places-section",
   data() {
     return {
       type: {},
