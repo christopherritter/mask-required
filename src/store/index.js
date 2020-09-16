@@ -1226,11 +1226,6 @@ const store = new Vuex.Store({
 
       return averageRating;
     },
-    async fetchStaticMap({ getters }, location) {
-      var apiKey = getters.getGoogleAPIKey;
-      const URL = `https://maps.googleapis.com/maps/api/staticmap?center=${location.lat + ',' + location.lng}&zoom=14&size=400x400&key=${apiKey}`;
-      return URL;
-    }
   },
 });
 
