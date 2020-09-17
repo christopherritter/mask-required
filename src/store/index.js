@@ -1158,10 +1158,10 @@ const store = new Vuex.Store({
         enforcement: await dispatch("averageRating", enforcementRatings),
       };
     },
-    async fetchTopReviews({ dispatch }) {
+    async fetchTopReviews({}) {
       const snapshot = await fb.reviewsCollection
         .orderBy("createdOn")
-        .limitToLast(3)
+        .limitToLast(6)
         .get();
 
       let reviewsArray = [];

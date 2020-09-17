@@ -12,12 +12,19 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col v-for="review in reviews" :key="review.reviewId">
-        <v-card height="325" outlined :style="styleObject">
+      <v-col cols="12" md="6" lg="4" v-for="review in reviews" :key="review.reviewId">
+        <v-card height="325" outlined :style="styleObject"
+              @mouseover.native="highlightedCard = review.reviewId"
+              @mouseleave.native="highlightedCard = null"
+              :class="{
+                'teal white--text': highlightedCard == review.reviewId,
+              }"
+              style="cursor: pointer"
+              @click="viewPlace(place)">
           <v-row no-gutters style="height: 216px;">
             <v-col cols="12" class="flex-grow-1 flex-shrink-0">
               <v-card-title>{{ review.title }}</v-card-title>
-              <v-card-text>{{ review.content | trimLength }}</v-card-text>
+              <v-card-text>{{ review.content| truncateWithEllipse(194) }}</v-card-text>
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -26,18 +33,18 @@
                 <v-divider></v-divider>
                 
                 <v-row no-gutters>
-                  <v-col cols="3" class="hidden-md-and-down">
-                    <v-avatar class="mt-2" color="teal" size="64">
+                  <v-col cols="3" sm="2" md="3" lg="1">
+                    <v-avatar class="mt-2 mr-2" color="teal" size="64">
                       <span class="white--text headline">{{
                         review.rating
                       }}</span>
                     </v-avatar>
                   </v-col>
-                  <v-col cols="9" md="12" lg="9">
+                  <v-col cols="7" sm="10" md="9" lg="11">
                     <v-row no-gutters>
                       <v-col cols="12" class="pt-2">
                         <span class="subtitle-2">
-                          {{ review.place.name | truncateWithEllipse(38) }}
+                          {{ review.place.name | truncateWithEllipse(36) }}
                         </span>
                       </v-col>
                     </v-row>
@@ -115,6 +122,8 @@ export default {
     return {
       reviews: [],
       styleObject: { "border-color": "#7dbc96" },
+      highlightedCard: null,
+      hover: false,
     };
   },
   async created() {
@@ -132,12 +141,6 @@ export default {
     });
   },
   filters: {
-    trimLength(val) {
-      if (val.length < 240) {
-        return val;
-      }
-      return `${val.substring(0, 240)}...`;
-    },
     truncateWithEllipse(val, stringLength) {
       if (val.length > stringLength) {
         return val.slice(0, stringLength - 1) + "...";
