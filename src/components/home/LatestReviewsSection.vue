@@ -29,7 +29,7 @@
             'teal white--text': highlightedCard == review.reviewId,
           }"
           style="cursor: pointer"
-          @click="viewPlace(place)"
+          @click="viewPlace({ place_id: review.place.place_id })"
         >
           <v-row no-gutters style="height: 216px;">
             <v-col cols="12" class="flex-grow-1 flex-shrink-0">
@@ -154,6 +154,12 @@ export default {
       });
       this.reviews = reviews;
     });
+  },
+  methods: {
+    async viewPlace(place) {
+      await this.$store.dispatch("fetchPlace", place);
+      this.$router.push({ name: "place", params: { id: place.place_id } });
+    },
   },
   filters: {
     truncateWithEllipse(val, stringLength) {

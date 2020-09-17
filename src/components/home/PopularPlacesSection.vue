@@ -158,7 +158,6 @@ export default {
       return places.slice(0, 6);
     },
   },
-
   watch: {
     types(newVal, oldVal) {
       if (this.types.length > 0) {
