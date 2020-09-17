@@ -65,8 +65,6 @@ export default {
   async created() {
     if (this.regions === null) {
       this.$store.dispatch("fetchActiveRegions").then((regions) => {
-        console.log("Setting regions at creation.");
-        console.log(regions);
         this.regions = regions;
       });
     }

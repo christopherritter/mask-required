@@ -134,15 +134,6 @@ export default {
     var stateObj = findState();
     var countryObj = findCountry();
 
-    console.log("Here's the locality:");
-    console.log(localityObj.long_name);
-
-    console.log("Here's the state:");
-    console.log(stateObj.long_name);
-
-    console.log("Here's the country:");
-    console.log(countryObj.short_name);
-
     this.getPlacePredictions(localityObj.long_name + ", " + stateObj.long_name + ", " + countryObj.short_name + "A");
   },
   methods: {

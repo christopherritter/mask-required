@@ -693,7 +693,6 @@ const store = new Vuex.Store({
       return newRegion;
     },
     async fetchRegion({ dispatch, commit }, place) {
-      // console.log(place)
       var regionId = place.place_id;
       const snapshot = await fb.regionsCollection
         .where("place_id", "==", regionId)
@@ -701,7 +700,6 @@ const store = new Vuex.Store({
       var newRegion = {};
 
       if (snapshot.empty) {
-        console.log("No matching regions.");
         await dispatch("createRegion", place).then((region) => {
           commit("setRegion", region);
         });
@@ -715,9 +713,6 @@ const store = new Vuex.Store({
       commit("setRegion", newRegion);
     },
     async fetchRegionId({ getters }, address) {
-      console.log("Received address:")
-      console.log(address)
-
       var apiKey = getters.getFixieKey;
       var locality = address.name;
       var state = address.state;
@@ -735,8 +730,6 @@ const store = new Vuex.Store({
           this.errorMessage = error.message;
         });
 
-      console.log("Received response:")
-      console.log(newRegion)
       return newRegion.predictions[0].place_id;
     },
     async fetchActiveRegions() {
@@ -748,20 +741,15 @@ const store = new Vuex.Store({
       let regionsArray = [];
 
       if (snapshot.empty) {
-        // console.log("No results.")
         return;
       }
 
-      // console.log("Gathering regions:")
       snapshot.forEach((doc) => {
         let region = doc.data();
         region.id = doc.id;
-        // console.log(region)
         regionsArray.push(region);
       });
 
-      console.log("Sending regions:")
-      console.log(regionsArray)
       return regionsArray;
     },
     async updateProfile({ dispatch }, user) {
@@ -823,8 +811,6 @@ const store = new Vuex.Store({
       return newPlace;
     },
     async fetchPlace({ dispatch, commit }, place) {
-      console.log("Here is the place")
-      console.log(place)
       var placeId = place.place_id;
       const snapshot = await fb.placesGeoFirestore
         .where("place_id", "==", placeId)
@@ -832,7 +818,6 @@ const store = new Vuex.Store({
       var newPlace = {};
 
       if (snapshot.empty) {
-        console.log("No matching places.");
         await dispatch("createPlace", place).then((newPlace) => {
           commit("setPlace", newPlace);
         });
