@@ -1,6 +1,6 @@
 <template>
   <section id="latest-reviews-section">
-    <v-row>
+    <v-row v-if="!loading">
       <v-col class="d-flex align-center">
         <v-divider class="mb-1"></v-divider>
       </v-col>
@@ -11,7 +11,7 @@
         <v-divider class="mb-1"></v-divider>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="!loading">
       <v-col
         cols="12"
         md="6"
@@ -34,9 +34,9 @@
           <v-row no-gutters style="height: 216px;">
             <v-col cols="12" class="flex-grow-1 flex-shrink-0">
               <v-card-title>{{ review.title }}</v-card-title>
-              <v-card-text>{{
-                review.content | truncateWithEllipse(194)
-              }}</v-card-text>
+              <v-card-text>
+                {{ review.content | truncateWithEllipse(194) }}
+              </v-card-text>
             </v-col>
           </v-row>
           <v-row no-gutters>
@@ -63,10 +63,7 @@
                     <v-row no-gutters>
                       <v-col cols="12">
                         <span class="caption">
-                          {{
-                            review.place.formatted_address
-                              | truncateWithEllipse(42)
-                          }}
+                          {{ review.place.formatted_address | truncateWithEllipse(42) }}
                         </span>
                       </v-col>
                     </v-row>
@@ -135,10 +132,17 @@ export default {
   name: "latest-reviews-section",
   data() {
     return {
-      reviews: [],
+      reviews: [{ 
+        content: "",
+        place: {
+          name: "",
+          formatted_address: ""
+        }
+      }],
       styleObject: { "border-color": "#7dbc96" },
       highlightedCard: null,
       hover: false,
+      loading: true
     };
   },
   async created() {
@@ -153,16 +157,21 @@ export default {
           });
       });
       this.reviews = reviews;
+      this.loading = false;
     });
   },
   methods: {
     async viewPlace(place) {
-      await this.$store.dispatch("fetchPlace", place);
+      await this.$store.dispatch("fetchPlace", { place_id: place.place_id });
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
   },
   filters: {
     truncateWithEllipse(val, stringLength) {
+      if (!val) {
+        // not sure why this is erroring out.
+        return
+      }
       if (val.length > stringLength) {
         return val.slice(0, stringLength - 1) + "...";
       } else {
