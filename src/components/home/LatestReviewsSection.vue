@@ -12,35 +12,47 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" md="6" lg="4" v-for="review in reviews" :key="review.reviewId">
-        <v-card height="325" outlined :style="styleObject"
-              @mouseover.native="highlightedCard = review.reviewId"
-              @mouseleave.native="highlightedCard = null"
-              :class="{
-                'teal white--text': highlightedCard == review.reviewId,
-              }"
-              style="cursor: pointer"
-              @click="viewPlace(place)">
+      <v-col
+        cols="12"
+        md="6"
+        lg="4"
+        v-for="review in reviews"
+        :key="review.reviewId"
+      >
+        <v-card
+          height="325"
+          outlined
+          :style="styleObject"
+          @mouseover.native="highlightedCard = review.reviewId"
+          @mouseleave.native="highlightedCard = null"
+          :class="{
+            'teal white--text': highlightedCard == review.reviewId,
+          }"
+          style="cursor: pointer"
+          @click="viewPlace(place)"
+        >
           <v-row no-gutters style="height: 216px;">
             <v-col cols="12" class="flex-grow-1 flex-shrink-0">
               <v-card-title>{{ review.title }}</v-card-title>
-              <v-card-text>{{ review.content| truncateWithEllipse(194) }}</v-card-text>
+              <v-card-text>{{
+                review.content | truncateWithEllipse(194)
+              }}</v-card-text>
             </v-col>
           </v-row>
           <v-row no-gutters>
             <v-col cols="12" class="flex-grow-1 flex-shrink-1">
               <v-card-text>
                 <v-divider></v-divider>
-                
+
                 <v-row no-gutters>
-                  <v-col cols="3" sm="2" md="3" lg="1">
-                    <v-avatar class="mt-2 mr-2" color="teal" size="64">
+                  <v-col class="flex-grow-0 flex-shrink-1">
+                    <v-avatar class="mt-2 mr-4" color="teal" size="64">
                       <span class="white--text headline">{{
                         review.rating
                       }}</span>
                     </v-avatar>
                   </v-col>
-                  <v-col cols="7" sm="10" md="9" lg="11">
+                  <v-col class="flex-grow-1 flex-shrink-1">
                     <v-row no-gutters>
                       <v-col cols="12" class="pt-2">
                         <span class="subtitle-2">
@@ -51,7 +63,10 @@
                     <v-row no-gutters>
                       <v-col cols="12">
                         <span class="caption">
-                          {{ review.place.formatted_address | truncateWithEllipse(40) }}
+                          {{
+                            review.place.formatted_address
+                              | truncateWithEllipse(42)
+                          }}
                         </span>
                       </v-col>
                     </v-row>
