@@ -529,6 +529,8 @@ const store = new Vuex.Store({
     },
   },
   actions: {
+
+    // Authentication  
     async login({ dispatch }, form) {
       store.commit("setErrorMessage", "");
       // sign user in
@@ -630,6 +632,15 @@ const store = new Vuex.Store({
       // fetch user profile and set in state
       dispatch("fetchUserProfile", user);
     },
+    async logout({ commit }) {
+      await fb.auth.signOut();
+
+      // clear userProfile and redirect to /login
+      commit("setUserProfile", {});
+      router.push("/login");
+    },
+
+    // Users
     async fetchUserProfile({ commit }, user) {
       // fetch user profile
       const currentUser = await firebase.auth().currentUser;
@@ -670,6 +681,28 @@ const store = new Vuex.Store({
         long: null,
       });
     },
+    async updateProfile({ dispatch }, user) {
+      const userId = fb.auth.currentUser.uid;
+      // update user object
+      const userRef = await fb.usersCollection.doc(userId).update({
+        name: user.name,
+        nickname: user.nickname,
+      });
+
+      dispatch("fetchUserProfile", { uid: userId });
+
+      // update all reviews by user
+      const reviewDocs = await fb.reviewsCollection
+        .where("userId", "==", userId)
+        .get();
+      reviewDocs.forEach((doc) => {
+        fb.reviewsCollection.doc(doc.id).update({
+          userName: user.name,
+        });
+      });
+    },
+
+    // Regions
     async createRegion({ commit, getters }, place) {
       var apiKey = getters.getFixieKey;
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${apiKey}`;
@@ -752,26 +785,8 @@ const store = new Vuex.Store({
 
       return regionsArray;
     },
-    async updateProfile({ dispatch }, user) {
-      const userId = fb.auth.currentUser.uid;
-      // update user object
-      const userRef = await fb.usersCollection.doc(userId).update({
-        name: user.name,
-        nickname: user.nickname,
-      });
-
-      dispatch("fetchUserProfile", { uid: userId });
-
-      // update all reviews by user
-      const reviewDocs = await fb.reviewsCollection
-        .where("userId", "==", userId)
-        .get();
-      reviewDocs.forEach((doc) => {
-        fb.reviewsCollection.doc(doc.id).update({
-          userName: user.name,
-        });
-      });
-    },
+    
+    // Places
     async createPlace({ state, getters }, place) {
       var apiKey = getters.getFixieKey;
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types,address_component&key=${apiKey}`;
@@ -953,127 +968,9 @@ const store = new Vuex.Store({
       commit("setPlaces", null);
       commit("setRange", { lower: null, upper: null });
     },
-    async getGeohashRange({ state, commit }) {
-      // console.log("Getting the geoHash")
-      const lowerLat = state.region.geometry.viewport.southwest.lat;
-      const lowerLon = state.region.geometry.viewport.southwest.lng;
 
-      const upperLat = state.region.geometry.viewport.northeast.lat;
-      const upperLon = state.region.geometry.viewport.northeast.lng;
-
-      const lower = geohash.encode(lowerLat, lowerLon);
-      const upper = geohash.encode(upperLat, upperLon);
-
-      // console.log("Geohashes coming at ya!");
-      // console.log(lowerLat, lowerLon);
-      // console.log(upperLat, upperLon);
-      // console.log(lower, upper);
-
-      commit("setRange", { lower, upper });
-    },
-    async fetchReviewTypes({ commit }) {
-      const reviews = await fb.reviewsCollection.get();
-      let typesArray = [];
-
-      if (reviews.empty) {
-        return;
-      }
-
-      reviews.forEach((doc) => {
-        let review = doc.data();
-        review.id = doc.id;
-
-        if (review.place.types) {
-          for (let t = 0; t < review.place.types.length; t++) {
-            let name = review.place.types[t];
-            let type = {
-              name: name,
-              counter: 1,
-            };
-            if (
-              //   name == "administrative_area_level_1" ||
-              //   name == "administrative_area_level_2" ||
-              //   name == "administrative_area_level_3" ||
-              //   name == "administrative_area_level_4" ||
-              //   name == "administrative_area_level_5" ||
-              //   name == "archipelago" ||
-              //   name == "colloquial_area" ||
-              //   name == "continent" ||
-              //   name == "country" ||
-              name == "establishment" ||
-              //   name == "finance" ||
-              //   name == "floor" ||
-              name == "food" ||
-              //   name == "general_contractor" ||
-              //   name == "geocode" ||
-              //   name == "health" ||
-              //   name == "intersection" ||
-              //   name == "locality" ||
-              //   name == "natural_feature" ||
-              //   name == "place_of_worship" ||
-              //   name == "plus_code" ||
-              name == "point_of_interest"
-              //   name == "political" ||
-              //   name == "post_box" ||
-              //   name == "postal_code" ||
-              //   name == "postal_code_prefix" ||
-              //   name == "postal_code_suffix" ||
-              //   name == "postal_town" ||
-              //   name == "premise" ||
-              //   name == "room" ||
-              //   name == "route" ||
-              //   name == "store" ||
-              //   name == "street_address" ||
-              //   name == "sublocality" ||
-              //   name == "sublocality_level_1" ||
-              //   name == "sublocality_level_2" ||
-              //   name == "sublocality_level_3" ||
-              //   name == "sublocality_level_4" ||
-              //   name == "sublocality_level_5" ||
-              //   name == "subpremise" ||
-              //   name == "town_square"
-            ) {
-              return;
-            }
-            let result = containsType(type, typesArray);
-            if (!result) {
-              typesArray.push(type);
-            } else {
-              typesArray.filter((obj) => {
-                if (obj.name == type.name) {
-                  obj.counter++;
-                }
-              });
-            }
-          }
-        }
-      });
-
-      // sort array by counter then name
-
-      typesArray.sort((a, b) =>
-        a.counter > b.counter
-          ? -1
-          : a.counter === b.counter
-          ? a.name > b.name
-            ? 1
-            : -1
-          : 1
-      );
-
-      commit("setTypes", typesArray);
-
-      function containsType(type, list) {
-        var i;
-        for (i = 0; i < list.length; i++) {
-          if (list[i].name == type.name) {
-            return true;
-          }
-        }
-
-        return false;
-      }
-    },
+    // Ratings and reviews
+    
     async createReview({ state, commit }, review) {
       // create review in firebase
       const newReview = await fb.reviewsCollection
@@ -1191,16 +1088,6 @@ const store = new Vuex.Store({
     async deleteReview({ commit }, review) {
       fb.reviewsCollection.doc(review.id).delete();
     },
-    async showSearchBar({ commit }, val) {
-      commit("setSearchBar", val);
-    },
-    async logout({ commit }) {
-      await fb.auth.signOut();
-
-      // clear userProfile and redirect to /login
-      commit("setUserProfile", {});
-      router.push("/login");
-    },
     async averageRating({}, ratings) {
       var averageRating = ratings.reduce(function(a, b) {
         return a + b;
@@ -1210,6 +1097,134 @@ const store = new Vuex.Store({
       averageRating = Math.round(averageRating * 2) / 2;
 
       return averageRating;
+    },
+
+    // Types
+    async countReviewTypes({ commit }) {
+      const reviews = await fb.reviewsCollection.get();
+      let typesArray = [];
+
+      if (reviews.empty) {
+        return;
+      }
+
+      reviews.forEach((doc) => {
+        let review = doc.data();
+        review.id = doc.id;
+
+        if (review.place.types) {
+          for (let t = 0; t < review.place.types.length; t++) {
+            let name = review.place.types[t];
+            let type = {
+              name: name,
+              counter: 1,
+            };
+            if (
+              //   name == "administrative_area_level_1" ||
+              //   name == "administrative_area_level_2" ||
+              //   name == "administrative_area_level_3" ||
+              //   name == "administrative_area_level_4" ||
+              //   name == "administrative_area_level_5" ||
+              //   name == "archipelago" ||
+              //   name == "colloquial_area" ||
+              //   name == "continent" ||
+              //   name == "country" ||
+              name == "establishment" ||
+              //   name == "finance" ||
+              //   name == "floor" ||
+              name == "food" ||
+              //   name == "general_contractor" ||
+              //   name == "geocode" ||
+              //   name == "health" ||
+              //   name == "intersection" ||
+              //   name == "locality" ||
+              //   name == "natural_feature" ||
+              //   name == "place_of_worship" ||
+              //   name == "plus_code" ||
+              name == "point_of_interest"
+              //   name == "political" ||
+              //   name == "post_box" ||
+              //   name == "postal_code" ||
+              //   name == "postal_code_prefix" ||
+              //   name == "postal_code_suffix" ||
+              //   name == "postal_town" ||
+              //   name == "premise" ||
+              //   name == "room" ||
+              //   name == "route" ||
+              //   name == "store" ||
+              //   name == "street_address" ||
+              //   name == "sublocality" ||
+              //   name == "sublocality_level_1" ||
+              //   name == "sublocality_level_2" ||
+              //   name == "sublocality_level_3" ||
+              //   name == "sublocality_level_4" ||
+              //   name == "sublocality_level_5" ||
+              //   name == "subpremise" ||
+              //   name == "town_square"
+            ) {
+              return;
+            }
+            let result = containsType(type, typesArray);
+            if (!result) {
+              typesArray.push(type);
+            } else {
+              typesArray.filter((obj) => {
+                if (obj.name == type.name) {
+                  obj.counter++;
+                }
+              });
+            }
+          }
+        }
+      });
+
+      // sort array by counter then name
+
+      typesArray.sort((a, b) =>
+        a.counter > b.counter
+          ? -1
+          : a.counter === b.counter
+          ? a.name > b.name
+            ? 1
+            : -1
+          : 1
+      );
+
+      commit("setTypes", typesArray);
+
+      function containsType(type, list) {
+        var i;
+        for (i = 0; i < list.length; i++) {
+          if (list[i].name == type.name) {
+            return true;
+          }
+        }
+
+        return false;
+      }
+    },
+
+    // Utilities
+    async showSearchBar({ commit }, val) {
+      commit("setSearchBar", val);
+    },
+    async getGeohashRange({ state, commit }) {
+      // console.log("Getting the geoHash")
+      const lowerLat = state.region.geometry.viewport.southwest.lat;
+      const lowerLon = state.region.geometry.viewport.southwest.lng;
+
+      const upperLat = state.region.geometry.viewport.northeast.lat;
+      const upperLon = state.region.geometry.viewport.northeast.lng;
+
+      const lower = geohash.encode(lowerLat, lowerLon);
+      const upper = geohash.encode(upperLat, upperLon);
+
+      // console.log("Geohashes coming at ya!");
+      // console.log(lowerLat, lowerLon);
+      // console.log(upperLat, upperLon);
+      // console.log(lower, upper);
+
+      commit("setRange", { lower, upper });
     },
   },
 });

@@ -130,7 +130,7 @@ export default {
   },
   async created() {
     if (this.$store.state.types === null) {
-      await this.$store.dispatch("fetchReviewTypes");
+      await this.$store.dispatch("countReviewTypes");
     }
 
     var i,
