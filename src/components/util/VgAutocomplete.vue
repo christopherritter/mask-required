@@ -4,6 +4,7 @@
     :value="search"
     item-text="Description"
     item-value="PlaceId"
+    :type="type"
     :items="items"
     :loading="isLoading"
     :search-input.sync="search"
@@ -53,6 +54,7 @@ export default {
     "prependIcon",
     "hideSelected",
     "appendIcon",
+    "type",
     "types",
     "solo",
     "prependInnerIcon",
@@ -103,7 +105,12 @@ export default {
         var isGeocode = newVal.types.includes("geocode");
         var isEstablishment = newVal.types.includes("establishment");
 
-        if (isGeocode) {
+        if (isGeocode && this.type.length > 0) {
+          this.$router.push({
+            name: "nearby-places-type",
+            params: { id: newVal.place_id, type: this.type },
+          });
+        } else if (isGeocode) {
           this.$router.push({
             name: "nearby-places",
             params: { id: newVal.place_id },

@@ -51,6 +51,7 @@
           class="px-0"
           mandatory
           active-class="teal--text"
+          v-model="type"
         >
           <v-chip
             color="white"
@@ -331,7 +332,7 @@ export default {
       },
       place: {},
       places: [],
-      type: "view_all",
+      type: "",
       types: [],
       region: {},
       sortedPlaces: [],
@@ -368,36 +369,41 @@ export default {
   },
   async created() {
     var routerId = this.$router.currentRoute.params.id;
-    // var routerType = this.$router.currentRoute.params.type;
+    var routerType = this.$router.currentRoute.params.type;
 
     await this.setRegion(routerId);
-
-    // if (routerType) {
-    //   this.type = routerType;
-    //   this.showLessTypes = true;
-    // }
 
     if (this.region.place_id != routerId) {
       await this.$store.dispatch("clearPlaces");
     }
 
+    console.log("Checking the router type:")
+    if (routerType) {
+      console.log("Pass")
+      console.log(routerType)
+      this.type = routerType;
+    } else {
+      console.log("Fail")
+      this.type = "";
+    }
+    console.log("Now we view local places.")
     await this.viewLocalPlaces();
     this.loading = false;
   },
   watch: {
     async $route(to, from) {
-      var routerId = this.$router.currentRoute.params.id;
-
       this.loading = true;
 
+      console.log("Checking it again:")
       if (to.params.id == from.params.id) {
         if (!to.params.type) {
+          console.log("Here's what I did:")
           this.type = "view_all";
         } else {
           this.type = to.params.type;
         }
       } else {
-        this.type = null;
+        this.type = "";
         await this.$store.dispatch("clearPlaces");
         this.sortedPlaces = [];
         this.viewLocalPlaces();
@@ -408,16 +414,18 @@ export default {
   },
   computed: {
     typesToDisplay: function() {
-      if (this.showLessTypes) {
-        var lessTypes = [];
-        for (let i = 0; i < this.sortedPlaces.length; i++) {
-          if (this.sortedPlaces[i].name == this.type) {
-            lessTypes.push(this.sortedPlaces[i]);
-          }
-        }
-        return lessTypes;
-      } else {
+      if (this.type == "view_all") {
         return this.sortedPlaces;
+      } else {
+        var filteredPlaces = [];
+
+        this.sortedPlaces.map((place) => {
+          if (place.name == this.type) {
+            filteredPlaces.push(place)
+          }
+        });
+
+        return filteredPlaces;
       }
     },
   },
@@ -432,6 +440,7 @@ export default {
       this.region = this.$store.getters.getRegion;
     },
     async viewLocalPlaces() {
+      console.log("Viewing local places.")
       var placeId = this.$route.params.id;
       var routerId = this.$router.currentRoute.params.id;
 
@@ -442,7 +451,9 @@ export default {
 
       await this.$store.dispatch("getGeohashRange");
       await this.$store.dispatch("findLocalPlaces");
+      console.log("Counting the review types.")
       await this.$store.dispatch("countReviewTypes");
+      console.log("Sorting the places into types.")
       await this.sortPlacesIntoTypes();
       return;
     },
@@ -459,6 +470,7 @@ export default {
     async sortPlacesIntoTypes() {
       var p, t, s;
       const currentPlaces = this.$store.getters.getPlaces;
+      const currentTypes = this.$store.getters.getTypes;
       var sortedPlaces = [];
       var sortedTypes = [];
 
@@ -471,51 +483,52 @@ export default {
       this.$store.dispatch("showSearchBar", true);
       this.empty = false;
 
-      for (p = 0; p < currentPlaces.length; p++) {
-        var newPlace = currentPlaces[p];
+      // for (p = 0; p < currentPlaces.length; p++) {
+      //   var newPlace = currentPlaces[p];
 
-        // create an updated list of types
-        for (t = 0; t < newPlace.types.length; t++) {
-          var newType = {
-            name: newPlace.types[t],
-            counter: 1,
-            places: [],
-          };
+      //   // create an updated list of types
+      //   for (t = 0; t < newPlace.types.length; t++) {
+      //     var newType = {
+      //       name: newPlace.types[t],
+      //       counter: 1,
+      //       places: [],
+      //     };
 
-          if (
-            sortedTypes.filter((type) => type.name === newType.name).length > 0
-          ) {
-            var pos = sortedTypes
-              .map(function(e) {
-                return e.name;
-              })
-              .indexOf(newType.name);
-            sortedTypes[pos].counter = sortedTypes[pos].counter + 1;
-          } else {
-            sortedTypes.push(newType);
-          }
-        }
-      }
+      //     if (
+      //       sortedTypes.filter((type) => type.name === newType.name).length > 0
+      //     ) {
+      //       var pos = sortedTypes
+      //         .map(function(e) {
+      //           return e.name;
+      //         })
+      //         .indexOf(newType.name);
+      //       sortedTypes[pos].counter = sortedTypes[pos].counter + 1;
+      //     } else {
+      //       sortedTypes.push(newType);
+      //     }
+      //   }
+      // }
 
       // sort the places into types
-      for (s = 0; s < sortedTypes.length; s++) {
-        var currentType = sortedTypes[s];
+      for (s = 0; s < currentTypes.length; s++) {
+        var currentType = currentTypes[s];
+        currentType.places = [];
 
         for (p = 0; p < currentPlaces.length; p++) {
           var currentPlace = currentPlaces[p];
 
-          if (currentPlace.types.includes(sortedTypes[s].name)) {
-            sortedTypes[s].places.push(currentPlace);
+          if (currentPlace.types.includes(currentType.name)) {
+            currentType.places.push(currentPlace);
           }
         }
 
         if (
-          sortedPlaces.filter((type) => type.name === sortedTypes[s].name)
+          currentPlaces.filter((type) => type.name === currentType.name)
             .length > 0
         ) {
           console.log("Found something.");
         } else {
-          sortedPlaces.push(sortedTypes[s]);
+          sortedPlaces.push(currentType);
         }
       }
 

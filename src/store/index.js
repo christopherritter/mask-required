@@ -733,7 +733,7 @@ const store = new Vuex.Store({
       var newRegion = {};
 
       if (snapshot.empty) {
-        await dispatch("createRegion", place).then((region) => {
+        dispatch("createRegion", place).then((region) => {
           commit("setRegion", region);
         });
         return;
