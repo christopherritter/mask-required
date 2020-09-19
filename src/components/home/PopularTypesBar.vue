@@ -90,14 +90,14 @@
       </v-col>
     </v-row>
     <v-row v-else>
-      <v-col>
-        <v-card height="80" outlined color="teal" dark>
-          <v-card-subtitle>
+      <v-col cols="4" md="2">
+        <v-card height="80" outlined color="teal">
+          <v-card-subtitle class="white--text">
             Browse nearby places:
           </v-card-subtitle>
         </v-card>
       </v-col>
-      <v-col v-for="type in topReviewTypes" :key="type.name">
+      <v-col cols="4" md="2" v-for="type in topReviewTypes" :key="type.name">
         <v-card
           height="80"
           outlined
@@ -105,17 +105,21 @@
           @mouseover.native="highlightedCard = type.name"
           @mouseleave.native="highlightedCard = null"
           :class="{
-            'teal white--text': highlightedCard == type.name,
+            teal: highlightedCard == type.name,
           }"
           style="cursor: pointer"
           @click="selectType(type.name)"
         >
-          <v-card-subtitle>
+          <v-card-subtitle
+            :class="{
+              'white--text': highlightedCard == type.name,
+            }"
+          >
             {{ type.name | replaceUnderscore }}
           </v-card-subtitle>
         </v-card>
       </v-col>
-      <v-col>
+      <v-col cols="4" md="2">
         <v-menu offset-y>
           <template v-slot:activator="{ on, attrs }">
             <v-card
@@ -127,11 +131,15 @@
               @mouseover.native="highlightedCard = 'more'"
               @mouseleave.native="highlightedCard = null"
               :class="{
-                'teal white--text': highlightedCard == 'more',
+                teal: highlightedCard == 'more',
               }"
               style="cursor: pointer"
             >
-              <v-card-subtitle>
+              <v-card-subtitle
+                :class="{
+                  'white--text': highlightedCard == 'more',
+                }"
+              >
                 More...
               </v-card-subtitle>
             </v-card>
