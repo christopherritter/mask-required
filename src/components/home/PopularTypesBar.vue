@@ -205,7 +205,9 @@ export default {
 
       for (t = 0; t < types.length; t++) {
         if (this.validTypes.includes(types[t].name)) {
-          overflow.push(types[t]);
+          if (types[t].counter > 2) {
+            overflow.push(types[t]);
+          }
         }
       }
 
