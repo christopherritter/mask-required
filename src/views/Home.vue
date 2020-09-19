@@ -4,8 +4,8 @@
       <popular-types-bar></popular-types-bar>
       <primary-search-bar></primary-search-bar>
       <popular-places-section></popular-places-section>
-      <!-- <latest-reviews-section></latest-reviews-section> -->
-      <active-regions-section></active-regions-section>
+      <latest-reviews-section></latest-reviews-section>
+      <active-regions-section class="mb-16"></active-regions-section>
     </v-container>
   </v-main>
 </template>
@@ -13,7 +13,7 @@
 <script>
 import PopularTypesBar from "@/components/home/PopularTypesBar";
 import ActiveRegionsSection from "@/components/home/ActiveRegionsSection";
-// import LatestReviewsSection from "@/components/home/LatestReviewsSection";
+import LatestReviewsSection from "@/components/home/LatestReviewsSection";
 import PopularPlacesSection from "@/components/home/PopularPlacesSection";
 import PrimarySearchBar from "@/components/home/PrimarySearchBar";
 
@@ -22,7 +22,7 @@ export default {
   components: {
     PopularTypesBar,
     ActiveRegionsSection,
-    // LatestReviewsSection,
+    LatestReviewsSection,
     PrimarySearchBar,
     PopularPlacesSection
   },

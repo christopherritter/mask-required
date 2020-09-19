@@ -854,6 +854,7 @@ const store = new Vuex.Store({
       });
 
       commit("setPlace", newPlace);
+      return newPlace;
     },
     async fetchPlaces({ commit, dispatch }, type) {
       var placesArray = [];

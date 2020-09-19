@@ -1,6 +1,6 @@
 <template>
   <section id="latest-reviews-section">
-    <v-row v-if="!loading">
+    <v-row>
       <v-col class="d-flex align-center">
         <v-divider class="mb-1"></v-divider>
       </v-col>
@@ -11,7 +11,7 @@
         <v-divider class="mb-1"></v-divider>
       </v-col>
     </v-row>
-    <v-row v-if="!loading">
+    <v-row>
       <v-col
         cols="12"
         md="6"
@@ -33,9 +33,9 @@
         >
           <v-row no-gutters style="height: 216px;">
             <v-col cols="12" class="flex-grow-1 flex-shrink-0">
-              <v-card-title>{{ review.title }}</v-card-title>
+              <v-card-title>{{ review.title | truncateWithEllipse(70) }}</v-card-title>
               <v-card-text>
-                {{ review.content | truncateWithEllipse(194) }}
+                {{ review.content | truncateWithEllipse(250) }}
               </v-card-text>
             </v-col>
           </v-row>
@@ -63,7 +63,10 @@
                     <v-row no-gutters>
                       <v-col cols="12">
                         <span class="caption">
-                          {{ review.place.formatted_address | truncateWithEllipse(42) }}
+                          {{
+                            review.place.formatted_address
+                              | truncateWithEllipse(42)
+                          }}
                         </span>
                       </v-col>
                     </v-row>
@@ -132,33 +135,30 @@ export default {
   name: "latest-reviews-section",
   data() {
     return {
-      reviews: [{ 
-        content: "",
-        place: {
-          name: "",
-          formatted_address: ""
-        }
-      }],
+      reviews: [],
       styleObject: { "border-color": "#7dbc96" },
       highlightedCard: null,
       hover: false,
-      loading: true
+      loading: true,
     };
   },
   async created() {
     await this.$store.dispatch("fetchTopReviews").then((reviews) => {
+
       reviews.map((review) => {
-        // console.log(review.place.place_id)
+        var topReview = review;
+
         this.$store
           .dispatch("fetchPlace", { place_id: review.place.place_id })
-          .then(() => {
-            // console.log(this.$store.getters.getPlace)
-            review.place = this.$store.getters.getPlace;
+          .then((place) => {
+            topReview.place = place;
           });
+
+        this.reviews.push(topReview);
       });
-      this.reviews = reviews;
-      this.loading = false;
+
     });
+    this.loading = false;
   },
   methods: {
     async viewPlace(place) {
@@ -170,7 +170,7 @@ export default {
     truncateWithEllipse(val, stringLength) {
       if (!val) {
         // not sure why this is erroring out.
-        return
+        return;
       }
       if (val.length > stringLength) {
         return val.slice(0, stringLength - 1) + "...";
