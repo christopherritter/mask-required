@@ -377,16 +377,12 @@ export default {
       await this.$store.dispatch("clearPlaces");
     }
 
-    console.log("Checking the router type:")
     if (routerType) {
-      console.log("Pass")
-      console.log(routerType)
       this.type = routerType;
     } else {
-      console.log("Fail")
       this.type = "";
     }
-    console.log("Now we view local places.")
+
     await this.viewLocalPlaces();
     this.loading = false;
   },
@@ -394,13 +390,11 @@ export default {
     async $route(to, from) {
       this.loading = true;
 
-      console.log("Checking it again:")
       if (to.params.id == from.params.id) {
-        if (!to.params.type) {
-          console.log("Here's what I did:")
-          this.type = "view_all";
-        } else {
+        if (to.params.type) {
           this.type = to.params.type;
+        } else {
+          this.type = "view_all";
         }
       } else {
         this.type = "";
@@ -414,19 +408,24 @@ export default {
   },
   computed: {
     typesToDisplay: function() {
-      if (this.type == "view_all") {
-        return this.sortedPlaces;
-      } else {
-        var filteredPlaces = [];
+      var filteredPlaces = [];
 
+      if (this.type == "view_all") {
+        this.sortedPlaces.map((place) => {
+          filteredPlaces.push(place);
+        });
+      } else {
         this.sortedPlaces.map((place) => {
           if (place.name == this.type) {
-            filteredPlaces.push(place)
+            filteredPlaces.push(place);
           }
         });
-
-        return filteredPlaces;
       }
+
+      if (filteredPlaces.length == 0) {
+        this.setEmptyToTrue();
+      }
+      return filteredPlaces;
     },
   },
   methods: {
@@ -440,7 +439,6 @@ export default {
       this.region = this.$store.getters.getRegion;
     },
     async viewLocalPlaces() {
-      console.log("Viewing local places.")
       var placeId = this.$route.params.id;
       var routerId = this.$router.currentRoute.params.id;
 
@@ -451,9 +449,7 @@ export default {
 
       await this.$store.dispatch("getGeohashRange");
       await this.$store.dispatch("findLocalPlaces");
-      console.log("Counting the review types.")
       await this.$store.dispatch("countReviewTypes");
-      console.log("Sorting the places into types.")
       await this.sortPlacesIntoTypes();
       return;
     },
@@ -472,6 +468,7 @@ export default {
       const currentPlaces = this.$store.getters.getPlaces;
       const currentTypes = this.$store.getters.getTypes;
       var sortedPlaces = [];
+      var filteredPlaces = [];
       var sortedTypes = [];
 
       if (!currentPlaces) {
@@ -482,32 +479,6 @@ export default {
 
       this.$store.dispatch("showSearchBar", true);
       this.empty = false;
-
-      // for (p = 0; p < currentPlaces.length; p++) {
-      //   var newPlace = currentPlaces[p];
-
-      //   // create an updated list of types
-      //   for (t = 0; t < newPlace.types.length; t++) {
-      //     var newType = {
-      //       name: newPlace.types[t],
-      //       counter: 1,
-      //       places: [],
-      //     };
-
-      //     if (
-      //       sortedTypes.filter((type) => type.name === newType.name).length > 0
-      //     ) {
-      //       var pos = sortedTypes
-      //         .map(function(e) {
-      //           return e.name;
-      //         })
-      //         .indexOf(newType.name);
-      //       sortedTypes[pos].counter = sortedTypes[pos].counter + 1;
-      //     } else {
-      //       sortedTypes.push(newType);
-      //     }
-      //   }
-      // }
 
       // sort the places into types
       for (s = 0; s < currentTypes.length; s++) {
@@ -532,6 +503,7 @@ export default {
         }
       }
 
+      removeItemAll(sortedPlaces, 0);
       this.sortedPlaces = sortedPlaces.sort(compareCounters);
 
       function compareCounters(a, b) {
@@ -547,7 +519,24 @@ export default {
         }
         return comparison;
       }
+
+      function removeItemAll(arr, value) {
+        var i = 0;
+        while (i < arr.length) {
+          if (arr[i].places.length === value) {
+            arr.splice(i, 1);
+          } else {
+            ++i;
+          }
+        }
+        return arr;
+      }
     },
+    setEmptyToTrue() {
+      if (this.sortedPlaces.length == 0) {
+        this.empty = true;
+      }
+    }
   },
   components: {
     VgAutocomplete,
