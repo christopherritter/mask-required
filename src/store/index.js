@@ -928,7 +928,7 @@ const store = new Vuex.Store({
       const longitude = state.region.geometry.location.lng;
       const query = fb.placesGeoFirestore.near({
         center: new firebase.firestore.GeoPoint(latitude, longitude),
-        radius: 4,
+        radius: 10,
       });
       // Retrieve the current coordinates using the navigator API
       const places = await query.get();
@@ -1100,6 +1100,109 @@ const store = new Vuex.Store({
     },
 
     // Types
+    async countPlaceTypes({ commit }) {
+      const places = await fb.placesCollection.get();
+      let typesArray = [];
+
+      if (places.empty) {
+        return;
+      }
+
+      places.forEach((doc) => {
+        let place = doc.data();
+        place.id = doc.id;
+
+        if (place.types) {
+          for (let t = 0; t < place.types.length; t++) {
+            let name = place.types[t];
+            let type = {
+              name: name,
+              counter: 1,
+            };
+            if (
+              // name == "administrative_area_level_1" ||
+              // name == "administrative_area_level_2" ||
+              // name == "administrative_area_level_3" ||
+              // name == "administrative_area_level_4" ||
+              // name == "administrative_area_level_5" ||
+              // name == "archipelago" ||
+              // name == "colloquial_area" ||
+              // name == "continent" ||
+              // name == "country" ||
+              name == "establishment" ||
+              // name == "finance" ||
+              // name == "floor" ||
+              name == "food" ||
+              // name == "general_contractor" ||
+              name == "geocode"
+              // name == "health" ||
+              // name == "intersection" ||
+              // name == "locality" ||
+              // name == "natural_feature" ||
+              // name == "place_of_worship" ||
+              // name == "plus_code" ||
+              // name == "point_of_interest" ||
+              // name == "political" ||
+              // name == "post_box" ||
+              // name == "postal_code" ||
+              // name == "postal_code_prefix" ||
+              // name == "postal_code_suffix" ||
+              // name == "postal_town" ||
+              // name == "premise" ||
+              // name == "room" ||
+              // name == "route" ||
+              // name == "store" ||
+              // name == "street_address" ||
+              // name == "sublocality" ||
+              // name == "sublocality_level_1" ||
+              // name == "sublocality_level_2" ||
+              // name == "sublocality_level_3" ||
+              // name == "sublocality_level_4" ||
+              // name == "sublocality_level_5" ||
+              // name == "subpremise" ||
+              // name == "town_square"
+            ) {
+              return;
+            }
+            let result = containsType(type, typesArray);
+            if (!result) {
+              typesArray.push(type);
+            } else {
+              typesArray.filter((obj) => {
+                if (obj.name == type.name) {
+                  obj.counter++;
+                }
+              });
+            }
+          }
+        }
+      });
+
+      // sort array by counter then name
+
+      typesArray.sort((a, b) =>
+        a.counter > b.counter
+          ? -1
+          : a.counter === b.counter
+          ? a.name > b.name
+            ? 1
+            : -1
+          : 1
+      );
+
+      commit("setTypes", typesArray);
+
+      function containsType(type, list) {
+        var i;
+        for (i = 0; i < list.length; i++) {
+          if (list[i].name == type.name) {
+            return true;
+          }
+        }
+
+        return false;
+      }
+    },
     async countReviewTypes({ commit }) {
       const reviews = await fb.reviewsCollection.get();
       let typesArray = [];
@@ -1120,55 +1223,57 @@ const store = new Vuex.Store({
               counter: 1,
             };
             if (
-              name == "administrative_area_level_1" ||
-              name == "administrative_area_level_2" ||
-              name == "administrative_area_level_3" ||
-              name == "administrative_area_level_4" ||
-              name == "administrative_area_level_5" ||
-              name == "archipelago" ||
-              name == "colloquial_area" ||
-              name == "continent" ||
-              name == "country" ||
+              // name == "administrative_area_level_1" ||
+              // name == "administrative_area_level_2" ||
+              // name == "administrative_area_level_3" ||
+              // name == "administrative_area_level_4" ||
+              // name == "administrative_area_level_5" ||
+              // name == "archipelago" ||
+              // name == "colloquial_area" ||
+              // name == "continent" ||
+              // name == "country" ||
               name == "establishment" ||
-              name == "finance" ||
-              name == "floor" ||
+              // name == "finance" ||
+              // name == "floor" ||
               name == "food" ||
-              name == "general_contractor" ||
-              name == "geocode" ||
-              name == "health" ||
-              name == "intersection" ||
-              name == "locality" ||
-              name == "natural_feature" ||
-              name == "place_of_worship" ||
-              name == "plus_code" ||
-              name == "point_of_interest" ||
-              name == "political" ||
-              name == "post_box" ||
-              name == "postal_code" ||
-              name == "postal_code_prefix" ||
-              name == "postal_code_suffix" ||
-              name == "postal_town" ||
-              name == "premise" ||
-              name == "room" ||
-              name == "route" ||
-              name == "store" ||
-              name == "street_address" ||
-              name == "sublocality" ||
-              name == "sublocality_level_1" ||
-              name == "sublocality_level_2" ||
-              name == "sublocality_level_3" ||
-              name == "sublocality_level_4" ||
-              name == "sublocality_level_5" ||
-              name == "subpremise" ||
-              name == "town_square"
+              // name == "general_contractor" ||
+              name == "geocode"
+              // name == "health" ||
+              // name == "intersection" ||
+              // name == "locality" ||
+              // name == "natural_feature" ||
+              // name == "place_of_worship" ||
+              // name == "plus_code" ||
+              // name == "point_of_interest" ||
+              // name == "political" ||
+              // name == "post_box" ||
+              // name == "postal_code" ||
+              // name == "postal_code_prefix" ||
+              // name == "postal_code_suffix" ||
+              // name == "postal_town" ||
+              // name == "premise" ||
+              // name == "room" ||
+              // name == "route" ||
+              // name == "store" ||
+              // name == "street_address" ||
+              // name == "sublocality" ||
+              // name == "sublocality_level_1" ||
+              // name == "sublocality_level_2" ||
+              // name == "sublocality_level_3" ||
+              // name == "sublocality_level_4" ||
+              // name == "sublocality_level_5" ||
+              // name == "subpremise" ||
+              // name == "town_square"
             ) {
               return;
             }
             let result = containsType(type, typesArray);
             if (!result) {
+              console.log("Adding " + type.name)
               typesArray.push(type);
             } else {
               typesArray.filter((obj) => {
+                console.log("Increasing " + type.name)
                 if (obj.name == type.name) {
                   obj.counter++;
                 }

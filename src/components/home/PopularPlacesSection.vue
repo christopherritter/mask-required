@@ -136,7 +136,7 @@ export default {
   },
   async created() {
     if (this.$store.state.types === null) {
-      await this.$store.dispatch("countReviewTypes");
+      await this.$store.dispatch("countPlaceTypes");
     }
 
     var i,

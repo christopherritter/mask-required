@@ -187,7 +187,7 @@ export default {
   },
   async mounted() {
     if (!this.types.length) {
-      await this.$store.dispatch("countReviewTypes");
+      await this.$store.dispatch("countPlaceTypes");
       this.types = this.$store.getters.getTypes;
     }
     this.loading = false;
