@@ -1,6 +1,6 @@
 <template>
   <section id="popular-types-bar">
-    <v-row justify="center">
+    <v-row>
       <v-dialog v-model="showSearchBox" max-width="600">
         <v-card>
           <v-card-title class="headline">
@@ -28,7 +28,68 @@
         </v-card>
       </v-dialog>
     </v-row>
-    <v-row>
+    <v-row v-if="loading">
+      <v-col>
+        <v-card height="80" outlined color="teal">
+          <v-skeleton-loader
+            type="text"
+            class="mx-4 mt-6"
+            width="75%"
+          ></v-skeleton-loader>
+          <v-skeleton-loader
+            type="text"
+            class="mx-4 mt-1"
+            width="45%"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card height="80" outlined :style="styleObject">
+          <v-skeleton-loader
+            type="text"
+            class="mx-4 my-6"
+            width="75%"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card height="80" outlined :style="styleObject">
+          <v-skeleton-loader
+            type="text"
+            class="mx-4 my-6"
+            width="75%"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card height="80" outlined :style="styleObject">
+          <v-skeleton-loader
+            type="text"
+            class="mx-4 my-6"
+            width="75%"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card height="80" outlined :style="styleObject">
+          <v-skeleton-loader
+            type="text"
+            class="mx-4 my-6"
+            width="75%"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+      <v-col>
+        <v-card height="80" outlined :style="styleObject">
+          <v-skeleton-loader
+            type="text"
+            class="mx-4 my-6"
+            width="45%"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row v-else>
       <v-col>
         <v-card height="80" outlined color="teal" dark>
           <v-card-subtitle>
@@ -55,11 +116,38 @@
         </v-card>
       </v-col>
       <v-col>
-        <v-card height="80" outlined :style="styleObject">
-          <v-card-subtitle>
-            More...
-          </v-card-subtitle>
-        </v-card>
+        <v-menu offset-y>
+          <template v-slot:activator="{ on, attrs }">
+            <v-card
+              height="80"
+              outlined
+              :style="styleObject"
+              v-bind="attrs"
+              v-on="on"
+              @mouseover.native="highlightedCard = 'more'"
+              @mouseleave.native="highlightedCard = null"
+              :class="{
+                'teal white--text': highlightedCard == 'more',
+              }"
+              style="cursor: pointer"
+            >
+              <v-card-subtitle>
+                More...
+              </v-card-subtitle>
+            </v-card>
+          </template>
+          <v-list>
+            <v-list-item
+              v-for="type in typeOverflow"
+              :key="type.name"
+              @click="selectType(type.name)"
+            >
+              <v-list-item-title>{{
+                type.name | replaceUnderscore
+              }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-menu>
       </v-col>
     </v-row>
   </section>
@@ -85,6 +173,7 @@ export default {
       hover: false,
       loading: true,
       showSearchBox: false,
+      showMenu: false,
       error: "",
     };
   },
@@ -93,10 +182,30 @@ export default {
       await this.$store.dispatch("countReviewTypes");
       this.types = this.$store.getters.getTypes;
     }
+    this.loading = false;
   },
   computed: {
+    ...mapState([["validTypes"]]),
     topReviewTypes() {
       return this.types.slice(0, 4);
+    },
+    typeOverflow() {
+      var t,
+        types = this.types;
+      var i,
+        overflow = [];
+
+      for (t = 0; t < types.length; t++) {
+        if (this.validTypes.includes(types[t].name)) {
+          overflow.push(types[t]);
+        }
+      }
+
+      for (i = 0; i < 4; i++) {
+        overflow.shift();
+      }
+
+      return overflow;
     },
   },
   methods: {
