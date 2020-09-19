@@ -928,7 +928,7 @@ const store = new Vuex.Store({
       const longitude = state.region.geometry.location.lng;
       const query = fb.placesGeoFirestore.near({
         center: new firebase.firestore.GeoPoint(latitude, longitude),
-        radius: 10,
+        radius: 12,
       });
       // Retrieve the current coordinates using the navigator API
       const places = await query.get();
