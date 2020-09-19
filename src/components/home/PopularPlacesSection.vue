@@ -6,7 +6,7 @@
       </v-col>
       <v-col class="flex-grow-1 flex-shrink-0">
         <h3 class="text-center">
-          Popular {{ type.name + "s" | replaceUnderscore }}
+          Popular {{ (type.name + "s") | replaceUnderscore }}
         </h3>
       </v-col>
       <v-col class="d-flex align-center flex-grow-1 flex-shrink-1">
@@ -14,9 +14,16 @@
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="12" md="4" lg="3" class="hidden-sm-and-down" style="font-size: 1.25rem">
+      <v-col
+        cols="12"
+        sm="12"
+        md="4"
+        lg="3"
+        class="hidden-sm-and-down"
+        style="font-size: 1.25rem"
+      >
         <p>
-          Here are some {{ type.name + "s" | replaceUnderscore }} that people
+          Here are some {{ (type.name + "s") | replaceUnderscore }} that people
           are currently searching for.
         </p>
         <p>
@@ -25,7 +32,39 @@
         </p>
       </v-col>
       <v-col cols="12" sm="12" md="8" lg="9">
-        <v-row>
+        <v-row v-if="loading">
+          <v-col cols="12" sm="6" md="6" lg="4">
+            <v-card height="200" outlined>
+              <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="6" lg="4">
+            <v-card height="200" outlined>
+              <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="6" lg="4">
+            <v-card height="200" outlined>
+              <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="6" lg="4">
+            <v-card height="200" outlined>
+              <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="6" lg="4">
+            <v-card height="200" outlined>
+              <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="6" lg="4">
+            <v-card height="200" outlined>
+              <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row v-else>
           <v-col
             cols="12"
             sm="6"
