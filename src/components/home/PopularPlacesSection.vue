@@ -1,22 +1,28 @@
 <template>
-  <section id="popular-type-section">
+  <section id="popular-places-section">
     <v-row>
-      <v-col class="d-flex align-center">
+      <v-col class="d-flex align-center flex-grow-1 flex-shrink-1">
         <v-divider class="mb-1"></v-divider>
       </v-col>
-      <v-col>
+      <v-col class="flex-grow-1 flex-shrink-0">
         <h3 class="text-center">
-          Popular Places
+          Popular {{ type.name + "s" | replaceUnderscore }}
         </h3>
       </v-col>
-      <v-col class="d-flex align-center">
+      <v-col class="d-flex align-center flex-grow-1 flex-shrink-1">
         <v-divider class="mb-1"></v-divider>
       </v-col>
     </v-row>
     <v-row>
-      <v-col cols="12" sm="12" md="4" lg="3" style="font-size: 1.25rem">
-        Here are some popular {{ (type.name + "s") | replaceUnderscore }} that
-        people are currently searching for.
+      <v-col cols="12" sm="12" md="4" lg="3" class="hidden-sm-and-down" style="font-size: 1.25rem">
+        <p>
+          Here are some {{ type.name + "s" | replaceUnderscore }} that people
+          are currently searching for.
+        </p>
+        <p>
+          Select a card to leave a review if you are familar with any of these
+          places.
+        </p>
       </v-col>
       <v-col cols="12" sm="12" md="8" lg="9">
         <v-row>

@@ -866,7 +866,7 @@ const store = new Vuex.Store({
         return;
       }
 
-      await places.forEach((doc) => {
+      places.forEach((doc) => {
         var searchResult = doc.data();
 
         dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
@@ -1120,47 +1120,47 @@ const store = new Vuex.Store({
               counter: 1,
             };
             if (
-              //   name == "administrative_area_level_1" ||
-              //   name == "administrative_area_level_2" ||
-              //   name == "administrative_area_level_3" ||
-              //   name == "administrative_area_level_4" ||
-              //   name == "administrative_area_level_5" ||
-              //   name == "archipelago" ||
-              //   name == "colloquial_area" ||
-              //   name == "continent" ||
-              //   name == "country" ||
+              name == "administrative_area_level_1" ||
+              name == "administrative_area_level_2" ||
+              name == "administrative_area_level_3" ||
+              name == "administrative_area_level_4" ||
+              name == "administrative_area_level_5" ||
+              name == "archipelago" ||
+              name == "colloquial_area" ||
+              name == "continent" ||
+              name == "country" ||
               name == "establishment" ||
-              //   name == "finance" ||
-              //   name == "floor" ||
+              name == "finance" ||
+              name == "floor" ||
               name == "food" ||
-              //   name == "general_contractor" ||
-              //   name == "geocode" ||
-              //   name == "health" ||
-              //   name == "intersection" ||
-              //   name == "locality" ||
-              //   name == "natural_feature" ||
-              //   name == "place_of_worship" ||
-              //   name == "plus_code" ||
-              name == "point_of_interest"
-              //   name == "political" ||
-              //   name == "post_box" ||
-              //   name == "postal_code" ||
-              //   name == "postal_code_prefix" ||
-              //   name == "postal_code_suffix" ||
-              //   name == "postal_town" ||
-              //   name == "premise" ||
-              //   name == "room" ||
-              //   name == "route" ||
-              //   name == "store" ||
-              //   name == "street_address" ||
-              //   name == "sublocality" ||
-              //   name == "sublocality_level_1" ||
-              //   name == "sublocality_level_2" ||
-              //   name == "sublocality_level_3" ||
-              //   name == "sublocality_level_4" ||
-              //   name == "sublocality_level_5" ||
-              //   name == "subpremise" ||
-              //   name == "town_square"
+              name == "general_contractor" ||
+              name == "geocode" ||
+              name == "health" ||
+              name == "intersection" ||
+              name == "locality" ||
+              name == "natural_feature" ||
+              name == "place_of_worship" ||
+              name == "plus_code" ||
+              name == "point_of_interest" ||
+              name == "political" ||
+              name == "post_box" ||
+              name == "postal_code" ||
+              name == "postal_code_prefix" ||
+              name == "postal_code_suffix" ||
+              name == "postal_town" ||
+              name == "premise" ||
+              name == "room" ||
+              name == "route" ||
+              name == "store" ||
+              name == "street_address" ||
+              name == "sublocality" ||
+              name == "sublocality_level_1" ||
+              name == "sublocality_level_2" ||
+              name == "sublocality_level_3" ||
+              name == "sublocality_level_4" ||
+              name == "sublocality_level_5" ||
+              name == "subpremise" ||
+              name == "town_square"
             ) {
               return;
             }
