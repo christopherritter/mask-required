@@ -827,7 +827,7 @@ const store = new Vuex.Store({
     },
     async fetchPlace({ dispatch, commit }, place) {
       var placeId = place.place_id;
-      const snapshot = await fb.placesGeoFirestore
+      const snapshot = await fb.placesCollection
         .where("place_id", "==", placeId)
         .get();
       var newPlace = {};
