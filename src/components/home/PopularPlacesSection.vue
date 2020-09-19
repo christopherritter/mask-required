@@ -90,7 +90,7 @@
                   'white--text': highlightedCard == place.place_id,
                 }"
               >
-                {{ place.name | truncateWithEllipse(18) }}
+                {{ place.name | truncateWithEllipse(24) }}
               </v-card-title>
               <v-card-subtitle
                 class="pb-2"
