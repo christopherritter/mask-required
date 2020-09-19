@@ -392,12 +392,6 @@ export default {
     async $route(to, from) {
       this.loading = true;
 
-      if (this.region.place_id != this.$router.currentRoute.params.id) {
-        this.type = "";
-        await this.$store.dispatch("clearPlaces");
-        this.sortedPlaces = [];
-      }
-
       if (to.params.id == from.params.id) {
         if (to.params.type) {
           this.type = to.params.type;
@@ -405,6 +399,9 @@ export default {
           this.type = "view_all";
         }
       } else {
+        this.type = "";
+        await this.$store.dispatch("clearPlaces");
+        this.sortedPlaces = [];
         this.viewLocalPlaces();
       }
 
