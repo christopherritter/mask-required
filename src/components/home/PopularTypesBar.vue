@@ -30,7 +30,7 @@
     </v-row>
     <v-row v-if="loading">
       <v-col>
-        <v-card height="80" outlined color="teal">
+        <v-card height="80" outlined color="grey">
           <v-skeleton-loader
             type="text"
             class="mx-4 mt-6"
@@ -44,7 +44,7 @@
         </v-card>
       </v-col>
       <v-col>
-        <v-card height="80" outlined :style="styleObject">
+        <v-card height="80" outlined>
           <v-skeleton-loader
             type="text"
             class="mx-4 my-6"
@@ -53,7 +53,7 @@
         </v-card>
       </v-col>
       <v-col>
-        <v-card height="80" outlined :style="styleObject">
+        <v-card height="80" outlined>
           <v-skeleton-loader
             type="text"
             class="mx-4 my-6"
@@ -62,7 +62,7 @@
         </v-card>
       </v-col>
       <v-col>
-        <v-card height="80" outlined :style="styleObject">
+        <v-card height="80" outlined>
           <v-skeleton-loader
             type="text"
             class="mx-4 my-6"
@@ -71,7 +71,7 @@
         </v-card>
       </v-col>
       <v-col>
-        <v-card height="80" outlined :style="styleObject">
+        <v-card height="80" outlined>
           <v-skeleton-loader
             type="text"
             class="mx-4 my-6"
@@ -80,7 +80,7 @@
         </v-card>
       </v-col>
       <v-col>
-        <v-card height="80" outlined :style="styleObject">
+        <v-card height="80" outlined>
           <v-skeleton-loader
             type="text"
             class="mx-4 my-6"
