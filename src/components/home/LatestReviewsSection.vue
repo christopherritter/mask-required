@@ -11,7 +11,99 @@
         <v-divider class="mb-1"></v-divider>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="loading">
+      <v-col cols="12" md="6" lg="4">
+        <v-card height="325" outlined>
+          <v-card-text>
+            <v-skeleton-loader type="heading" class="mt-2"></v-skeleton-loader>
+            <v-skeleton-loader
+              type="paragraph"
+              class="my-6"
+            ></v-skeleton-loader>
+          </v-card-text>
+          <v-skeleton-loader
+            type="list-item-avatar-three-line"
+            class="mt-16"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="6" lg="4">
+        <v-card height="325" outlined>
+          <v-card-text>
+            <v-skeleton-loader type="heading" class="mt-2"></v-skeleton-loader>
+            <v-skeleton-loader
+              type="paragraph"
+              class="my-6"
+            ></v-skeleton-loader>
+          </v-card-text>
+          <v-skeleton-loader
+            type="list-item-avatar-three-line"
+            class="mt-16"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="6" lg="4">
+        <v-card height="325" outlined>
+          <v-card-text>
+            <v-skeleton-loader type="heading" class="mt-2"></v-skeleton-loader>
+            <v-skeleton-loader
+              type="paragraph"
+              class="my-6"
+            ></v-skeleton-loader>
+          </v-card-text>
+          <v-skeleton-loader
+            type="list-item-avatar-three-line"
+            class="mt-16"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="6" lg="4">
+        <v-card height="325" outlined>
+          <v-card-text>
+            <v-skeleton-loader type="heading" class="mt-2"></v-skeleton-loader>
+            <v-skeleton-loader
+              type="paragraph"
+              class="my-6"
+            ></v-skeleton-loader>
+          </v-card-text>
+          <v-skeleton-loader
+            type="list-item-avatar-three-line"
+            class="mt-16"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="6" lg="4">
+        <v-card height="325" outlined>
+          <v-card-text>
+            <v-skeleton-loader type="heading" class="mt-2"></v-skeleton-loader>
+            <v-skeleton-loader
+              type="paragraph"
+              class="my-6"
+            ></v-skeleton-loader>
+          </v-card-text>
+          <v-skeleton-loader
+            type="list-item-avatar-three-line"
+            class="mt-16"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+      <v-col cols="12" md="6" lg="4">
+        <v-card height="325" outlined>
+          <v-card-text>
+            <v-skeleton-loader type="heading" class="mt-2"></v-skeleton-loader>
+            <v-skeleton-loader
+              type="paragraph"
+              class="my-6"
+            ></v-skeleton-loader>
+          </v-card-text>
+          <v-skeleton-loader
+            type="list-item-avatar-three-line"
+            class="mt-16"
+          ></v-skeleton-loader>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row v-else>
       <v-col
         cols="12"
         md="6"
@@ -33,7 +125,9 @@
         >
           <v-row no-gutters style="height: 216px;">
             <v-col cols="12" class="flex-grow-1 flex-shrink-0">
-              <v-card-title>{{ review.title | truncateWithEllipse(70) }}</v-card-title>
+              <v-card-title>{{
+                review.title | truncateWithEllipse(70)
+              }}</v-card-title>
               <v-card-text>
                 {{ review.content | truncateWithEllipse(250) }}
               </v-card-text>
@@ -144,7 +238,6 @@ export default {
   },
   async created() {
     await this.$store.dispatch("fetchTopReviews").then((reviews) => {
-
       reviews.map((review) => {
         var topReview = review;
 
@@ -156,7 +249,6 @@ export default {
 
         this.reviews.push(topReview);
       });
-
     });
     this.loading = false;
   },
