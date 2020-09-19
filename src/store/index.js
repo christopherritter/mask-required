@@ -1269,11 +1269,9 @@ const store = new Vuex.Store({
             }
             let result = containsType(type, typesArray);
             if (!result) {
-              console.log("Adding " + type.name)
               typesArray.push(type);
             } else {
               typesArray.filter((obj) => {
-                console.log("Increasing " + type.name)
                 if (obj.name == type.name) {
                   obj.counter++;
                 }

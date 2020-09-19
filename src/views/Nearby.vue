@@ -454,7 +454,7 @@ export default {
 
       await this.$store.dispatch("getGeohashRange");
       await this.$store.dispatch("findLocalPlaces");
-      await this.$store.dispatch("countReviewTypes");
+      await this.$store.dispatch("countPlaceTypes");
       await this.sortPlacesIntoTypes();
       return;
     },
