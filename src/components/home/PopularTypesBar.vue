@@ -91,10 +91,13 @@
     </v-row>
     <v-row v-else>
       <v-col cols="4" md="2">
-        <v-card height="80" outlined color="teal">
-          <v-card-subtitle class="white--text">
+        <v-card height="80" outlined color="#c5f9da">
+          <v-card-text class="hidden-md-and-down">
             Browse nearby places:
-          </v-card-subtitle>
+          </v-card-text>
+          <v-card-text class="hidden-lg-and-up">
+            Browse nearby:
+          </v-card-text>
         </v-card>
       </v-col>
       <v-col cols="4" md="2" v-for="type in topReviewTypes" :key="type.name">
@@ -110,13 +113,13 @@
           style="cursor: pointer"
           @click="selectType(type.name)"
         >
-          <v-card-subtitle
+          <v-card-text
             :class="{
               'white--text': highlightedCard == type.name,
             }"
           >
-            {{ type.name | replaceUnderscore }}
-          </v-card-subtitle>
+            {{ type.name + 's' | replaceUnderscore }}
+          </v-card-text>
         </v-card>
       </v-col>
       <v-col cols="4" md="2">
@@ -135,13 +138,13 @@
               }"
               style="cursor: pointer"
             >
-              <v-card-subtitle
+              <v-card-text
                 :class="{
                   'white--text': highlightedCard == 'more',
                 }"
               >
                 More...
-              </v-card-subtitle>
+              </v-card-text>
             </v-card>
           </template>
           <v-list>
