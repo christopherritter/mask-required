@@ -7,7 +7,7 @@
             <svg-img icon="logo2" class="logo pr-4"></svg-img>
             <h1 class="white--text">Mask Required</h1>
             <p class="white--text">
-              MaskRequired helps customers find and rate local businesses
+              MaskRequired.net helps customers find and rate local businesses
               that enforce mask requirements and other CDC guidelines in their
               stores.
             </p>

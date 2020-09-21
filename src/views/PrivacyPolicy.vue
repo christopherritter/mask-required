@@ -7,7 +7,7 @@
 
           <p>
             Christopher Ritter ("he", "him", or "his") operates the
-            http://www.maskrequired.us website (the "Service").
+            http://www.maskrequired.net website (the "Service").
           </p>
 
           <p>
@@ -26,7 +26,7 @@
             of information in accordance with this policy. Unless otherwise
             defined in this Privacy Policy, terms used in this Privacy Policy
             have the same meanings as in our Terms and Conditions, accessible at
-            http://www.maskrequired.us.
+            http://www.maskrequired.net.
           </p>
 
           <h3>Information Collection And Use</h3>
@@ -69,7 +69,7 @@
           <p>
             You can prevent the installation of cookies by adjusting the
             settings in your browser software accordingly; please note though
-            that you may not be able to use all the features of MaskRequired
+            that you may not be able to use all the features of MaskRequired.net
             in full as a result. Google also offers so-called deactivation tools
             for some web browsers, where you can opt out of your user behavior
             being recorded and analyzed. You will find more information and
