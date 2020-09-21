@@ -69,7 +69,7 @@
           <p>
             You can prevent the installation of cookies by adjusting the
             settings in your browser software accordingly; please note though
-            that you may not be able to use all the features of MaskRequired.US
+            that you may not be able to use all the features of MaskRequired
             in full as a result. Google also offers so-called deactivation tools
             for some web browsers, where you can opt out of your user behavior
             being recorded and analyzed. You will find more information and

@@ -7,7 +7,7 @@ import store from "../store";
 
 Vue.use(VueRouter);
 
-const DEFAULT_TITLE = "MaskRequired.US";
+const DEFAULT_TITLE = "MaskRequired";
 
 const routes = [
   {
@@ -15,7 +15,7 @@ const routes = [
     name: "home",
     component: Home,
     meta: {
-      title: "Are masks required? Search on MaskRequired.US.",
+      title: "Are masks required? Search on MaskRequired.",
     },
   },
   {
@@ -24,7 +24,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "login" */ "../views/Login.vue"),
     meta: {
-      title: "Sign up to review businesses on MaskRequired.US.",
+      title: "Sign up to review businesses on MaskRequired.",
     },
   },
   {
@@ -33,7 +33,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "settings" */ "../views/Settings.vue"),
     meta: {
-      title: "Update your private settings on MaskRequired.US.",
+      title: "Update your private settings on MaskRequired.",
       requiresAuth: true,
     },
   },
@@ -45,7 +45,7 @@ const routes = [
         /* webpackChunkName: "user-location" */ "../views/UserLocation.vue"
       ),
     meta: {
-      title: "This is an experiment that doesn't belong on MaskRequired.US.",
+      title: "This is an experiment that doesn't belong on MaskRequired.",
       requiresAuth: true,
     },
   },
@@ -55,7 +55,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "close-buy" */ "../views/CloseBuy.vue"),
     meta: {
-      title: "This is an experiment that doesn't belong on MaskRequired.US.",
+      title: "This is an experiment that doesn't belong on MaskRequired.",
       requiresAuth: true,
     },
   },
@@ -65,7 +65,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "nearby" */ "../views/Nearby.vue"),
     meta: {
-      title: "Find different types of nearby places to shop safely on MaskRequired.US.",
+      title: "Find different types of nearby places to shop safely on MaskRequired.",
     },
     // beforeEnter: (to, from, next) => {
     //   if (store.state.place.name) next();
@@ -78,7 +78,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "nearby" */ "../views/Nearby.vue"),
     meta: {
-      title: "Find a specific type of nearby places to shop safely on MaskRequired.US.",
+      title: "Find a specific type of nearby places to shop safely on MaskRequired.",
     },
     // beforeEnter: (to, from, next) => {
     //   if (store.state.place.name) next();
@@ -91,7 +91,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "search" */ "../views/Search.vue"),
     meta: {
-      title: "Search for safe places to shop on MaskRequired.US.",
+      title: "Search for safe places to shop on MaskRequired.",
     },
   },
   {
@@ -100,7 +100,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "place" */ "../views/Place.vue"),
     meta: {
-      title: "Collaborative business reviews on MaskRequired.US.",
+      title: "Collaborative business reviews on MaskRequired.",
     },
     // beforeEnter: (to, from, next) => {
     //   if (store.state.place.name) next();
@@ -113,7 +113,7 @@ const routes = [
     component: () =>
       import(/* webpackChunkName: "review" */ "../views/Review.vue"),
     meta: {
-      title: "Review a business location on MaskRequired.US.",
+      title: "Review a business location on MaskRequired.",
       requiresAuth: true,
     },
     beforeEnter: (to, from, next) => {
@@ -129,7 +129,7 @@ const routes = [
         /* webpackChunkName: "privacy-policy" */ "../views/PrivacyPolicy.vue"
       ),
     meta: {
-      title: "MaskRequired.US Privacy Policy",
+      title: "MaskRequired Privacy Policy",
     },
   },
   {
