@@ -6,10 +6,12 @@
       dark
       app
     >
-      <svg-img @click="goHome" icon="logo2" class="logo pr-4" :style="showPointer"></svg-img>
-      <v-toolbar-title @click="goHome" class="ml-0 p-3" :style="showPointer">
-        Mask Required
-      </v-toolbar-title>
+      <div class="d-flex flex-row" @click="goHome">
+        <svg-img icon="logo2" class="logo pr-4" :style="showPointer"></svg-img>
+        <v-toolbar-title class="ml-0 p-3" :style="showPointer">
+          Mask Required
+        </v-toolbar-title>
+      </div>
 
       <vg-autocomplete
         v-show="showSearchBar"
