@@ -859,11 +859,12 @@ const store = new Vuex.Store({
     async fetchPlaces({ commit, dispatch }, type) {
       var placesArray = [];
 
-      const places = await fb.placesGeoFirestore
+      const places = await fb.placesCollection
         .where("types", "array-contains-any", [type])
         .get();
 
       if (places.empty) {
+        console.log("No places found.")
         return;
       }
 
@@ -885,7 +886,8 @@ const store = new Vuex.Store({
         });
       });
 
-      commit("setPlaces", placesArray);
+      return placesArray;
+      // commit("setPlaces", placesArray);
     },
     async findNearbyPlaces({ state, commit, dispatch }, type) {
       // console.log("Fetching nearby places for " + type + "s.")

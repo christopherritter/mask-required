@@ -178,16 +178,13 @@ export default {
       await this.$store.dispatch("countPlaceTypes");
     }
 
-    var i,
-      currentTypes = this.$store.getters.getTypes;
-
-    // for (i = 0; i < currentTypes.length; i++) {
-    await this.$store.dispatch("fetchPlaces", currentTypes[0].name);
-    // currentTypes[0].places = this.$store.getters.getPlaces;
-    // }
-
+    var currentTypes = this.$store.getters.getTypes;
     this.type = currentTypes[0];
-    this.places = this.$store.getters.getPlaces;
+
+    this.$store.dispatch("fetchPlaces", this.type.name).then((places) => {
+      this.places = places;
+    });
+
     this.loading = false;
   },
   methods: {

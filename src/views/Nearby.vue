@@ -373,11 +373,9 @@ export default {
 
     await this.setRegion(routerId);
 
-    if (this.region.place_id != routerId) {
-      this.type = "";
-      await this.$store.dispatch("clearPlaces");
-      this.sortedPlaces = [];
-    }
+    this.type = "";
+    await this.$store.dispatch("clearPlaces");
+    this.sortedPlaces = [];
 
     if (routerType) {
       this.type = routerType;

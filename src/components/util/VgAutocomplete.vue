@@ -131,14 +131,14 @@ export default {
   },
   methods: {
     // Get user location
-    async getUserLocation() {
+    getUserLocation() {
       this.spinner = true;
       if (!this.userLocation.lat) {
         // console.log("Fetching user location.");
-        await this.$store.dispatch("fetchUserLocation");
+        this.$store.dispatch("fetchUserLocation");
       } else {
         // console.log("Forgetting user location.");
-        await this.$store.dispatch("clearUserLocation");
+        this.$store.dispatch("clearUserLocation");
       }
       this.spinner = false;
     },
