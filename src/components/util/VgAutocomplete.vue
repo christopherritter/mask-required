@@ -150,10 +150,11 @@ export default {
       if (this.userLocation.lat) {
         autocompleteService.getPlacePredictions(
           {
-            origin: new google.maps.LatLng(
+            location: new google.maps.LatLng(
               this.userLocation.lat,
               this.userLocation.long
             ),
+            radius: 500,
             input: search,
             types: this.types,
             componentRestrictions: { country: "us" },
