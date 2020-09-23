@@ -43,7 +43,7 @@ export default {
   data: () => ({
     currentLocation: null,
     options: {
-      types: ["establishment"],
+      types: ["establishment", "geocode"],
       componentRestrictions: { country: "us" },
       fields: [
         // "formatted_address",
