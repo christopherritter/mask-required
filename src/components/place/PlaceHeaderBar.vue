@@ -7,10 +7,10 @@
     <v-row no-gutters>
       <v-card-text class="pa-0">
         {{ place.formatted_address }}
-        <v-chip @click="viewRegion(place.place_id)" class="ma-2" small>
+        <!-- <v-chip  class="ma-2" small>
           <v-icon left>mdi-magnify</v-icon>
           View Region
-        </v-chip>
+        </v-chip> -->
       </v-card-text>
     </v-row>
 
@@ -64,6 +64,7 @@
           :ripple="false"
           v-for="(type, index) in place.types"
           :key="index"
+          @click="viewRegion(type)"
           >{{ type | replaceUnderscore }}</v-chip
         >
       </v-chip-group>
@@ -145,8 +146,8 @@ export default {
       });
     },
 
-    viewRegion() {
-      this.$router.push({ name: "nearby-places", params: { id: this.region.place_id } })
+    viewRegion(type) {
+      this.$router.push({ name: "nearby-places-type", params: { id: this.region.place_id, type: type } })
     },
 
     // Get place predictions
