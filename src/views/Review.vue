@@ -261,6 +261,7 @@ export default {
 
     const newPlace = this.$store.getters.getPlace;
     this.currentPlace = newPlace;
+    this.$ga.page(this.$router);
   },
   watch: {
     steps(val) {

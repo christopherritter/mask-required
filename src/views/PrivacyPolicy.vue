@@ -188,3 +188,12 @@
     </v-container>
   </v-main>
 </template>
+
+<script>
+export default {
+  name: "privacy-policy",
+  created() {
+    this.$ga.page(this.$router);
+  },
+}
+</script>

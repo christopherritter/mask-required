@@ -385,6 +385,7 @@ export default {
 
     await this.viewLocalPlaces();
     this.loading = false;
+    this.$ga.page(this.$router);
   },
   watch: {
     async $route(to, from) {

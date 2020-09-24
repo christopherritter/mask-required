@@ -32,6 +32,7 @@ import SvgImg from "@/components/util/SvgImg";
 export default {
   mounted() {
     this.$store.dispatch("socialLogin", {});
+    this.$ga.page(this.$router);
   },
   components: {
     SvgImg,

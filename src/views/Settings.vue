@@ -54,6 +54,9 @@ export default {
       showSuccess: false,
     };
   },
+  created() {
+    this.$ga.page(this.$router);
+  },
   computed: {
     ...mapFields(["userProfile.name", "userProfile.nickname"]),
   },

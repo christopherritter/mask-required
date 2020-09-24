@@ -94,6 +94,7 @@ export default {
     this.$store.dispatch("showSearchBar", true);
     await this.fetchPlace();
     this.loading = false;
+    this.$ga.page(this.$router);
   },
   components: {
     PlaceHeaderBar,

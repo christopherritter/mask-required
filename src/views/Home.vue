@@ -19,6 +19,9 @@ import PrimarySearchBar from "@/components/home/PrimarySearchBar";
 
 export default {
   name: "Home",
+  created() {
+    this.$ga.page(this.$router);
+  },
   components: {
     PopularTypesBar,
     ActiveRegionsSection,
