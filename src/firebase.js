@@ -19,6 +19,15 @@ firebase.initializeApp(firebaseConfig);
 
 // utils
 const db = firebase.firestore();
+
+// Use db emulator on local host
+if (location.hostname === "localhost") {
+  db.settings({
+    host: "localhost:8080",
+    ssl: false
+  });
+}
+
 const auth = firebase.auth();
 const ga = firebase.analytics();
 const GeoFirestore = geofirestore.initializeApp(db);
@@ -36,6 +45,8 @@ const placesFirestore = firebase.firestore().collection('places');
 
 // Create a GeoCollection reference
 const placesGeoFirestore = GeoFirestore.collection('places');
+
+
 
 // export default
 export default firebase;
