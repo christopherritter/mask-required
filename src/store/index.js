@@ -531,71 +531,7 @@ const store = new Vuex.Store({
   actions: {
 
     // Authentication  
-    async login({ dispatch }, form) {
-      store.commit("setErrorMessage", "");
-      // sign user in
-      const { user } = await fb.auth
-        .signInWithEmailAndPassword(form.email, form.password)
-        .catch((err) => {
-          store.commit("setErrorMessage", err.message);
-        });
-
-      // fetch user profile and set in state
-      dispatch("fetchUserProfile", user);
-    },
-    async googleLogin({ dispatch }) {
-      store.commit("setErrorMessage", "");
-
-      const provider = new firebase.auth.GoogleAuthProvider();
-
-      // firebase.auth().signInWithRedirect(provider);
-
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        // .getRedirectResult()
-        .then((result) => {
-          // console.log(result);
-          var user = result.user;
-          dispatch("fetchUserProfile", user);
-        })
-        .catch((err) => {
-          var errorCode = err.code;
-          var errorMessage = err.message;
-
-          store.commit("setErrorMessage", errorMessage);
-        });
-    },
-    async facebookLogin({ dispatch }) {
-      var provider = new firebase.auth.FacebookAuthProvider();
-
-      firebase
-        .auth()
-        .signInWithPopup(provider)
-        .then(function(result) {
-          // This gives you a Facebook Access Token. You can use it to access the Facebook API.
-          var token = result.credential.accessToken;
-          // The signed-in user info.
-          var user = result.user;
-          // console.log("Signing in with Facebook provider.");
-          // console.log(user);
-          dispatch("fetchUserProfile", user);
-        })
-        .catch(function(error) {
-          // Handle Errors here.
-          var errorCode = error.code;
-          var errorMessage = error.message;
-          // The email of the user's account used.
-          // console.log("Facebook error! " + error.message);
-          this.errorMessage = error.message;
-
-          var email = error.email;
-          // The firebase.auth.AuthCredential type that was used.
-          var credential = error.credential;
-          // ...
-        });
-    },
-    async socialLogin({ dispatch }) {
+    async login({ dispatch }) {
       let ui = firebaseui.auth.AuthUI.getInstance();
 
       if (!ui) {
