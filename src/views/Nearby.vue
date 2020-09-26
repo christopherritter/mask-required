@@ -371,8 +371,6 @@ export default {
     var routerId = this.$router.currentRoute.params.id;
     var routerType = this.$router.currentRoute.params.type;
 
-    await this.setRegion(routerId);
-
     this.type = "";
     await this.$store.dispatch("clearPlaces");
     this.sortedPlaces = [];
@@ -383,6 +381,7 @@ export default {
       this.type = "";
     }
 
+    console.log("Viewing places when created.")
     await this.viewLocalPlaces();
     this.loading = false;
     this.$ga.page(this.$router);
@@ -401,6 +400,7 @@ export default {
         this.type = "";
         await this.$store.dispatch("clearPlaces");
         this.sortedPlaces = [];
+        console.log("Viewing places when route changed.")
         this.viewLocalPlaces();
       }
 
@@ -433,16 +433,10 @@ export default {
     getUserLocation() {
       this.$store.dispatch("fetchUserLocation");
     },
-    async setRegion(routerId) {
-      await this.$store.dispatch("fetchRegion", {
-        place_id: routerId,
-      });
-      this.region = this.$store.getters.getRegion;
-    },
     async viewLocalPlaces() {
       var placeId = this.$route.params.id;
       var routerId = this.$router.currentRoute.params.id;
-
+      console.log("Viewing local places.")
       await this.$store.dispatch("fetchRegion", {
         place_id: placeId,
       });

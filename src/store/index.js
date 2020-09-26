@@ -649,6 +649,11 @@ const store = new Vuex.Store({
         .then((response) => {
           newRegion = response.data.result;
           newRegion.createdOn = new Date();
+
+          console.log("Creating new region.")
+          fb.regionsCollection.add(newRegion);
+          console.log("Setting new region.")
+          commit("setRegion", newRegion);
         })
         .catch((error) => {
           console.log(error.message);
@@ -658,8 +663,8 @@ const store = new Vuex.Store({
       // console.log("Committing set region:")
       // console.log(newRegion)
       // commit("setRegion", newRegion);
-      fb.regionsCollection.add(newRegion);
-      return newRegion;
+      
+      
     },
     async fetchRegion({ dispatch, commit }, place) {
       var regionId = place.place_id;
@@ -669,9 +674,8 @@ const store = new Vuex.Store({
       var newRegion = {};
 
       if (snapshot.empty) {
-        dispatch("createRegion", place).then((region) => {
-          commit("setRegion", region);
-        });
+        console.log("Snapshot empty.")
+        dispatch("createRegion", place);
         return;
       }
 
@@ -679,27 +683,8 @@ const store = new Vuex.Store({
         newRegion = doc.data();
       });
 
+      console.log("Setting existing region.")
       commit("setRegion", newRegion);
-    },
-    async fetchRegionId({ getters }, address) {
-      var apiKey = getters.getFixieKey;
-      var locality = address.name;
-      var state = address.state;
-      var country = address.country;
-      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/queryautocomplete/json?input=${locality},%20${state},%20${country}&key=${apiKey}`;
-      var newRegion = {};
-
-      await axios
-        .get(URL)
-        .then((response) => {
-          newRegion = response.data;
-        })
-        .catch((error) => {
-          console.log(error.message);
-          this.errorMessage = error.message;
-        });
-
-      return newRegion.predictions[0].place_id;
     },
     async fetchActiveRegions() {
       const snapshot = await fb.regionsCollection
