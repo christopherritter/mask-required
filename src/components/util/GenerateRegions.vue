@@ -559,7 +559,6 @@ export default {
       this.starterRegions.map((region) => {
         return fb.regionsCollection.add(region);
       });
-      console.log("Starter regions have been generated.")
     },
   }
 };

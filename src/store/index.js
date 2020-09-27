@@ -650,9 +650,7 @@ const store = new Vuex.Store({
           newRegion = response.data.result;
           newRegion.createdOn = new Date();
 
-          console.log("Creating new region.")
           fb.regionsCollection.add(newRegion);
-          console.log("Setting new region.")
           commit("setRegion", newRegion);
         })
         .catch((error) => {
@@ -674,7 +672,6 @@ const store = new Vuex.Store({
       var newRegion = {};
 
       if (snapshot.empty) {
-        console.log("Snapshot empty.")
         dispatch("createRegion", place);
         return;
       }
@@ -683,7 +680,6 @@ const store = new Vuex.Store({
         newRegion = doc.data();
       });
 
-      console.log("Setting existing region.")
       commit("setRegion", newRegion);
     },
     async fetchActiveRegions() {
@@ -785,7 +781,6 @@ const store = new Vuex.Store({
         .get();
 
       if (places.empty) {
-        console.log("No places found.")
         return;
       }
 

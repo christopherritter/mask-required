@@ -990,7 +990,6 @@ export default {
       this.starterPlaces.map((place) => {
         return fb.placesCollection.add(place);
       });
-      console.log("Starter places have been generated.");
     },
   },
 };

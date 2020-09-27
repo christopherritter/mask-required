@@ -800,7 +800,6 @@ export default {
       this.starterReviews.map((review) => {
         return fb.reviewsCollection.add(review);
       });
-      console.log("Starter reviews have been generated.")
     },
   }
 };
