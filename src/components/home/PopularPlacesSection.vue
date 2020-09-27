@@ -13,7 +13,7 @@
         <v-divider class="mb-1"></v-divider>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="placesExist">
       <v-col
         cols="12"
         sm="12"
@@ -35,32 +35,50 @@
         <v-row v-if="loading">
           <v-col cols="12" sm="6" md="6" lg="4">
             <v-card height="200" outlined>
-              <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+              <v-skeleton-loader
+                type="article"
+                class="mt-2"
+              ></v-skeleton-loader>
             </v-card>
           </v-col>
           <v-col cols="12" sm="6" md="6" lg="4">
             <v-card height="200" outlined>
-              <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+              <v-skeleton-loader
+                type="article"
+                class="mt-2"
+              ></v-skeleton-loader>
             </v-card>
           </v-col>
           <v-col cols="12" sm="6" md="6" lg="4">
             <v-card height="200" outlined>
-              <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+              <v-skeleton-loader
+                type="article"
+                class="mt-2"
+              ></v-skeleton-loader>
             </v-card>
           </v-col>
           <v-col cols="12" sm="6" md="6" lg="4">
             <v-card height="200" outlined>
-              <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+              <v-skeleton-loader
+                type="article"
+                class="mt-2"
+              ></v-skeleton-loader>
             </v-card>
           </v-col>
           <v-col cols="12" sm="6" md="6" lg="4">
             <v-card height="200" outlined>
-              <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+              <v-skeleton-loader
+                type="article"
+                class="mt-2"
+              ></v-skeleton-loader>
             </v-card>
           </v-col>
           <v-col cols="12" sm="6" md="6" lg="4">
             <v-card height="200" outlined>
-              <v-skeleton-loader type="article" class="mt-2"></v-skeleton-loader>
+              <v-skeleton-loader
+                type="article"
+                class="mt-2"
+              ></v-skeleton-loader>
             </v-card>
           </v-col>
         </v-row>
@@ -154,11 +172,16 @@
         </v-row>
       </v-col>
     </v-row>
+    <v-row justify="center" v-else>
+      <generate-places class="mb-16"></generate-places>
+    </v-row>
   </section>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import * as fb from "@/firebase";
+import GeneratePlaces from "@/components/util/GeneratePlaces";
 
 export default {
   name: "popular-places-section",
@@ -171,9 +194,19 @@ export default {
       styleObject: { "border-color": "#7dbc96" },
       highlightedCard: null,
       hover: false,
+      placesExist: false,
     };
   },
   async created() {
+    var collectionSize = await fb.placesCollection
+      .limit(1)
+      .get()
+      .then((query) => query.size);
+
+    if (collectionSize) {
+      this.placesExist = true;
+    }
+
     if (this.$store.state.types === null) {
       await this.$store.dispatch("countPlaceTypes");
     }
@@ -206,6 +239,9 @@ export default {
         this.loading = false;
       }
     },
+  },
+  components: {
+    GeneratePlaces,
   },
   filters: {
     replaceUnderscore(val) {
