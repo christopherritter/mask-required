@@ -297,7 +297,7 @@ export default {
             {
               long_name: "United States",
               short_name: "US",
-              types: ["county", "political"],
+              types: ["country", "political"],
             },
             {
               long_name: "45066",
@@ -703,7 +703,7 @@ export default {
             {
               long_name: "United States",
               short_name: "US",
-              types: ["county", "political"],
+              types: ["country", "political"],
             },
             {
               long_name: "45066",
