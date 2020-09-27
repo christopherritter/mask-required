@@ -434,7 +434,7 @@ export default {
     async viewLocalPlaces() {
       var placeId = this.$route.params.id;
       var routerId = this.$router.currentRoute.params.id;
-      console.log("Viewing local places.")
+
       await this.$store.dispatch("fetchRegion", {
         place_id: placeId,
       });

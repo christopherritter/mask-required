@@ -16,17 +16,17 @@ export default {
           formatted_address: "Beavercreek, OH, USA",
           geometry: {
             location: {
-              lat: "39.7092262",
-              lng: "-84.06326849999999",
+              lat: 39.7092262,
+              lng: -84.06326849999999,
             },
             viewport: {
               northeast: {
-                lat: "39.7790059",
-                lng: "-84.009098",
+                lat: 39.7790059,
+                lng: -84.009098,
               },
               southwest: {
-                lat: "39.680862",
-                lng: "-84.10651",
+                lat: 39.680862,
+                lng: -84.10651,
               },
             },
           },
@@ -43,17 +43,17 @@ export default {
           formatted_address: "Bellevue, WA, USA",
           geometry: {
             location: {
-              lat: "47.6101497",
-              lng: "-122.2015159",
+              lat: 47.6101497,
+              lng: -122.2015159,
             },
             viewport: {
               northeast: {
-                lat: "47.6606959",
-                lng: "-122.0793321",
+                lat: 47.6606959,
+                lng: -122.0793321,
               },
               southwest: {
-                lat: "47.534614",
-                lng: "-122.222931",
+                lat: 47.534614,
+                lng: -122.222931,
               },
             },
           },
@@ -70,17 +70,17 @@ export default {
           formatted_address: "Centerville, OH, USA",
           geometry: {
             location: {
-              lat: "39.6283928",
-              lng: "-84.15938179999999",
+              lat: 39.6283928,
+              lng: -84.15938179999999,
             },
             viewport: {
               northeast: {
-                lat: "39.673569",
-                lng: "-84.10873099999999",
+                lat: 39.673569,
+                lng: -84.10873099999999,
               },
               southwest: {
-                lat: "-84.208829",
-                lng: "39.5906138",
+                lat: -84.208829,
+                lng: 39.5906138,
               },
             },
           },
@@ -97,17 +97,17 @@ export default {
           formatted_address: "Chattanooga, TN, USA",
           geometry: {
             location: {
-              lat: "35.0456297",
-              lng: "-85.3096801",
+              lat: 35.0456297,
+              lng: -85.3096801,
             },
             viewport: {
               northeast: {
-                lat: "35.2136671",
-                lng: "-85.0517979",
+                lat: 35.2136671,
+                lng: -85.0517979,
               },
               southwest: {
-                lat: "34.9829239",
-                lng: "-85.425584",
+                lat: 34.9829239,
+                lng: -85.425584,
               },
             },
           },
@@ -124,17 +124,17 @@ export default {
           formatted_address: "Cincinnati, OH, USA",
           geometry: {
             location: {
-              lat: "39.1031182",
-              lng: "-84.5120196",
+              lat: 39.1031182,
+              lng: -84.5120196,
             },
             viewport: {
               northeast: {
-                lat: "39.2207591",
-                lng: "-84.36875479999999",
+                lat: 39.2207591,
+                lng: -84.36875479999999,
               },
               southwest: {
-                lat: "39.051921",
-                lng: "-84.71204809999999",
+                lat: 39.051921,
+                lng: -84.71204809999999,
               },
             },
           },
@@ -151,17 +151,17 @@ export default {
           formatted_address: "Dayton, OH, USA",
           geometry: {
             location: {
-              lat: "39.7589478",
-              lng: "-84.1916069",
+              lat: 39.7589478,
+              lng: -84.1916069,
             },
             viewport: {
               northeast: {
-                lat: "39.9208229",
-                lng: "-84.0929378",
+                lat: 39.9208229,
+                lng: -84.0929378,
               },
               southwest: {
-                lat: "39.7018339",
-                lng: "-84.3113769",
+                lat: 39.7018339,
+                lng: -84.3113769,
               },
             },
           },
@@ -178,17 +178,17 @@ export default {
           formatted_address: "Franklin, OH 45005, USA",
           geometry: {
             location: {
-              lat: "39.55894739999999",
-              lng: "-84.30410739999999",
+              lat: 39.55894739999999,
+              lng: -84.30410739999999,
             },
             viewport: {
               northeast: {
-                lat: "39.5891638",
-                lng: "-84.253708",
+                lat: 39.5891638,
+                lng: -84.253708,
               },
               southwest: {
-                lat: "39.518977",
-                lng: "-84.3351189",
+                lat: 39.518977,
+                lng: -84.3351189,
               },
             },
           },
@@ -205,17 +205,17 @@ export default {
           formatted_address: "Harmony, PA, USA",
           geometry: {
             location: {
-              lat: "40.801454",
-              lng: "-80.1272826",
+              lat: 40.801454,
+              lng: -80.1272826,
             },
             viewport: {
               northeast: {
-                lat: "40.80925089999999",
-                lng: "-80.112121",
+                lat: 40.80925089999999,
+                lng: -80.112121,
               },
               southwest: {
-                lat: "40.7913609",
-                lng: "-80.131894",
+                lat: 40.7913609,
+                lng: -80.131894,
               },
             },
           },
@@ -232,17 +232,17 @@ export default {
           formatted_address: "Huber Heights, OH, USA",
           geometry: {
             location: {
-              lat: "39.84394699999999",
-              lng: "-84.12466080000002",
+              lat: 39.84394699999999,
+              lng: -84.12466080000002,
             },
             viewport: {
               northeast: {
-                lat: "39.899155",
-                lng: "-84.051039",
+                lat: 39.899155,
+                lng: -84.051039,
               },
               southwest: {
-                lat: "39.818351",
-                lng: "-84.17546",
+                lat: 39.818351,
+                lng: -84.17546,
               },
             },
           },
@@ -259,17 +259,17 @@ export default {
           formatted_address: "Kettering, OH, USA",
           geometry: {
             location: {
-              lat: "39.68950359999999",
-              lng: "-84.1688274",
+              lat: 39.68950359999999,
+              lng: -84.1688274,
             },
             viewport: {
               northeast: {
-                lat: "39.736801",
-                lng: "-84.1003269",
+                lat: 39.736801,
+                lng: -84.1003269,
               },
               southwest: {
-                lat: "39.6546169",
-                lng: "-84.21472899999999",
+                lat: 39.6546169,
+                lng: -84.21472899999999,
               },
             },
           },
@@ -286,17 +286,17 @@ export default {
           formatted_address: "Lebanon, OH 45036, USA",
           geometry: {
             location: {
-              lat: "39.4353373",
-              lng: "-84.2029922",
+              lat: 39.4353373,
+              lng: -84.2029922,
             },
             viewport: {
               northeast: {
-                lat: "39.467597",
-                lng: "-84.160212",
+                lat: 39.467597,
+                lng: -84.160212,
               },
               southwest: {
-                lat: "39.3653729",
-                lng: "-84.27004099999999",
+                lat: 39.3653729,
+                lng: -84.27004099999999,
               },
             },
           },
@@ -313,17 +313,17 @@ export default {
           formatted_address: "Loveland, OH, USA",
           geometry: {
             location: {
-              lat: "39.2689476",
-              lng: "-84.26382600000001",
+              lat: 39.2689476,
+              lng: -84.26382600000001,
             },
             viewport: {
               northeast: {
-                lat: "39.288937",
-                lng: "-84.2329029",
+                lat: 39.288937,
+                lng: -84.2329029,
               },
               southwest: {
-                lat: "39.250554",
-                lng: "-84.306939",
+                lat: 39.250554,
+                lng: -84.306939,
               },
             },
           },
@@ -340,17 +340,17 @@ export default {
           formatted_address: "Maineville, OH 45039, USA",
           geometry: {
             location: {
-              lat: "39.3150592",
-              lng: "-84.22076969999999",
+              lat: 39.3150592,
+              lng: -84.22076969999999,
             },
             viewport: {
               northeast: {
-                lat: "39.320702",
-                lng: "-84.2121629",
+                lat: 39.320702,
+                lng: -84.2121629,
               },
               southwest: {
-                lat: "39.3113929",
-                lng: "-84.2287399",
+                lat: 39.3113929,
+                lng: -84.2287399,
               },
             },
           },
@@ -367,17 +367,17 @@ export default {
           formatted_address: "Miamisburg, OH, USA",
           geometry: {
             location: {
-              lat: "39.6428362",
-              lng: "-84.2866083",
+              lat: 39.6428362,
+              lng: -84.2866083,
             },
             viewport: {
               northeast: {
-                lat: "39.661568",
-                lng: "-84.21510099999999",
+                lat: 39.661568,
+                lng: -84.21510099999999,
               },
               southwest: {
-                lat: "39.5966479",
-                lng: "-84.327636",
+                lat: 39.5966479,
+                lng: -84.327636,
               },
             },
           },
@@ -394,17 +394,17 @@ export default {
           formatted_address: "Middletown, OH, USA",
           geometry: {
             location: {
-              lat: "39.5150576",
-              lng: "-84.39827629999999",
+              lat: 39.5150576,
+              lng: -84.39827629999999,
             },
             viewport: {
               northeast: {
-                lat: "39.548798",
-                lng: "-84.292515",
+                lat: 39.548798,
+                lng: -84.292515,
               },
               southwest: {
-                lat: "39.4598159",
-                lng: "-84.42091080000002",
+                lat: 39.4598159,
+                lng: -84.42091080000002,
               },
             },
           },
@@ -421,17 +421,17 @@ export default {
           formatted_address: "Rapid City, SD, USA",
           geometry: {
             location: {
-              lat: "44.0805434",
-              lng: "-103.2310149",
+              lat: 44.0805434,
+              lng: -103.2310149,
             },
             viewport: {
               northeast: {
-                lat: "44.136807",
-                lng: "-103.0393968",
+                lat: 44.136807,
+                lng: -103.0393968,
               },
               southwest: {
-                lat: "44.002127",
-                lng: "-103.325763",
+                lat: 44.002127,
+                lng: -103.325763,
               },
             },
           },
@@ -448,17 +448,17 @@ export default {
           formatted_address: "Springboro, OH, USA",
           geometry: {
             location: {
-              lat: "39.5522815",
-              lng: "-84.2332718",
+              lat: 39.5522815,
+              lng: -84.2332718,
             },
             viewport: {
               northeast: {
-                lat: "39.596857",
-                lng: "-84.1910291",
+                lat: 39.596857,
+                lng: -84.1910291,
               },
               southwest: {
-                lat: "39.520634",
-                lng: "-84.277092",
+                lat: 39.520634,
+                lng: -84.277092,
               },
             },
           },
@@ -475,17 +475,17 @@ export default {
           formatted_address: "Trotwood, OH, USA",
           geometry: {
             location: {
-              lat: "39.7972788",
-              lng: "-84.3113334",
+              lat: 39.7972788,
+              lng: -84.3113334,
             },
             viewport: {
               northeast: {
-                lat: "39.833579",
-                lng: "-84.25344179999999",
+                lat: 39.833579,
+                lng: -84.25344179999999,
               },
               southwest: {
-                lat: "39.7457889",
-                lng: "-84.3671408",
+                lat: 39.7457889,
+                lng: -84.3671408,
               },
             },
           },
@@ -502,17 +502,17 @@ export default {
           formatted_address: "Troy, OH 45373, USA",
           geometry: {
             location: {
-              lat: "40.0394982",
-              lng: "-84.20327669999999",
+              lat: 40.0394982,
+              lng: -84.20327669999999,
             },
             viewport: {
               northeast: {
-                lat: "40.0760379",
-                lng: "-84.1735889",
+                lat: 40.0760379,
+                lng: -84.1735889,
               },
               southwest: {
-                lat: "40.009563",
-                lng: "-84.268427",
+                lat: 40.009563,
+                lng: -84.268427,
               },
             },
           },
@@ -529,17 +529,17 @@ export default {
           formatted_address: "Vandalia, OH, USA",
           geometry: {
             location: {
-              lat: "39.89061219999999",
-              lng: "-84.1988308",
+              lat: 39.89061219999999,
+              lng: -84.1988308,
             },
             viewport: {
               northeast: {
-                lat: "39.9229798",
-                lng: "-84.1572229",
+                lat: 39.9229798,
+                lng: -84.1572229,
               },
               southwest: {
-                lat: "39.834283",
-                lng: "-84.2554858",
+                lat: 39.834283,
+                lng: -84.2554858,
               },
             },
           },
