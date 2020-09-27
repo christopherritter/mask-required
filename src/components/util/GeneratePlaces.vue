@@ -227,17 +227,11 @@ export default {
               types: ["country", "political"],
             },
           ],
-          coordinates: new firebase.firestore.GeoPoint(
-            39.5594079,
-            -84.2391289
-          ),
+          coordinates: new firebase.firestore.GeoPoint(39.5594079, -84.2391289),
           createdOn: new Date(),
           formatted_address: "240 W Central Ave, Springboro, OH 45066, USA",
           g: {
-            geopoint: new firebase.firestore.GeoPoint(
-              39.5594079,
-              -84.2391289
-            ),
+            geopoint: new firebase.firestore.GeoPoint(39.5594079, -84.2391289),
             geohash: "dph151dfq0",
           },
           geohash: "dph151dfq0",
@@ -311,17 +305,11 @@ export default {
               types: ["postal_code"],
             },
           ],
-          coordinates: new firebase.firestore.GeoPoint(
-            39.5608822,
-            -84.2582096
-          ),
+          coordinates: new firebase.firestore.GeoPoint(39.5608822, -84.2582096),
           createdOn: new Date(),
           formatted_address: "725 W Central Ave, Springboro, OH 45066, USA",
           g: {
-            geopoint: new firebase.firestore.GeoPoint(
-              39.5608822,
-              -84.2582096
-            ),
+            geopoint: new firebase.firestore.GeoPoint(39.5608822, -84.2582096),
             geohash: "dph149v4c",
           },
           geohash: "dph149v4c",
@@ -526,16 +514,484 @@ export default {
             "clothing_store",
           ],
         },
+        {
+          address_components: [
+            {
+              long_name: "Space C - 122",
+              short_name: "Space C - 122",
+              types: ["subpremise"],
+            },
+            {
+              long_name: "4427",
+              short_name: "4427",
+              types: ["street_number"],
+            },
+            {
+              long_name: "Glengarry Drive",
+              short_name: "Glengarry Dr",
+              types: ["route"],
+            },
+            {
+              long_name: "Beavercreek",
+              short_name: "Beavercreek",
+              types: ["locality", "political"],
+            },
+            {
+              long_name: "Beavercreek Township",
+              short_name: "Beavercreek Township",
+              types: ["administrative_area_level_3", "political"],
+            },
+            {
+              long_name: "Greene County",
+              short_name: "Greene County",
+              types: ["administrative_area_level_2", "political"],
+            },
+            {
+              long_name: "Ohio",
+              short_name: "OH",
+              types: ["administrative_area_level_1", "political"],
+            },
+            {
+              long_name: "United States",
+              short_name: "US",
+              types: ["country", "political"],
+            },
+            {
+              long_name: "45440",
+              short_name: "45440",
+              types: ["postal_code"],
+            },
+          ],
+          coordinates: new firebase.firestore.GeoPoint(39.693321, -84.102154),
+          createdOn: new Date(),
+          formatted_address: "4427 Glengarry Dr Space C - 122, Beavercreek, OH 45440, USA",
+          g: {
+            geopoint: new firebase.firestore.GeoPoint(39.693321, -84.102154),
+            geohash: "dph1y1ywmg",
+          },
+          geohash: "dph1y1ywmg",
+          geometry: {
+            location: {
+              lng: "-84.102154",
+              lat: "39.693321",
+            },
+            viewport: {
+              northeast: {
+                lng: "-84.10081411970849",
+                lat: "39.6947821302915",
+              },
+              southwest: {
+                lng: "-84.10351208029151",
+                lat: "39.6920841697085",
+              },
+            },
+          },
+          icon: "https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png",
+          name: "Eddie Bauer",
+          place_id: "ChIJpdwUhTOFQIgRLuXt_Rrr2Nw",
+          plus_code: {
+            compound_code: "MVVX+84 Beavercreek, OH, USA",
+            global_code: "86FQMVVX+84",
+          },
+          review: 0,
+          types: ["shoe_store", "clothing_store"],
+        },
+        {
+          address_components: [
+            {
+              long_name: "103",
+              short_name: "103",
+              types: ["street_number"],
+            },
+            {
+              long_name: "South Shore Drive",
+              short_name: "S Shore Dr",
+              types: ["route"],
+            },
+            {
+              long_name: "Surf City",
+              short_name: "Surf City",
+              types: ["locality", "political"],
+            },
+            {
+              long_name: "Topsail",
+              short_name: "Topsail",
+              types: ["administrative_area_level_3", "political"],
+            },
+            {
+              long_name: "Pender County",
+              short_name: "Pender County",
+              types: ["administrative_area_level_2", "political"],
+            },
+            {
+              long_name: "North Carolina",
+              short_name: "NC",
+              types: ["administrative_area_level_1", "political"],
+            },
+            {
+              long_name: "28445",
+              short_name: "28445",
+              types: ["postal_code"],
+            },
+          ],
+          coordinates: new firebase.firestore.GeoPoint(34.4257187, -77.5454196),
+          createdOn: new Date(),
+          formatted_address: "103 S Shore Dr, Surf City, NC 28445, USA",
+          g: {
+            geopoint: new firebase.firestore.GeoPoint(34.4257187, -77.5454196),
+            geohash: "dq0gg7j0kg",
+          },
+          geohash: "dq0gg7j0kg",
+          geometry: {
+            location: {
+              lng: "-77.5454196",
+              lat: "34.4257187",
+            },
+            viewport: {
+              northeast: {
+                lng: "-77.5440013697085",
+                lat: "34.4269888802915",
+              },
+              southwest: {
+                lng: "-77.5466993302915",
+                lat: "34.4242909197085",
+              },
+            },
+          },
+          icon: "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+          name: "HOT DIGGITY DOGZ",
+          place_id: "ChIJz9ZSmJaiqYkRKYlRFYLqiqw",
+          plus_code: {
+            compound_code: "CFG3+7R Surf City, NC, USA",
+            global_code: "8764CFG3+7R",
+          },
+          review: 0,
+          types: ["restaurant"],
+        },
+        {
+          address_components: [
+            {
+              long_name: "279",
+              short_name: "279",
+              types: ["street_number"],
+            },
+            {
+              long_name: "West Central Avenue",
+              short_name: "W Central Ave",
+              types: ["route"],
+            },
+            {
+              long_name: "Springboro",
+              short_name: "Springboro",
+              types: ["locality", "political"],
+            },
+            {
+              long_name: "Clearcreek Township",
+              short_name: "Clearcreek Township",
+              types: ["administrative_area_level_3", "political"],
+            },
+            {
+              long_name: "Warren County",
+              short_name: "Warren County",
+              types: ["administrative_area_level_2", "political"],
+            },
+            {
+              long_name: "Ohio",
+              short_name: "OH",
+              types: ["administrative_area_level_1", "political"],
+            },
+            {
+              long_name: "United States",
+              short_name: "US",
+              types: ["county", "political"],
+            },
+            {
+              long_name: "45066",
+              short_name: "45066",
+              types: ["postal_code"],
+            },
+          ],
+          coordinates: new firebase.firestore.GeoPoint(39.55857699999999, -84.24081300000002),
+          createdOn: new Date(),
+          formatted_address: "279 W Central Ave, Springboro, OH 45066, USA",
+          g: {
+            geopoint: new firebase.firestore.GeoPoint(39.55857699999999, -84.24081300000002),
+            geohash: "dph1513tqv",
+          },
+          geohash: "dph1513tqv",
+          geometry: {
+            location: {
+              lng: "-84.24081300000002",
+              lat: "39.55857699999999",
+            },
+            viewport: {
+              northeast: {
+                lng: "-84.2394468697085",
+                lat: "39.5599769302915",
+              },
+              southwest: {
+                lng: "-84.24214483029152",
+                lat: "39.5572789697085",
+              },
+            },
+          },
+          icon: "https://maps.gstatic.com/mapfiles/place_api/icons/restaurant-71.png",
+          name: "Marco's Pizza",
+          place_id: "ChIJC5tV_VqKQIgRo0s3A1FXiKs",
+          plus_code: {
+            compound_code: "HQ55+CM Springboro, OH, USA",
+            global_code: "86FQHQ55+CM",
+          },
+          review: 0,
+          types: ["meal_takeaway", "restaurant"],
+        },
+        {
+          address_components: [
+            {
+              long_name: "2145",
+              short_name: "2145",
+              types: ["street_number"],
+            },
+            {
+              long_name: "South Breiel Boulevard",
+              short_name: "S Breiel Blvd",
+              types: ["route"],
+            },
+            {
+              long_name: "Middletown",
+              short_name: "Middletown",
+              types: ["locality", "political"],
+            },
+            {
+              long_name: "Butler County",
+              short_name: "Butler County",
+              types: ["administrative_area_level_2", "political"],
+            },
+            {
+              long_name: "Ohio",
+              short_name: "OH",
+              types: ["administrative_area_level_1", "political"],
+            },
+            {
+              long_name: "United States",
+              short_name: "US",
+              types: ["country", "political"],
+            },
+            {
+              long_name: "45042",
+              short_name: "45042",
+              types: ["postal_code"],
+            },
+          ],
+          coordinates: new firebase.firestore.GeoPoint(39.4920769, -84.3529326),
+          createdOn: new Date(),
+          formatted_address: "2145 S Breiel Blvd, Middletown, OH 45042, USA",
+          g: {
+            geopoint: new firebase.firestore.GeoPoint(39.4920769, -84.3529326),
+            geohash: "dph08t2440",
+          },
+          geohash: "dph08t2440",
+          geometry: {
+            location: {
+              lng: "-84.3529326",
+              lat: "39.4920769",
+            },
+            viewport: {
+              northeast: {
+                lng: "-84.35145746970849",
+                lat: "39.4936832302915",
+              },
+              southwest: {
+                lng: "-84.3541554302915",
+                lat: "39.4909852697085",
+              },
+            },
+          },
+          icon: "https://maps.gstatic.com/mapfiles/place_api/icons/generic_business-71.png",
+          name: "Middletown Pickleball Association",
+          place_id: "ChIJ5ztOBZpnQIgRPiUDWvlSJhQ",
+          plus_code: {
+            compound_code: "FJRW+RR Middletown, OH, USA",
+            global_code: "86FQFJRW+RR",
+          },
+          review: 0,
+          types: [],
+        },
+        {
+          address_components: [
+            {
+              long_name: "E",
+              short_name: "E",
+              types: ["subpremise"],
+            },
+            {
+              long_name: "2765",
+              short_name: "2765",
+              types: ["street_number"],
+            },
+            {
+              long_name: "",
+              short_name: "",
+              types: [""],
+            },
+            {
+              long_name: "North Carolina 210",
+              short_name: "NC-210",
+              types: ["route"],
+            },
+            {
+              long_name: "Hampstead",
+              short_name: "Hampstead",
+              types: ["locality", "political"],
+            },
+            {
+              long_name: "Topsail",
+              short_name: "Topsail",
+              types: ["administrative_area_level_3", "political"],
+            },
+            {
+              long_name: "Pender County",
+              short_name: "Pender County",
+              types: ["administrative_area_level_2", "political"],
+            },
+            {
+              long_name: "North Carolina",
+              short_name: "NC",
+              types: ["administrative_area_level_1", "political"],
+            },
+            {
+              long_name: "United States",
+              short_name: "US",
+              types: ["country", "political"],
+            },
+            {
+              long_name: "28443",
+              short_name: "28443",
+              types: ["postal_code"],
+            },
+          ],
+          coordinates: new firebase.firestore.GeoPoint(34.451406, -77.5645136),
+          createdOn: new Date(),
+          formatted_address: "2765 NC-210 E, Hampstead, NC 28443, USA",
+          g: {
+            geopoint: new firebase.firestore.GeoPoint(34.451406, -77.5645136),
+            geohash: "dq0gfzxjzz",
+          },
+          geohash: "dq0gfzxjzz",
+          geometry: {
+            location: {
+              lng: "-77.5645136",
+              lat: "34.451406",
+            },
+            viewport: {
+              northeast: {
+                lng: "-77.5627448697085",
+                lat: "-77.5627448697085",
+              },
+              southwest: {
+                lng: "-77.56544283029152",
+                lat: "34.4500776697085",
+              },
+            },
+          },
+          icon: "https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png",
+          name: "Publix Super Market at Arboretum at Surf City",
+          place_id: "ChIJxy1WPgCZqYkRkeRpkzpTOFk",
+          plus_code: {
+            compound_code: "FC2P+H5 Hampstead, NC, USA",
+            global_code: "8764FC2P+H5",
+          },
+          review: 0,
+          types: ["supermarket", "bakery", "liquor_store"],
+        },
+        {
+          address_components: [
+            {
+              long_name: "100",
+              short_name: "100",
+              types: ["street_number"],
+            },
+            {
+              long_name: "Stumer Road",
+              short_name: "Stumer Rd",
+              types: ["route"],
+            },
+            {
+              long_name: "Rapid City",
+              short_name: "Rapid City",
+              types: ["locality", "political"],
+            },
+            {
+              long_name: "Pennington County",
+              short_name: "Pennington County",
+              types: ["administrative_area_level_2", "political"],
+            },
+            {
+              long_name: "South Dakota",
+              short_name: "SD",
+              types: ["administrative_area_level_1", "political"],
+            },
+            {
+              long_name: "United States",
+              short_name: "US",
+              types: ["country", "political"],
+            },
+            {
+              long_name: "57701",
+              short_name: "57701",
+              types: ["postal_code"],
+            },
+          ],
+          coordinates: new firebase.firestore.GeoPoint(44.03380569999999, -103.2183798),
+          createdOn: new Date(),
+          formatted_address: "100 Stumer Rd, Rapid City, SD 57701, USA",
+          g: {
+            geopoint: new firebase.firestore.GeoPoint(44.03380569999999, -103.2183798),
+            geohash: "9xyde0net2",
+          },
+          geohash: "9xyde0net2",
+          geometry: {
+            location: {
+              lng: "-103.2183798",
+              lat: "44.03380569999999",
+            },
+            viewport: {
+              northeast: {
+                lng: "-103.2165147197085",
+                lat: "44.0350050302915",
+              },
+              southwest: {
+                lng: "-103.2192126802915",
+                lat: "44.03230706970851",
+              },
+            },
+          },
+          icon: "https://maps.gstatic.com/mapfiles/place_api/icons/shopping-71.png",
+          name: "Walmart Supercenter",
+          place_id: "ChIJBcgcNU1CfYcR3i78H4GdpK0",
+          plus_code: {
+            compound_code: "2QMJ+GJ Rapid City, SD, USA",
+            global_code: "85PR2QMJ+GJ",
+          },
+          review: 0,
+          types: [
+            "department_store",
+            "supermarket",
+            "electronics_store",
+            "home_goods_store",
+            "clothing_store",
+          ],
+        },
       ],
-    }
+    };
   },
   methods: {
     generatePlaces() {
       this.starterPlaces.map((place) => {
         return fb.placesCollection.add(place);
       });
-      console.log("Starter places have been generated.")
+      console.log("Starter places have been generated.");
     },
-  }
+  },
 };
 </script>
