@@ -1,4 +1,3 @@
-
 <template>
   <v-btn @click="generateRegions">Generate Regions</v-btn>
 </template>

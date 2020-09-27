@@ -11,7 +11,7 @@
         <v-divider class="mb-1"></v-divider>
       </v-col>
     </v-row>
-    <v-row v-if="loading">
+    <v-row v-if="loading && reviewsExist">
       <v-col cols="12" md="6" lg="4">
         <v-card height="325" outlined>
           <v-card-text>
@@ -103,7 +103,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-else>
+    <v-row v-if="!loading && reviewsExist">
       <v-col
         cols="12"
         md="6"
@@ -219,11 +219,16 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row justify="center" v-else>
+      <generate-reviews class="mb-16"></generate-reviews>
+    </v-row>
   </section>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import * as fb from "@/firebase";
+import GenerateReviews from "@/components/util/GenerateReviews";
 
 export default {
   name: "latest-reviews-section",
@@ -234,9 +239,19 @@ export default {
       highlightedCard: null,
       hover: false,
       loading: true,
+      reviewsExist: false,
     };
   },
   async created() {
+    var collectionSize = await fb.reviewsCollection
+      .limit(1)
+      .get()
+      .then((query) => query.size);
+
+    if (!collectionSize) {
+      return
+    }
+
     await this.$store.dispatch("fetchTopReviews").then((reviews) => {
       reviews.map((review) => {
         var topReview = review;
@@ -250,6 +265,7 @@ export default {
         this.reviews.push(topReview);
       });
     });
+    this.reviewsExist = true;
     this.loading = false;
   },
   methods: {
@@ -257,6 +273,9 @@ export default {
       await this.$store.dispatch("fetchPlace", { place_id: place.place_id });
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
+  },
+  components: {
+    GenerateReviews,
   },
   filters: {
     truncateWithEllipse(val, stringLength) {

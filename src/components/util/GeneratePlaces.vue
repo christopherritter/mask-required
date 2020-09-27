@@ -1,4 +1,3 @@
-
 <template>
   <v-btn @click="generatePlaces">Generate Places</v-btn>
 </template>
