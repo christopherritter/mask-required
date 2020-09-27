@@ -535,7 +535,7 @@ export default {
       this.starterPlaces.map((place) => {
         return fb.placesCollection.add(place);
       });
-      console.log("Start places have been generated.")
+      console.log("Starter places have been generated.")
     },
   }
 };

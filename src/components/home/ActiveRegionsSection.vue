@@ -11,7 +11,7 @@
         <v-divider class="mb-1"></v-divider>
       </v-col>
     </v-row>
-    <v-row>
+    <v-row v-if="regionsExist">
       <v-col
         cols="12"
         sm="6"
@@ -45,11 +45,16 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row justify="center" v-else>
+      <generate-regions class="mb-16"></generate-regions>
+    </v-row>
   </section>
 </template>
 
 <script>
 import { mapState } from "vuex";
+import * as fb from "@/firebase";
+import GenerateRegions from "@/components/util/GenerateRegions";
 
 export default {
   name: "active-regions-section",
@@ -60,9 +65,19 @@ export default {
       styleObject: { "border-color": "#7dbc96" },
       highlightedCard: null,
       hover: false,
+      regionsExist: false,
     };
   },
   async created() {
+    var collectionSize = await fb.regionsCollection
+      .limit(1)
+      .get()
+      .then((query) => query.size);
+
+    if (collectionSize) {
+      this.regionsExist = true;
+    }
+
     if (this.regions === null) {
       this.$store.dispatch("fetchActiveRegions").then((regions) => {
         this.regions = regions;
@@ -76,6 +91,9 @@ export default {
       await this.$store.dispatch("fetchRegion", { place_id: region.place_id });
       this.$router.push({ name: "nearby-places", params: { id: region.place_id } });
     },
+  },
+  components: {
+    GenerateRegions,
   },
 };
 </script>
