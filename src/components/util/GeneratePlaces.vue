@@ -629,6 +629,11 @@ export default {
               types: ["administrative_area_level_1", "political"],
             },
             {
+              long_name: "United States",
+              short_name: "US",
+              types: ["country", "political"],
+            },
+            {
               long_name: "28445",
               short_name: "28445",
               types: ["postal_code"],

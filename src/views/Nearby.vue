@@ -381,7 +381,6 @@ export default {
       this.type = "";
     }
 
-    console.log("Viewing places when created.")
     await this.viewLocalPlaces();
     this.loading = false;
     this.$ga.page(this.$router);
@@ -400,7 +399,6 @@ export default {
         this.type = "";
         await this.$store.dispatch("clearPlaces");
         this.sortedPlaces = [];
-        console.log("Viewing places when route changed.")
         this.viewLocalPlaces();
       }
 
