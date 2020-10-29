@@ -10,6 +10,11 @@ yarn install
 yarn serve
 ```
 
+### Run the local Firebase emulator suite
+```
+firebase emulators:start
+```
+
 ### Compiles and minifies for production
 ```
 yarn build
