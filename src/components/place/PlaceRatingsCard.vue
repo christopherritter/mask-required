@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card v-if="place.reviews && place.reviews.length > 0">
+    <v-card v-if="place.ratings">
       <v-card-title>Ratings and reviews</v-card-title>
       <v-card-actions class="px-4 pb-4">
         <v-avatar color="teal" size="64">
@@ -20,7 +20,7 @@
         ></v-rating>
         <v-spacer></v-spacer>
         <span class="caption mr-2 font-weight-medium">
-          ( {{ place.reviews.length }} reviews )
+          ( {{ place.ratings.total }} reviews )
         </span>
       </v-card-actions>
       <v-divider class="my-0"></v-divider>
