@@ -125,7 +125,6 @@ export default {
     async fetchPlace() {
       var placeId = await this.$route.params.id;
 
-      console.log("Fetching place.")
       await this.$store.dispatch("fetchPlace", {
         place_id: placeId,
       });
@@ -133,7 +132,6 @@ export default {
       // console.log("Fetching reviews")
       // await this.$store.dispatch("fetchReviews", placeId);
 
-      console.log("Setting place")
       this.currentPlace = this.$store.getters.getPlace;
     },
   },

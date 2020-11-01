@@ -19,7 +19,7 @@
 
     <v-row no-gutters align="center" justify="start">
       <v-rating
-        v-if="place.reviews && place.reviews.length > 0"
+        v-if="place.ratings.total > 0"
         v-model="place.ratings.general"
         background-color="yellow"
         color="yellow accent-4"
@@ -46,12 +46,12 @@
       ></v-rating>
 
       <v-chip
-        v-if="place.reviews && place.reviews.length > 0"
+        v-if="place.ratings.total > 0"
         small
         color="white"
         :ripple="false"
       >
-        {{ place.reviews.length }} reviews
+        {{ place.ratings.total }} reviews
       </v-chip>
 
       <v-chip v-else small color="white" :ripple="false">

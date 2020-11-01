@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-card v-if="place.ratings">
+    <v-card v-if="place.ratings.total > 0">
       <v-card-title>Ratings and reviews</v-card-title>
       <v-card-actions class="px-4 pb-4">
         <v-avatar color="teal" size="64">
