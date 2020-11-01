@@ -730,7 +730,7 @@ const store = new Vuex.Store({
       snapshot.forEach((doc) => {
         newPlace = doc.data();
 
-        if (!newPlace.address) {
+        if (!newPlace.address || !newPlace.ratings || !newPlace.location) {
           dispatch("updatePlace", newPlace);
         }
 
@@ -826,6 +826,7 @@ const store = new Vuex.Store({
             compliance: 0,
             notifications: 0,
             enforcement: 0,
+            total: 0,
           };
         })
         .catch((error) => {
@@ -981,24 +982,22 @@ const store = new Vuex.Store({
     },
 
     // Update older places that lack the proper fields.
-    async updatePlace({}, place) {
+    async updatePlace({ dispatch }, place) {
       var placeId = place.place_id;
       const snapshot = await fb.placesCollection
         .where("place_id", "==", placeId)
         .get();
 
       if (snapshot.empty) {
-        console.log("Place not found.");
         return;
       }
 
       snapshot.forEach((doc) => {
         var docId = doc.id;
         var newPlace = doc.data();
-        console.log(docId);
 
         if (!newPlace.address) {
-          console.log("This place doesn't have an address.");
+          // console.log("This place doesn't have an address.");
           newPlace.address = {};
 
           for (let a = 0; a < newPlace.address_components.length; a++) {
@@ -1040,20 +1039,21 @@ const store = new Vuex.Store({
         }
 
         if (!newPlace.ratings) {
-          console.log("This place doesn't have any ratings.")
+          // console.log("This place doesn't have any ratings.");
 
           newPlace.ratings = {
-            general: 0,
-            compliance: 0,
-            notifications: 0,
-            enforcement: 0,
+            general: 0, // General rating
+            compliance: 0, // Compliance rating
+            notifications: 0, // Notification rating
+            enforcement: 0, // Enforcement rating
+            total: 0, // Total number of ratings
           };
 
           delete newPlace.review;
         }
 
         if (!newPlace.location) {
-          console.log("This place doesn't have a location.");
+          // console.log("This place doesn't have a location.");
 
           newPlace.location = {
             lat: newPlace.geometry.location.lat,
@@ -1070,9 +1070,12 @@ const store = new Vuex.Store({
         fb.placesCollection
           .doc(docId)
           .set(newPlace)
-          // .then(function() {
-          //   console.log("Document successfully updated!");
-          // })
+          .then(function() {
+            dispatch("updateReviews", {
+              docId: docId,
+              placeId: newPlace.place_id,
+            });
+          })
           .catch(function(error) {
             // The document probably doesn't exist.
             console.error("Error updating document: ", error);
@@ -1216,6 +1219,74 @@ const store = new Vuex.Store({
       averageRating = Math.round(averageRating * 2) / 2;
 
       return averageRating;
+    },
+    async updateReviews({}, place) {
+      console.log("Updating review " + place.docId);
+
+      var docId = place.docId;
+      var placeId = place.placeId;
+
+      var generalRatings = 0;
+      var complianceRatings = 0;
+      var notificationsRatings = 0;
+      var enforcementRatings = 0;
+      var totalRatings = 0;
+
+      const snapshot = await fb.reviewsCollection
+        .where("place.place_id", "==", placeId)
+        .get();
+
+      if (snapshot.empty) {
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        var newReview = doc.data();
+        
+        console.log("Compliance ratings: " + newReview.ratings[0].value )
+        console.log("Notifications ratings: " + newReview.ratings[1].value )
+        console.log("Enforcement ratings: " + newReview.ratings[2].value )
+        
+        totalRatings = totalRatings + 1;
+        generalRatings = ( generalRatings + newReview.rating ) / totalRatings ;
+        complianceRatings = ( complianceRatings + newReview.ratings[0].value ) / totalRatings;
+        notificationsRatings = ( notificationsRatings + newReview.ratings[1].value ) / totalRatings;
+        enforcementRatings = ( enforcementRatings + newReview.ratings[2].value ) / totalRatings;
+
+        fb.placesCollection
+          .doc(docId)
+          .collection("reviews")
+          .doc(doc.id)
+          .set(newReview)
+          .then(function() {
+            fb.placesCollection
+              .doc(docId)
+              .update({
+                ratings: {
+                  total: totalRatings,
+                  general: generalRatings,
+                  compliance: complianceRatings,
+                  notifications: notificationsRatings,
+                  enforcement: enforcementRatings,
+                }
+              });
+          })
+          .then(function() {
+            fb.reviewsCollection
+              .doc(doc.id)
+              .delete()
+              .then(function() {
+                console.log("Document successfully deleted!");
+              })
+              .catch(function(error) {
+                console.error("Error removing document: ", error);
+              });
+          })
+          .catch(function(error) {
+            // The document probably doesn't exist.
+            console.error("Error updating document: ", error);
+          });
+      });
     },
 
     // Types
