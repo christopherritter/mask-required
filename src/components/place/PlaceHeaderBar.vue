@@ -5,12 +5,15 @@
     </v-row>
 
     <v-row no-gutters>
-      <v-card-text class="pa-0">
+      <v-card-text class="pa-0" v-if="place.formatted_address">
         {{ place.formatted_address }}
-        <!-- <v-chip  class="ma-2" small>
-          <v-icon left>mdi-magnify</v-icon>
-          View Region
-        </v-chip> -->
+      </v-card-text>
+      <v-card-text class="pa-0" v-else>
+        {{ place.address.street_number }}
+        {{ place.address.route }},
+        {{ place.address.locality }},
+        {{ place.address.state }}
+        {{ place.address.postal_code }}
       </v-card-text>
     </v-row>
 
@@ -131,12 +134,17 @@ export default {
       }
     }
 
-    var localityObj = findLocality();
-    var stateObj = findState();
-    var countryObj = findCountry();
+    if (addressComponents) {
+      var localityObj = findLocality();
+      var stateObj = findState();
+      var countryObj = findCountry();
 
-    this.getPlacePredictions(localityObj.long_name + ", " + stateObj.long_name + ", " + countryObj.short_name + "A");
-  },
+      this.getPlacePredictions(localityObj.long_name + ", " + stateObj.long_name + ", " + countryObj.short_name + "A");
+    } else {
+      this.getPlacePredictions(this.place.address.locality + ", " + this.place.address.state + ", " + this.place.address.country + "A");
+    }
+   
+   },
   methods: {
     async findNearbyPlaces(type) {
       await this.$store.dispatch("findNearbyPlaces", type);

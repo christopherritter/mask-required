@@ -61,11 +61,11 @@
               </v-col>
             </v-row>
           </v-sheet>
-          <place-reviews-section
+          <!-- <place-reviews-section
             v-else
             :place="currentPlace"
             v-on:confirm-delete="fetchPlace(id)"
-          ></place-reviews-section>
+          ></place-reviews-section> -->
         </v-col>
       </v-row>
     </v-container>
@@ -78,7 +78,7 @@ import { mapState } from "vuex";
 import PlaceHeaderBar from "@/components/place/PlaceHeaderBar";
 import PlaceRatingsCard from "@/components/place/PlaceRatingsCard";
 import PlaceLocationCard from "@/components/place/PlaceLocationCard";
-import PlaceReviewsSection from "@/components/place/PlaceReviewsSection";
+// import PlaceReviewsSection from "@/components/place/PlaceReviewsSection";
 
 export default {
   name: "place",
@@ -100,7 +100,7 @@ export default {
     PlaceHeaderBar,
     PlaceRatingsCard,
     PlaceLocationCard,
-    PlaceReviewsSection,
+    // PlaceReviewsSection,
   },
   watch: {
     async $route(to, from) {
@@ -125,14 +125,16 @@ export default {
     async fetchPlace() {
       var placeId = await this.$route.params.id;
 
+      console.log("Fetching place.")
       await this.$store.dispatch("fetchPlace", {
         place_id: placeId,
       });
 
-      await this.$store.dispatch("fetchReviews", placeId);
+      // console.log("Fetching reviews")
+      // await this.$store.dispatch("fetchReviews", placeId);
 
-      const newPlace = this.$store.getters.getPlace;
-      this.currentPlace = newPlace;
+      console.log("Setting place")
+      this.currentPlace = this.$store.getters.getPlace;
     },
   },
 };

@@ -440,8 +440,12 @@ export default {
       });
       this.region = this.$store.getters.getRegion;
 
-      await this.$store.dispatch("getGeohashRange");
-      await this.$store.dispatch("findLocalPlaces");
+      // await this.$store.dispatch("getGeohashRange");
+      // await this.$store.dispatch("findLocalPlaces");
+
+      // Find places within the region. 
+      await this.$store.dispatch("findRegionalPlaces");
+
       await this.$store.dispatch("countPlaceTypes");
       await this.sortPlacesIntoTypes();
       return;
