@@ -718,9 +718,7 @@ const store = new Vuex.Store({
       var newPlace = {};
 
       if (snapshot.empty) {
-        console.log("Place does not exist.");
         await dispatch("createPlace", place).then((results) => {
-          // newPlace = results.data();
           console.log("New place: " + results.id);
           console.log(results);
           commit("setPlace", results);
@@ -739,17 +737,6 @@ const store = new Vuex.Store({
         ) {
           dispatch("updatePlace", newPlace);
         }
-
-        // dispatch("fetchReviews", newPlace.place_id).then((reviews) => {
-        //   if (reviews) {
-        //     newPlace.reviews = reviews.reviews;
-        //     newPlace.ratings = {};
-        //     newPlace.ratings.general = reviews.rating;
-        //     newPlace.ratings.compliance = reviews.compliance;
-        //     newPlace.ratings.notifications = reviews.notifications;
-        //     newPlace.ratings.enforcement = reviews.enforcement;
-        //   }
-        // });
       });
 
       commit("setPlace", newPlace);
@@ -758,7 +745,6 @@ const store = new Vuex.Store({
 
     // Creates a new place with Google Places API data.
     async createPlace({ state, getters, dispatch }, place) {
-      console.log("Creating place " + place.place_id);
       var apiKey = getters.getFixieKey;
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,place_id,geometry,plus_code,types,address_component&key=${apiKey}`;
       var newPlace = {};
@@ -766,9 +752,7 @@ const store = new Vuex.Store({
       await axios
         .get(URL)
         .then((response) => {
-          console.log("Here's the result:");
           var result = response.data.result;
-          console.log(result);
           // var latitude = newPlace.geometry.location.lat;
           // var longitude = newPlace.geometry.location.lng;
           // var newGeohash = geohash.encode(latitude, longitude);
@@ -840,25 +824,14 @@ const store = new Vuex.Store({
           this.errorMessage = error.message;
         });
 
-      console.log("Place created, adding to fb.");
-
       await dispatch("addPlace", newPlace).then((response) => {
-        console.log("Added the following place: "  + newPlace.id);
-        
-        console.log(response);
-        // newPlace = response.data();
+        newPlace = response;
       });
-
-      console.log("Place added to fb, returning new place: ");
-      console.log(newPlace);
 
       return newPlace;
     },
 
     async addPlace({}, place) {
-      console.log("Here's the place to add:");
-      console.log(place);
-
       var newPlace = place;
 
       await fb.placesCollection
