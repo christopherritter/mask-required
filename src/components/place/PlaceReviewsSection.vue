@@ -15,13 +15,13 @@
       :full-review="fullReview"
       @close="toggleDeleteModal()"
     ></DeleteReviewDialog>
-    <v-card v-if="place.reviews && place.reviews.length > 0">
+    <v-card v-if="place.ratings.total > 0">
       <v-row>
         <v-col class="d-none d-md-flex">
           <v-card-title
             >Reviews
             <span class="reviews-length"
-              >({{ place.reviews.length }})</span
+              >({{ place.ratings.total }})</span
             ></v-card-title
           >
         </v-col>
@@ -37,7 +37,7 @@
         </v-col>
       </v-row>
       <v-divider></v-divider>
-      <div
+      <!-- <div
         v-for="review in place.reviews"
         :key="'review-' + review.id"
         class="review"
@@ -50,9 +50,6 @@
           review.content | trimLength
         }}</v-card-text>
         <v-card-actions>
-          <!-- <v-btn text @click="likeReview(review.id, review.likes)"
-            >likes {{ review.likes }}</v-btn
-          > -->
           <v-btn text @click="viewReview(review)">Read review</v-btn>
           <v-spacer></v-spacer>
           <v-btn
@@ -67,7 +64,7 @@
           >
         </v-card-actions>
         <v-divider></v-divider>
-      </div>
+      </div> -->
     </v-card>
     <v-card v-else>
       <v-row>
@@ -94,6 +91,7 @@
 
 <script>
 import { mapState } from "vuex";
+import * as fb from "@/firebase";
 import moment from "moment";
 
 import ViewReviewDialog from "@/components/place/dialogs/ViewReviewDialog";
@@ -104,13 +102,44 @@ export default {
   name: "place-reviews-section",
   data() {
     return {
+      reviews: [],
       fullReview: {},
       showDetails: false,
       showViewModal: false,
       showEditModal: false,
       showDeleteModal: false,
+      loading: true,
     };
   },
+  // watch: {
+  //   async place() {
+  //     var placeId = place.place_id;
+  //     console.log("Place ID: " + placeId);
+
+  //     const snapshot = await fb.placesCollection
+  //       .where("place_id", "==", placeId)
+  //       .get()
+  //       .then(function(querySnapshot) {
+  //         querySnapshot.forEach(function(doc) {
+  //           console.log(doc.id, " => ", doc.data());
+  //           // fb.placesCollection
+  //           //   .doc(doc.id)
+  //           //   .collection("reviews")
+  //           //   .get()
+  //           //   .then((querySnapshot) => {
+  //           //     querySnapshot.forEach((doc) => {
+  //           //       console.log(doc.id, " => ", doc.data());
+  //           //     });
+  //           //   });
+  //         });
+  //       })
+  //       .catch(function(error) {
+  //         console.log("Error getting documents: ", error);
+  //       });
+
+  //     this.loading = false;
+  //   },
+  // },
   props: {
     place: Object,
   },

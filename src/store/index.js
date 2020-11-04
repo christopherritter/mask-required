@@ -719,10 +719,11 @@ const store = new Vuex.Store({
 
       if (snapshot.empty) {
         console.log("Place does not exist.");
-        await dispatch("createPlace", place).then((newPlace) => {
-          console.log("New place:");
-          console.log(newPlace);
-          commit("setPlace", newPlace);
+        await dispatch("createPlace", place).then((results) => {
+          // newPlace = results.data();
+          console.log("New place: " + results.id);
+          console.log(results);
+          commit("setPlace", results);
         });
         return;
       }
@@ -730,20 +731,25 @@ const store = new Vuex.Store({
       snapshot.forEach((doc) => {
         newPlace = doc.data();
 
-        if (!newPlace.address || !newPlace.ratings || !newPlace.location) {
+        if (
+          !newPlace.address ||
+          !newPlace.ratings ||
+          !newPlace.location ||
+          !newPlace.doc_id
+        ) {
           dispatch("updatePlace", newPlace);
         }
 
-        dispatch("fetchReviews", newPlace.place_id).then((reviews) => {
-          if (reviews) {
-            newPlace.reviews = reviews.reviews;
-            newPlace.ratings = {};
-            newPlace.ratings.general = reviews.rating;
-            newPlace.ratings.compliance = reviews.compliance;
-            newPlace.ratings.notifications = reviews.notifications;
-            newPlace.ratings.enforcement = reviews.enforcement;
-          }
-        });
+        // dispatch("fetchReviews", newPlace.place_id).then((reviews) => {
+        //   if (reviews) {
+        //     newPlace.reviews = reviews.reviews;
+        //     newPlace.ratings = {};
+        //     newPlace.ratings.general = reviews.rating;
+        //     newPlace.ratings.compliance = reviews.compliance;
+        //     newPlace.ratings.notifications = reviews.notifications;
+        //     newPlace.ratings.enforcement = reviews.enforcement;
+        //   }
+        // });
       });
 
       commit("setPlace", newPlace);
@@ -751,7 +757,7 @@ const store = new Vuex.Store({
     },
 
     // Creates a new place with Google Places API data.
-    async createPlace({ state, getters }, place) {
+    async createPlace({ state, getters, dispatch }, place) {
       console.log("Creating place " + place.place_id);
       var apiKey = getters.getFixieKey;
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,place_id,geometry,plus_code,types,address_component&key=${apiKey}`;
@@ -834,9 +840,36 @@ const store = new Vuex.Store({
           this.errorMessage = error.message;
         });
 
-      console.log("Returning new place:");
+      console.log("Place created, adding to fb.");
+
+      await dispatch("addPlace", newPlace).then((response) => {
+        console.log("Added the following place: "  + newPlace.id);
+        
+        console.log(response);
+        // newPlace = response.data();
+      });
+
+      console.log("Place added to fb, returning new place: ");
       console.log(newPlace);
-      fb.placesCollection.add(newPlace);
+
+      return newPlace;
+    },
+
+    async addPlace({}, place) {
+      console.log("Here's the place to add:");
+      console.log(place);
+
+      var newPlace = place;
+
+      await fb.placesCollection
+        .add(newPlace)
+        .then((doc) => {
+          newPlace.doc_id = doc.id;
+          fb.placesCollection.doc(doc.id).update({
+            doc_id: doc.id,
+          });
+        });
+
       return newPlace;
     },
 
@@ -996,6 +1029,11 @@ const store = new Vuex.Store({
         var docId = doc.id;
         var newPlace = doc.data();
 
+        // REMINDER: Add doc_id when creating place.
+        if (!newPlace.doc_id) {
+          newPlace.doc_id = docId;
+        }
+
         if (!newPlace.address) {
           // console.log("This place doesn't have an address.");
           newPlace.address = {};
@@ -1120,47 +1158,43 @@ const store = new Vuex.Store({
         });
     },
     async fetchReviews({ dispatch }, place_id) {
-      const snapshot = await fb.reviewsCollection
+      const snapshot = await fb.placesCollection
         .where("place.place_id", "==", place_id)
         .get();
 
-      let reviewsArray = [];
-      let reviewsRatings = [];
-      let complianceRatings = [];
-      let notificationRatings = [];
-      let enforcementRatings = [];
+      // let reviewsArray = [];
+      // let reviewsRatings = [];
+      // let complianceRatings = [];
+      // let notificationRatings = [];
+      // let enforcementRatings = [];
 
       if (snapshot.empty) {
         return;
       }
 
       snapshot.forEach((doc) => {
-        let review = doc.data();
-        review.id = doc.id;
-
-        if (review.ratings && review.ratings[0].value) {
-          complianceRatings.push(review.ratings[0].value);
-        }
-
-        if (review.ratings && review.ratings[1].value) {
-          notificationRatings.push(review.ratings[1].value);
-        }
-
-        if (review.ratings && review.ratings[2].value) {
-          enforcementRatings.push(review.ratings[2].value);
-        }
-
-        reviewsRatings.push(review.rating);
-        reviewsArray.push(review);
+        // let review = doc.data();
+        // review.id = doc.id;
+        // if (review.ratings && review.ratings[0].value) {
+        //   complianceRatings.push(review.ratings[0].value);
+        // }
+        // if (review.ratings && review.ratings[1].value) {
+        //   notificationRatings.push(review.ratings[1].value);
+        // }
+        // if (review.ratings && review.ratings[2].value) {
+        //   enforcementRatings.push(review.ratings[2].value);
+        // }
+        // reviewsRatings.push(review.rating);
+        // reviewsArray.push(review);
       });
 
-      return {
-        reviews: reviewsArray,
-        rating: await dispatch("averageRating", reviewsRatings),
-        compliance: await dispatch("averageRating", complianceRatings),
-        notifications: await dispatch("averageRating", notificationRatings),
-        enforcement: await dispatch("averageRating", enforcementRatings),
-      };
+      // return {
+      //   reviews: reviewsArray,
+      //   rating: await dispatch("averageRating", reviewsRatings),
+      //   compliance: await dispatch("averageRating", complianceRatings),
+      //   notifications: await dispatch("averageRating", notificationRatings),
+      //   enforcement: await dispatch("averageRating", enforcementRatings),
+      // };
     },
     async fetchTopReviews({}) {
       const snapshot = await fb.reviewsCollection
@@ -1242,16 +1276,19 @@ const store = new Vuex.Store({
 
       snapshot.forEach((doc) => {
         var newReview = doc.data();
-        
-        console.log("Compliance ratings: " + newReview.ratings[0].value )
-        console.log("Notifications ratings: " + newReview.ratings[1].value )
-        console.log("Enforcement ratings: " + newReview.ratings[2].value )
-        
+
+        console.log("Compliance ratings: " + newReview.ratings[0].value);
+        console.log("Notifications ratings: " + newReview.ratings[1].value);
+        console.log("Enforcement ratings: " + newReview.ratings[2].value);
+
         totalRatings = totalRatings + 1;
-        generalRatings = ( generalRatings + newReview.rating ) / totalRatings ;
-        complianceRatings = ( complianceRatings + newReview.ratings[0].value ) / totalRatings;
-        notificationsRatings = ( notificationsRatings + newReview.ratings[1].value ) / totalRatings;
-        enforcementRatings = ( enforcementRatings + newReview.ratings[2].value ) / totalRatings;
+        generalRatings = (generalRatings + newReview.rating) / totalRatings;
+        complianceRatings =
+          (complianceRatings + newReview.ratings[0].value) / totalRatings;
+        notificationsRatings =
+          (notificationsRatings + newReview.ratings[1].value) / totalRatings;
+        enforcementRatings =
+          (enforcementRatings + newReview.ratings[2].value) / totalRatings;
 
         fb.placesCollection
           .doc(docId)
@@ -1259,17 +1296,15 @@ const store = new Vuex.Store({
           .doc(doc.id)
           .set(newReview)
           .then(function() {
-            fb.placesCollection
-              .doc(docId)
-              .update({
-                ratings: {
-                  total: totalRatings,
-                  general: generalRatings,
-                  compliance: complianceRatings,
-                  notifications: notificationsRatings,
-                  enforcement: enforcementRatings,
-                }
-              });
+            fb.placesCollection.doc(docId).update({
+              ratings: {
+                total: totalRatings,
+                general: generalRatings,
+                compliance: complianceRatings,
+                notifications: notificationsRatings,
+                enforcement: enforcementRatings,
+              },
+            });
           })
           .then(function() {
             fb.reviewsCollection
