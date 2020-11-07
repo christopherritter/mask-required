@@ -1146,7 +1146,6 @@ const store = new Vuex.Store({
         });
     },
     async fetchReviews({}, doc_id) {
-      console.log("Getting reviews for doc: " + doc_id);
       const snapshot = await fb.placesCollection
         .doc(doc_id)
         .collection("reviews")
@@ -1164,12 +1163,10 @@ const store = new Vuex.Store({
         reviewsArray.push(review);
       });
 
-      console.log("Let's do some sorting!")
       reviewsArray.sort(function(a, b) {
         return b.createdOn - a.createdOn;
       });
 
-      console.log(reviewsArray)
       return reviewsArray;
     },
     async fetchTopReviews({}) {
@@ -1252,51 +1249,27 @@ const store = new Vuex.Store({
         return;
       }
 
-      console.log("Counting reviews:");
-
       snapshot.forEach((doc) => {
         let newReview = doc.data();
 
         totalRatings = totalRatings + 1;
         generalRatings = generalRatings + newReview.rating;
 
-        console.log("-------------------------");
-        console.log("Review number " + totalRatings);
-        console.log("New general rating: " + newReview.rating);
-
-        console.log(
-          "New review compliance score: " + newReview.ratings[0].value
-        );
         if (newReview.ratings[0].value >= 1) {
           complianceRatingsCounter = complianceRatingsCounter + 1;
-          console.log(
-            "Compliance ratings counter: " + complianceRatingsCounter
-          );
         }
 
         complianceRatings = complianceRatings + newReview.ratings[0].value;
 
-        console.log(
-          "New review notifications score: " + newReview.ratings[1].value
-        );
         if (newReview.ratings[1].value >= 1) {
           notificationsRatingsCounter = notificationsRatingsCounter + 1;
-          console.log(
-            "Notifications ratings counter: " + notificationsRatingsCounter
-          );
         }
 
         notificationsRatings =
           notificationsRatings + newReview.ratings[1].value;
 
-        console.log(
-          "New review enforcement score: " + newReview.ratings[2].value
-        );
         if (newReview.ratings[2].value >= 1) {
           enforcementRatingsCounter = enforcementRatingsCounter + 1;
-          console.log(
-            "Enforcement ratings counter: " + enforcementRatingsCounter
-          );
         }
 
         enforcementRatings = enforcementRatings + newReview.ratings[2].value;
@@ -1311,18 +1284,6 @@ const store = new Vuex.Store({
       enforcementRatings =
         Math.round((enforcementRatings / enforcementRatingsCounter) * 2) / 2 ||
         0;
-
-      console.log("Here's the final scores: ");
-      console.log("General ratings: " + generalRatings);
-      console.log({
-        ratings: {
-          total: totalRatings,
-          general: generalRatings,
-          compliance: complianceRatings,
-          notifications: notificationsRatings,
-          enforcement: enforcementRatings,
-        },
-      });
 
       fb.placesCollection
         .doc(docId)
@@ -1362,10 +1323,6 @@ const store = new Vuex.Store({
 
       snapshot.forEach((doc) => {
         var newReview = doc.data();
-
-        console.log("Compliance ratings: " + newReview.ratings[0].value);
-        console.log("Notifications ratings: " + newReview.ratings[1].value);
-        console.log("Enforcement ratings: " + newReview.ratings[2].value);
 
         totalRatings = totalRatings + 1;
         generalRatings = (generalRatings + newReview.rating) / totalRatings;
