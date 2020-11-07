@@ -25,6 +25,7 @@ const store = new Vuex.Store({
       geometry: null,
       types: null,
       address: null,
+      formatted_address: null,
     },
     place: {
       types: null,
@@ -499,6 +500,7 @@ const store = new Vuex.Store({
       state.region.geometry = val.geometry;
       state.region.types = val.types;
       state.region.address = val.address;
+      state.region.formatted_address = val.formatted_address;
     },
     setPlace(state, val) {
       state.place = val;
@@ -695,6 +697,7 @@ const store = new Vuex.Store({
         createdOn: {},
         types: [],
         address: {},
+        formatted_address: "",
       };
 
       await axios
