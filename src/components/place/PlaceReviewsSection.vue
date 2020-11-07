@@ -37,8 +37,8 @@
         </v-col>
       </v-row>
       <v-divider></v-divider>
-      <!-- <div
-        v-for="review in place.reviews"
+      <div
+        v-for="review in reviews"
         :key="'review-' + review.id"
         class="review"
       >
@@ -64,7 +64,7 @@
           >
         </v-card-actions>
         <v-divider></v-divider>
-      </div> -->
+      </div>
     </v-card>
     <v-card v-else>
       <v-row>
@@ -102,7 +102,6 @@ export default {
   name: "place-reviews-section",
   data() {
     return {
-      reviews: [],
       fullReview: {},
       showDetails: false,
       showViewModal: false,
@@ -111,37 +110,9 @@ export default {
       loading: true,
     };
   },
-  // watch: {
-  //   async place() {
-  //     var placeId = place.place_id;
-  //     console.log("Place ID: " + placeId);
-
-  //     const snapshot = await fb.placesCollection
-  //       .where("place_id", "==", placeId)
-  //       .get()
-  //       .then(function(querySnapshot) {
-  //         querySnapshot.forEach(function(doc) {
-  //           console.log(doc.id, " => ", doc.data());
-  //           // fb.placesCollection
-  //           //   .doc(doc.id)
-  //           //   .collection("reviews")
-  //           //   .get()
-  //           //   .then((querySnapshot) => {
-  //           //     querySnapshot.forEach((doc) => {
-  //           //       console.log(doc.id, " => ", doc.data());
-  //           //     });
-  //           //   });
-  //         });
-  //       })
-  //       .catch(function(error) {
-  //         console.log("Error getting documents: ", error);
-  //       });
-
-  //     this.loading = false;
-  //   },
-  // },
   props: {
     place: Object,
+    reviews: Array
   },
   components: {
     ViewReviewDialog,

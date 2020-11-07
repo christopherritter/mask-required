@@ -26,14 +26,27 @@ const store = new Vuex.Store({
       place_id: null,
     },
     place: {
+      types: null,
+      address: null,
+      createdOn: null,
+      doc_id: null,
+      name: null,
       location: {
         lat: null,
         lng: null,
       },
+      place_id: null,
+      ratings: {
+        enforcement: null,
+        general: null,
+        total: null,
+        compliance: null,
+        notifications: null,
+      },
     },
     places: null,
     rating: null,
-    reviews: [],
+    reviews: null,
     types: null,
     showSearchBar: null,
     masks: {
@@ -458,6 +471,7 @@ const store = new Vuex.Store({
     getLowerRange: (state) => state.lowerRange,
     getPlaces: (state) => state.places,
     getPlace: (state) => state.place,
+    getReviews: (state) => state.reviews,
     getSearchBar: (state) => state.showSearchbar,
     getGoogleAPIKey: (state) => state.googleAPIKey,
     getFixieKey: (state) => state.fixieKey,
@@ -719,8 +733,6 @@ const store = new Vuex.Store({
 
       if (snapshot.empty) {
         await dispatch("createPlace", place).then((results) => {
-          console.log("New place: " + results.id);
-          console.log(results);
           commit("setPlace", results);
         });
         return;
@@ -834,14 +846,12 @@ const store = new Vuex.Store({
     async addPlace({}, place) {
       var newPlace = place;
 
-      await fb.placesCollection
-        .add(newPlace)
-        .then((doc) => {
-          newPlace.doc_id = doc.id;
-          fb.placesCollection.doc(doc.id).update({
-            doc_id: doc.id,
-          });
+      await fb.placesCollection.add(newPlace).then((doc) => {
+        newPlace.doc_id = doc.id;
+        fb.placesCollection.doc(doc.id).update({
+          doc_id: doc.id,
         });
+      });
 
       return newPlace;
     },
@@ -860,19 +870,19 @@ const store = new Vuex.Store({
       places.forEach((doc) => {
         var searchResult = doc.data();
 
-        dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
-          if (reviews) {
-            searchResult.reviews = reviews.reviews;
-            searchResult.ratings = {};
-            searchResult.ratings.general = reviews.rating;
-            searchResult.ratings.compliance = reviews.compliance;
-            searchResult.ratings.notifications = reviews.notifications;
-            searchResult.ratings.enforcement = reviews.enforcement;
-            placesArray.push(searchResult);
-          } else {
-            placesArray.push(searchResult);
-          }
-        });
+        // dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
+        //   if (reviews) {
+        //     searchResult.reviews = reviews.reviews;
+        //     searchResult.ratings = {};
+        //     searchResult.ratings.general = reviews.rating;
+        //     searchResult.ratings.compliance = reviews.compliance;
+        //     searchResult.ratings.notifications = reviews.notifications;
+        //     searchResult.ratings.enforcement = reviews.enforcement;
+        //     placesArray.push(searchResult);
+        //   } else {
+        placesArray.push(searchResult);
+        //   }
+        // });
       });
 
       return placesArray;
@@ -929,19 +939,19 @@ const store = new Vuex.Store({
       places.forEach((doc) => {
         var searchResult = doc.data();
 
-        dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
-          if (reviews) {
-            searchResult.reviews = reviews.reviews;
-            searchResult.ratings = {};
-            searchResult.ratings.general = reviews.rating;
-            searchResult.ratings.compliance = reviews.compliance;
-            searchResult.ratings.notifications = reviews.notifications;
-            searchResult.ratings.enforcement = reviews.enforcement;
-            nearbyPlaces.push(searchResult);
-          } else {
-            nearbyPlaces.push(searchResult);
-          }
-        });
+        // dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
+        //   if (reviews) {
+        //     searchResult.reviews = reviews.reviews;
+        //     searchResult.ratings = {};
+        //     searchResult.ratings.general = reviews.rating;
+        //     searchResult.ratings.compliance = reviews.compliance;
+        //     searchResult.ratings.notifications = reviews.notifications;
+        //     searchResult.ratings.enforcement = reviews.enforcement;
+        //     nearbyPlaces.push(searchResult);
+        //   } else {
+        nearbyPlaces.push(searchResult);
+        //   }
+        // });
       });
 
       // console.log("Here are the nearby places!")
@@ -969,19 +979,19 @@ const store = new Vuex.Store({
       places.forEach((doc) => {
         var searchResult = doc.data();
 
-        dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
-          if (reviews) {
-            searchResult.reviews = reviews.reviews;
-            searchResult.ratings = {};
-            searchResult.ratings.general = reviews.rating;
-            searchResult.ratings.compliance = reviews.compliance;
-            searchResult.ratings.notifications = reviews.notifications;
-            searchResult.ratings.enforcement = reviews.enforcement;
-            localPlaces.push(searchResult);
-          } else {
-            localPlaces.push(searchResult);
-          }
-        });
+        // dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
+        //   if (reviews) {
+        //     searchResult.reviews = reviews.reviews;
+        //     searchResult.ratings = {};
+        //     searchResult.ratings.general = reviews.rating;
+        //     searchResult.ratings.compliance = reviews.compliance;
+        //     searchResult.ratings.notifications = reviews.notifications;
+        //     searchResult.ratings.enforcement = reviews.enforcement;
+        //     localPlaces.push(searchResult);
+        //   } else {
+        localPlaces.push(searchResult);
+        //   }
+        // });
       });
 
       commit("setPlaces", localPlaces);
@@ -1104,13 +1114,16 @@ const store = new Vuex.Store({
 
     // Ratings and reviews
 
-    async createReview({ state, commit }, review) {
+    async createReview({ state, dispatch }, review) {
       // create review in firebase
-      const newReview = await fb.reviewsCollection
+      fb.placesCollection
+        .doc(state.place.doc_id)
+        .collection("reviews")
         .add({
           createdOn: new Date(),
           place: {
             place_id: state.place.place_id,
+            doc_id: state.place.doc_id,
             types: state.place.types,
           },
           rating: review.rating,
@@ -1124,50 +1137,40 @@ const store = new Vuex.Store({
           likes: 0,
           agreement: review.agreement,
         })
-        .then(function(newReview) {
-          newReview.update({
-            reviewId: fb.auth.currentUser.uid + "_" + newReview.id,
+        .then((results) => {
+          results.update({
+            reviewId: fb.auth.currentUser.uid + "_" + results.id,
           });
+
+          dispatch("updateRatings", state.place.doc_id);
         });
     },
-    async fetchReviews({ dispatch }, place_id) {
+    async fetchReviews({}, doc_id) {
+      console.log("Getting reviews for doc: " + doc_id);
       const snapshot = await fb.placesCollection
-        .where("place.place_id", "==", place_id)
+        .doc(doc_id)
+        .collection("reviews")
         .get();
 
-      // let reviewsArray = [];
-      // let reviewsRatings = [];
-      // let complianceRatings = [];
-      // let notificationRatings = [];
-      // let enforcementRatings = [];
+      let reviewsArray = [];
 
       if (snapshot.empty) {
         return;
       }
 
       snapshot.forEach((doc) => {
-        // let review = doc.data();
-        // review.id = doc.id;
-        // if (review.ratings && review.ratings[0].value) {
-        //   complianceRatings.push(review.ratings[0].value);
-        // }
-        // if (review.ratings && review.ratings[1].value) {
-        //   notificationRatings.push(review.ratings[1].value);
-        // }
-        // if (review.ratings && review.ratings[2].value) {
-        //   enforcementRatings.push(review.ratings[2].value);
-        // }
-        // reviewsRatings.push(review.rating);
-        // reviewsArray.push(review);
+        let review = doc.data();
+        review.id = doc.id;
+        reviewsArray.push(review);
       });
 
-      // return {
-      //   reviews: reviewsArray,
-      //   rating: await dispatch("averageRating", reviewsRatings),
-      //   compliance: await dispatch("averageRating", complianceRatings),
-      //   notifications: await dispatch("averageRating", notificationRatings),
-      //   enforcement: await dispatch("averageRating", enforcementRatings),
-      // };
+      console.log("Let's do some sorting!")
+      reviewsArray.sort(function(a, b) {
+        return b.createdOn - a.createdOn;
+      });
+
+      console.log(reviewsArray)
+      return reviewsArray;
     },
     async fetchTopReviews({}) {
       const snapshot = await fb.reviewsCollection
@@ -1226,6 +1229,116 @@ const store = new Vuex.Store({
       averageRating = Math.round(averageRating * 2) / 2;
 
       return averageRating;
+    },
+    async updateRatings({}, docId) {
+      console.log("Updating reviews for " + docId);
+
+      const snapshot = await fb.placesCollection
+        .doc(docId)
+        .collection("reviews")
+        .get();
+
+      var generalRatings = 0;
+      var complianceRatings = 0;
+      var notificationsRatings = 0;
+      var enforcementRatings = 0;
+
+      var totalRatings = 0;
+      var complianceRatingsCounter = 0;
+      var notificationsRatingsCounter = 0;
+      var enforcementRatingsCounter = 0;
+
+      if (snapshot.empty) {
+        return;
+      }
+
+      console.log("Counting reviews:");
+
+      snapshot.forEach((doc) => {
+        let newReview = doc.data();
+
+        totalRatings = totalRatings + 1;
+        generalRatings = generalRatings + newReview.rating;
+
+        console.log("-------------------------");
+        console.log("Review number " + totalRatings);
+        console.log("New general rating: " + newReview.rating);
+
+        console.log(
+          "New review compliance score: " + newReview.ratings[0].value
+        );
+        if (newReview.ratings[0].value >= 1) {
+          complianceRatingsCounter = complianceRatingsCounter + 1;
+          console.log(
+            "Compliance ratings counter: " + complianceRatingsCounter
+          );
+        }
+
+        complianceRatings = complianceRatings + newReview.ratings[0].value;
+
+        console.log(
+          "New review notifications score: " + newReview.ratings[1].value
+        );
+        if (newReview.ratings[1].value >= 1) {
+          notificationsRatingsCounter = notificationsRatingsCounter + 1;
+          console.log(
+            "Notifications ratings counter: " + notificationsRatingsCounter
+          );
+        }
+
+        notificationsRatings =
+          notificationsRatings + newReview.ratings[1].value;
+
+        console.log(
+          "New review enforcement score: " + newReview.ratings[2].value
+        );
+        if (newReview.ratings[2].value >= 1) {
+          enforcementRatingsCounter = enforcementRatingsCounter + 1;
+          console.log(
+            "Enforcement ratings counter: " + enforcementRatingsCounter
+          );
+        }
+
+        enforcementRatings = enforcementRatings + newReview.ratings[2].value;
+      });
+
+      generalRatings = Math.round((generalRatings / totalRatings) * 2) / 2;
+      complianceRatings =
+        Math.round((complianceRatings / complianceRatingsCounter) * 2) / 2 || 0;
+      notificationsRatings =
+        Math.round((notificationsRatings / notificationsRatingsCounter) * 2) /
+          2 || 0;
+      enforcementRatings =
+        Math.round((enforcementRatings / enforcementRatingsCounter) * 2) / 2 ||
+        0;
+
+      console.log("Here's the final scores: ");
+      console.log("General ratings: " + generalRatings);
+      console.log({
+        ratings: {
+          total: totalRatings,
+          general: generalRatings,
+          compliance: complianceRatings,
+          notifications: notificationsRatings,
+          enforcement: enforcementRatings,
+        },
+      });
+
+      fb.placesCollection
+        .doc(docId)
+        .update({
+          ratings: {
+            enforcement: enforcementRatings,
+            general: generalRatings,
+            total: totalRatings,
+            compliance: complianceRatings,
+            notifications: notificationsRatings,
+          },
+        })
+        .catch(function(error) {
+          // The document probably doesn't exist.
+          console.error("Error updating document: ", error);
+        });
     },
     async updateReviews({}, place) {
       console.log("Updating review " + place.docId);

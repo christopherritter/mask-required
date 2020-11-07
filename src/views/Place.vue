@@ -64,6 +64,7 @@
           <place-reviews-section
             v-else
             :place="currentPlace"
+            :reviews="reviews"
             v-on:confirm-delete="fetchPlace(id)"
           ></place-reviews-section>
         </v-col>
@@ -107,16 +108,34 @@ export default {
       await this.fetchPlace();
       this.loading = false;
     },
-    async place(newValue, oldValue) {
-      // await this.$store.dispatch("fetchReviews", newValue.place_id);
-      const newPlace = this.$store.getters.getPlace;
-      if (newPlace.reviews) {
-        if (newPlace.reviews.length != newValue.reviews.length) {
-          this.fetchPlace();
-        }
-      }
-      this.currentPlace = newValue;
-    },
+    // async place(newValue, oldValue) {
+    //   // await this.$store.dispatch("fetchReviews", newValue.place_id);
+    //   // const newPlace = this.$store.getters.getPlace;
+    //   // if (newPlace.reviews) {
+    //   //   if (newPlace.reviews.length != newValue.reviews.length) {
+    //   //     this.fetchPlace();
+    //   //   }
+    //   // }
+    //   this.currentPlace = await this.$store.getters.getPlace;
+
+    //   console.log("Watching reviews for: " + this.currentPlace.doc_id)
+    //   this.$store.dispatch("fetchReviews", this.currentPlace.doc_id).then((results) => {
+    //     this.reviews = results;
+    //   });
+    // },
+    async reviews() {
+      var placeId = await this.$route.params.id;
+
+      this.loading = true;
+          
+      await this.$store.dispatch("fetchPlace", {
+        place_id: placeId
+      });
+
+      this.currentPlace = await this.$store.getters.getPlace;
+
+      this.loading = false;
+    }
   },
   computed: {
     ...mapState(["place"]),
@@ -126,13 +145,17 @@ export default {
       var placeId = await this.$route.params.id;
 
       await this.$store.dispatch("fetchPlace", {
-        place_id: placeId,
+        place_id: placeId
       });
 
-      // console.log("Fetching reviews")
-      // await this.$store.dispatch("fetchReviews", placeId);
+      this.currentPlace = await this.$store.getters.getPlace;
 
-      this.currentPlace = this.$store.getters.getPlace;
+      console.log("Fetching reviews for: " + this.currentPlace.doc_id)
+      this.$store.dispatch("fetchReviews", this.currentPlace.doc_id).then((results) => {
+        this.reviews = results;
+      });
+
+      // this.reviews = await this.$store.getters.getReviews;
     },
   },
 };
