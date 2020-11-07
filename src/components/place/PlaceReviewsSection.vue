@@ -9,11 +9,14 @@
       :dialog-view="showEditModal"
       :full-review="fullReview"
       @close="toggleEditModal()"
+      @refresh="refreshReviews()"
     ></EditReviewDialog>
     <DeleteReviewDialog
       :dialog-view="showDeleteModal"
       :full-review="fullReview"
+      :doc-id="place.doc_id"
       @close="toggleDeleteModal()"
+      @refresh="refreshReviews()"
     ></DeleteReviewDialog>
     <v-card v-if="place.ratings.total > 0">
       <v-row>
@@ -141,6 +144,9 @@ export default {
     deleteReview(review) {
       this.fullReview = review;
       this.showDeleteModal = true;
+    },
+    refreshReviews() {
+      this.$emit('refresh');
     },
     toggleViewModal() {
       this.showViewModal = false;

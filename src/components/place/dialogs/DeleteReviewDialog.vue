@@ -19,12 +19,14 @@
 <script>
 export default {
   name: "delete-review-dialog",
-  props: ['dialogView', 'fullReview'],
+  props: ['dialogView', 'fullReview', 'docId'],
   methods: {
     async confirmDelete(review){
-      await this.$store.dispatch("deleteReview", review);
-      this.$store.dispatch("fetchPlace", this.fullReview.place);
+      this.$store.dispatch("deleteReview", { reviewId: review.id, docId: this.docId })
+      this.$store.dispatch("updateRatings", this.docId );
+      this.$emit('refresh');
       this.$emit('close');
+
     }
   }
 };

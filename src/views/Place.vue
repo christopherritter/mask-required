@@ -65,6 +65,7 @@
             v-else
             :place="currentPlace"
             :reviews="reviews"
+            @refresh="fetchPlace()"
             v-on:confirm-delete="fetchPlace(id)"
           ></place-reviews-section>
         </v-col>

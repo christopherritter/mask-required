@@ -1214,8 +1214,8 @@ const store = new Vuex.Store({
     async editReview({ commit }, review) {
       fb.reviewsCollection.doc(review.id).update(review);
     },
-    async deleteReview({ commit }, review) {
-      fb.reviewsCollection.doc(review.id).delete();
+    async deleteReview({ commit }, id) {
+      fb.placesCollection.doc(id.docId).collection('reviews').doc(id.reviewId).delete();
     },
     async averageRating({}, ratings) {
       var averageRating = ratings.reduce(function(a, b) {
