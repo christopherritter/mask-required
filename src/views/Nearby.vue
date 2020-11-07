@@ -20,8 +20,26 @@
       <v-row v-else>
         <v-col>
           <h1 style="line-height:4rem" class="mt-8">{{ region.name }}</h1>
-          <h4 class="font-weight-medium mb-1">
+          <h4 class="font-weight-medium mb-1" v-if="region.formatted_address">
             {{ region.formatted_address }}
+          </h4>
+          <h4 class="font-weight-medium mb-1" v-else-if="region.address">
+            <span v-if="region.address.route">
+              {{ region.address.street_number }}
+              {{ region.address.route }},
+            </span>
+            <span v-if="region.address.locality">
+              {{ region.address.locality }},
+            </span>
+            <span v-if="region.address.state">
+              {{ region.address.state }}
+            </span>
+            <span v-if="region.address.postal_code">
+              {{ region.address.postal_code }}
+            </span>
+            <span v-else>
+              {{ region.address.country }}
+            </span>
           </h4>
         </v-col>
       </v-row>
@@ -334,7 +352,16 @@ export default {
       places: [],
       type: "",
       types: [],
-      region: {},
+      region: {
+        name: "",
+        place_id: "",
+        location: {
+          lat: null,
+          lng: null
+        },
+        types: [],
+        address: {},
+      },
       sortedPlaces: [],
       loading: true,
       empty: false,
@@ -440,15 +467,19 @@ export default {
       });
       this.region = this.$store.getters.getRegion;
 
-      // await this.$store.dispatch("getGeohashRange");
-      // await this.$store.dispatch("findLocalPlaces");
+      // // await this.$store.dispatch("getGeohashRange");
+      // // await this.$store.dispatch("findLocalPlaces");
 
-      // Find places within the region. 
+      // // Find places within the region. 
+      console.log("Finding regional places.")
       await this.$store.dispatch("findRegionalPlaces");
 
+      console.log("Counting place types.")
       await this.$store.dispatch("countPlaceTypes");
+
+      console.log("Sorting places into types.")
       await this.sortPlacesIntoTypes();
-      return;
+      // return;
     },
     async filterByType(type) {
       this.$router.push({

@@ -20,10 +20,11 @@ const store = new Vuex.Store({
       long: null,
     },
     region: {
-      formatted_address: null,
-      geometry: null,
       name: null,
       place_id: null,
+      geometry: null,
+      types: null,
+      address: null,
     },
     place: {
       types: null,
@@ -493,10 +494,11 @@ const store = new Vuex.Store({
       state.userLocation.long = val.longitude;
     },
     setRegion(state, val) {
-      state.region.formatted_address = val.formatted_address;
-      state.region.geometry = val.geometry;
       state.region.name = val.name;
       state.region.place_id = val.place_id;
+      state.region.geometry = val.geometry;
+      state.region.types = val.types;
+      state.region.address = val.address;
     },
     setPlace(state, val) {
       state.place = val;
@@ -658,29 +660,9 @@ const store = new Vuex.Store({
 
     // Regions
 
-    // Creates a new region with Google Places API data.
-    async createRegion({ commit, getters }, place) {
-      var apiKey = getters.getFixieKey;
-      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=formatted_address,geometry,icon,name,place_id,plus_code,types&key=${apiKey}`;
-      var newRegion = {};
-
-      await axios
-        .get(URL)
-        .then((response) => {
-          newRegion = response.data.result;
-          newRegion.createdOn = new Date();
-
-          fb.regionsCollection.add(newRegion);
-          commit("setRegion", newRegion);
-        })
-        .catch((error) => {
-          console.log(error.message);
-          this.errorMessage = error.message;
-        });
-    },
-
     // Fetches existing region with place ID.
     async fetchRegion({ dispatch, commit }, place) {
+      console.log("Fetch region:");
       var regionId = place.place_id;
       const snapshot = await fb.regionsCollection
         .where("place_id", "==", regionId)
@@ -694,9 +676,83 @@ const store = new Vuex.Store({
 
       snapshot.forEach((doc) => {
         newRegion = doc.data();
+
+        if (!newRegion.address || !newRegion.location) {
+          dispatch("updateRegion", newRegion);
+        }
       });
 
       commit("setRegion", newRegion);
+    },
+
+    // Creates a new region with Google Places API data.
+    async createRegion({ commit, getters }, place) {
+      var apiKey = getters.getFixieKey;
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,place_id,geometry,types,address_component,formatted_address&key=${apiKey}`;
+      var newRegion = {
+        name: "",
+        place_id: "",
+        createdOn: {},
+        types: [],
+        address: {},
+      };
+
+      await axios
+        .get(URL)
+        .then((response) => {
+          var result = response.data.result;
+          console.log(result);
+          newRegion.name = result.name;
+          newRegion.formatted_address = result.formatted_address;
+          newRegion.place_id = result.place_id;
+          newRegion.createdOn = new Date();
+          newRegion.types = result.types;
+
+          for (let a = 0; a < result.address_components.length; a++) {
+            switch (result.address_components[a].types[0]) {
+              case "street_number":
+                newRegion.address.street_number =
+                  result.address_components[a].long_name;
+                break;
+              case "route":
+                newRegion.address.route =
+                  result.address_components[a].short_name;
+                break;
+              case "locality":
+                newRegion.address.locality =
+                  result.address_components[a].long_name;
+                break;
+              case "administrative_area_level_2":
+                newRegion.address.county =
+                  result.address_components[a].long_name;
+                break;
+              case "administrative_area_level_1":
+                newRegion.address.state =
+                  result.address_components[a].long_name;
+                break;
+              case "country":
+                newRegion.address.country =
+                  result.address_components[a].short_name;
+                break;
+              case "postal_code":
+                newRegion.address.postal_code =
+                  result.address_components[a].long_name;
+            }
+          }
+
+          newRegion.location = {
+            lat: result.geometry.location.lat,
+            lng: result.geometry.location.lng,
+          };
+
+          console.log(newRegion);
+          fb.regionsCollection.add(newRegion);
+          commit("setRegion", newRegion);
+        })
+        .catch((error) => {
+          console.log(error.message);
+          this.errorMessage = error.message;
+        });
     },
 
     // Retrieves list of recently created regions.
@@ -719,6 +775,94 @@ const store = new Vuex.Store({
       });
 
       return regionsArray;
+    },
+
+    // Update older regions that lack the proper fields.
+    async updateRegion({ dispatch }, region) {
+      var regionId = region.place_id;
+      const snapshot = await fb.regionsCollection
+        .where("place_id", "==", regionId)
+        .get();
+
+      if (snapshot.empty) {
+        return;
+      }
+
+      snapshot.forEach((doc) => {
+        var docId = doc.id;
+        var newRegion = doc.data();
+
+        // REMINDER: Add doc_id when creating place.
+        if (!newRegion.doc_id) {
+          newRegion.doc_id = docId;
+        }
+
+        if (!newRegion.address) {
+          // console.log("This place doesn't have an address.");
+          newRegion.address = {};
+
+          for (let a = 0; a < newRegion.address_components.length; a++) {
+            switch (newRegion.address_components[a].types[0]) {
+              case "street_number":
+                newRegion.address.street_number =
+                  newRegion.address_components[a].long_name;
+                break;
+              case "route":
+                newRegion.address.route =
+                  newRegion.address_components[a].short_name;
+                break;
+              case "locality":
+                newRegion.address.locality =
+                  newRegion.address_components[a].long_name;
+                break;
+              case "administrative_area_level_2":
+                newRegion.address.county =
+                  newRegion.address_components[a].long_name;
+                break;
+              case "administrative_area_level_1":
+                newRegion.address.state =
+                  newRegion.address_components[a].long_name;
+                break;
+              case "country":
+                newRegion.address.country =
+                  newRegion.address_components[a].short_name;
+                break;
+              case "postal_code":
+                newRegion.address.postal_code =
+                  newRegion.address_components[a].long_name;
+            }
+          }
+
+          delete newRegion.address_components;
+          delete newRegion.plus_code;
+        }
+
+        if (!newRegion.location) {
+          // console.log("This place doesn't have a location.");
+
+          newRegion.location = {
+            lat: newRegion.geometry.location.lat,
+            lng: newRegion.geometry.location.lng,
+          };
+
+          delete newRegion.geometry;
+          delete newRegion.icon;
+        }
+
+        fb.placesCollection
+          .doc(docId)
+          .set(newRegion)
+          .then(function() {
+            dispatch("updateReviews", {
+              docId: docId,
+              placeId: newRegion.place_id,
+            });
+          })
+          .catch(function(error) {
+            // The document probably doesn't exist.
+            console.error("Error updating document: ", error);
+          });
+      });
     },
 
     // Places
@@ -758,7 +902,7 @@ const store = new Vuex.Store({
     // Creates a new place with Google Places API data.
     async createPlace({ state, getters, dispatch }, place) {
       var apiKey = getters.getFixieKey;
-      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,place_id,geometry,plus_code,types,address_component&key=${apiKey}`;
+      const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,place_id,geometry,plus_code,types,address_component,formatted_address&key=${apiKey}`;
       var newPlace = {};
 
       await axios
@@ -771,6 +915,7 @@ const store = new Vuex.Store({
           var newTypes = [];
 
           newPlace.name = result.name;
+          newPlace.formatted_address = formatted_address;
           newPlace.place_id = result.place_id;
           newPlace.createdOn = new Date();
           // newPlace.geohash = newGeohash;
@@ -856,7 +1001,7 @@ const store = new Vuex.Store({
       return newPlace;
     },
 
-    async fetchPlaces({ dispatch }, type) {
+    async fetchPlaces({}, type) {
       var placesArray = [];
 
       const places = await fb.placesCollection
@@ -889,26 +1034,13 @@ const store = new Vuex.Store({
     },
 
     // Find existing places within a specified region.
-    async findRegionalPlaces({ state }) {
-      let address = state.region.formatted_address.split(", ");
-      let addressCity = address[0];
-
-      if (address[1].length > 2) {
-        let addressStateZip = address[1].split(" ");
-        let addressState = addressStateZip[0];
-        let addressZip = addressStateZip[1];
-        let addressCountry = address[2];
-
-        console.log(addressCity, addressState, addressZip, addressCountry);
-      } else {
-        let addressState = address[1];
-        let addressCountry = address[2];
-
-        console.log(addressCity, addressState, addressCountry);
-      }
+    async findRegionalPlaces({ state, commit }) {
+      let address = state.region.address;
+      let regionalPlaces = []
+      console.log(address.locality)
 
       const places = await fb.placesCollection
-        .where("address_components", "array-contains-any", ["political"])
+        .where("address.locality", "==", address.locality)
         .get();
 
       if (places.empty) {
@@ -917,8 +1049,10 @@ const store = new Vuex.Store({
       }
 
       places.forEach((doc) => {
-        console.log(doc);
+        regionalPlaces.push(doc.data());
       });
+
+      commit("setPlaces", regionalPlaces);
     },
 
     async findNearbyPlaces({ state, commit, dispatch }, type) {
@@ -1054,7 +1188,6 @@ const store = new Vuex.Store({
           }
           newPlace.address.plus_code = newPlace.plus_code.compound_code;
 
-          delete newPlace.formatted_address;
           delete newPlace.address_components;
           delete newPlace.plus_code;
         }
@@ -1212,10 +1345,18 @@ const store = new Vuex.Store({
       });
     },
     async editReview({ commit }, review) {
-      fb.placesCollection.doc(review.docId).collection('reviews').doc(review.id).update(review);
+      fb.placesCollection
+        .doc(review.docId)
+        .collection("reviews")
+        .doc(review.id)
+        .update(review);
     },
     async deleteReview({ commit }, id) {
-      fb.placesCollection.doc(id.docId).collection('reviews').doc(id.reviewId).delete();
+      fb.placesCollection
+        .doc(id.docId)
+        .collection("reviews")
+        .doc(id.reviewId)
+        .delete();
     },
     async averageRating({}, ratings) {
       var averageRating = ratings.reduce(function(a, b) {
