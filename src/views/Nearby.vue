@@ -20,26 +20,8 @@
       <v-row v-else>
         <v-col>
           <h1 style="line-height:4rem" class="mt-8">{{ region.name }}</h1>
-          <h4 class="font-weight-medium mb-1" v-if="region.formatted_address">
+          <h4 class="font-weight-medium mb-1">
             {{ region.formatted_address }}
-          </h4>
-          <h4 class="font-weight-medium mb-1" v-else-if="region.address">
-            <span v-if="region.address.route">
-              {{ region.address.street_number }}
-              {{ region.address.route }},
-            </span>
-            <span v-if="region.address.locality">
-              {{ region.address.locality }},
-            </span>
-            <span v-if="region.address.state">
-              {{ region.address.state }}
-            </span>
-            <span v-if="region.address.postal_code">
-              {{ region.address.postal_code }}
-            </span>
-            <span v-else>
-              {{ region.address.country }}
-            </span>
           </h4>
         </v-col>
       </v-row>
