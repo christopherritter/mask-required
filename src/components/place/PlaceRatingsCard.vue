@@ -37,6 +37,7 @@
             <v-rating
               v-model="place.ratings.compliance"
               background-color="purple lighten-3"
+              half-increments
               color="purple"
               length="5"
               dense
@@ -64,6 +65,7 @@
             <v-rating
               v-model="place.ratings.notifications"
               background-color="purple lighten-3"
+              half-increments
               color="purple"
               length="5"
               dense
@@ -91,6 +93,7 @@
             <v-rating
               v-model="place.ratings.enforcement"
               background-color="purple lighten-3"
+              half-increments
               color="purple"
               length="5"
               dense
