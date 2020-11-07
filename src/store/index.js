@@ -964,6 +964,7 @@ const store = new Vuex.Store({
           for (let t = 0; t < result.types.length; t++) {
             if (state.validTypes.includes(result.types[t])) {
               newTypes.push(result.types[t]);
+              dispatch("updateType", result.types[t]);
             }
           }
           newPlace.types = newTypes;
@@ -1510,8 +1511,35 @@ const store = new Vuex.Store({
 
     // Types
 
+    // Updates the type whenever a new place is created.
+    async updateType({ dispatch }, type) {
+      const typeDocs = await fb.typesCollection
+        .where("name", "==", type)
+        .get();
+
+        if (typeDocs.empty) {
+          dispatch("addType", type)
+          return;
+        }
+  
+        typeDocs.forEach((doc) => {
+          var type = doc.data();
+          console.log("Increasing counter for " + type.name)
+        });
+    },
+
+    // Adds a new place type whenever one cannot be found.
+    async addType({}, type) {
+      console.log("Adding new type for " + type)
+      var newType = {
+        name: type,
+        counter: 1
+      }
+      fb.typesCollection.add(newType);
+    },
+
     // Loops through places collection and counts their types.
-    async countPlaceTypes({ commit }) {
+    async countPlaceTypes({ commit, dispatch }) {
       const places = await fb.placesCollection.get();
       let typesArray = [];
 
@@ -1575,6 +1603,8 @@ const store = new Vuex.Store({
             ) {
               return;
             }
+            
+
             let result = containsType(type, typesArray);
             if (!result) {
               typesArray.push(type);

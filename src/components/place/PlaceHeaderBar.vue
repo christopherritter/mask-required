@@ -5,15 +5,8 @@
     </v-row>
 
     <v-row no-gutters>
-      <v-card-text class="pa-0" v-if="place.formatted_address">
+      <v-card-text class="pa-0">
         {{ place.formatted_address }}
-      </v-card-text>
-      <v-card-text class="pa-0" v-else>
-        {{ place.address.street_number }}
-        {{ place.address.route }},
-        {{ place.address.locality }},
-        {{ place.address.state }}
-        {{ place.address.postal_code }}
       </v-card-text>
     </v-row>
 
