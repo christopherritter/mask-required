@@ -26,7 +26,6 @@ export default {
       this.$store.dispatch("updateRatings", this.docId );
       this.$emit('refresh');
       this.$emit('close');
-
     }
   }
 };

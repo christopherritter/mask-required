@@ -160,7 +160,7 @@ export default {
       ],
     };
   },
-  props: ["dialogView", "fullReview"],
+  props: ["dialogView", "fullReview", "docId"],
   computed: {
     ...mapState([["masks"], ["questions"], ["ratings"], "place"]),
   },
@@ -183,7 +183,10 @@ export default {
         questions: this.fullReview.questions,
         ratings: this.fullReview.ratings,
         agreement: this.fullReview.agreement,
+        docId: this.docId,
       });
+      this.$store.dispatch("updateRatings", this.docId);
+      this.$emit('refresh');
       this.$emit("close");
     },
   },

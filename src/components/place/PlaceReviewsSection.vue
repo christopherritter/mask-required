@@ -8,6 +8,7 @@
     <EditReviewDialog
       :dialog-view="showEditModal"
       :full-review="fullReview"
+      :doc-id="place.doc_id"
       @close="toggleEditModal()"
       @refresh="refreshReviews()"
     ></EditReviewDialog>

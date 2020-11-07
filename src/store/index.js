@@ -1212,7 +1212,7 @@ const store = new Vuex.Store({
       });
     },
     async editReview({ commit }, review) {
-      fb.reviewsCollection.doc(review.id).update(review);
+      fb.placesCollection.doc(review.docId).collection('reviews').doc(review.id).update(review);
     },
     async deleteReview({ commit }, id) {
       fb.placesCollection.doc(id.docId).collection('reviews').doc(id.reviewId).delete();
