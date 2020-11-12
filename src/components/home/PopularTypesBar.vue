@@ -172,7 +172,6 @@ export default {
   name: "popular-types-bar",
   data() {
     return {
-      types: [],
       type: "",
       options: {
         types: ["(regions)"],
@@ -189,11 +188,14 @@ export default {
     };
   },
   async mounted() {
-    if (!this.types.length) {
-      await this.$store.dispatch("countPlaceTypes");
-      this.types = this.$store.getters.getTypes;
-    }
+    // if (!this.types.length) {
+    //   await this.$store.dispatch("countPlaceTypes");
+    //   this.types = this.$store.getters.getTypes;
+    // }
     this.loading = false;
+  },
+  props: {
+    types: Array,
   },
   computed: {
     ...mapState([["validTypes"]]),

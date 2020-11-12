@@ -339,7 +339,7 @@ export default {
         place_id: "",
         location: {
           lat: null,
-          lng: null
+          lng: null,
         },
         types: [],
         address: {},
@@ -381,7 +381,7 @@ export default {
     var routerType = this.$router.currentRoute.params.type;
 
     this.type = "";
-    await this.$store.dispatch("clearPlaces");
+    this.$store.dispatch("clearPlaces");
     this.sortedPlaces = [];
 
     if (routerType) {
@@ -390,9 +390,11 @@ export default {
       this.type = "";
     }
 
-    await this.viewLocalPlaces();
-    this.loading = false;
-    this.$ga.page(this.$router);
+    await this.viewLocalPlaces().then(() => {
+      console.log("Done loading!")
+      this.loading = false;
+      this.$ga.page(this.$router);
+    });
   },
   watch: {
     async $route(to, from) {
@@ -444,24 +446,23 @@ export default {
       var placeId = this.$route.params.id;
       var routerId = this.$router.currentRoute.params.id;
 
-      await this.$store.dispatch("fetchRegion", {
-        place_id: placeId,
-      });
-      this.region = this.$store.getters.getRegion;
+      await this.$store
+        .dispatch("fetchRegion", {
+          place_id: placeId,
+        })
+        .then(() => {
+          this.region = this.$store.getters.getRegion;
+          console.log("Setting region: " + this.region.name)
+        });
 
-      // // await this.$store.dispatch("getGeohashRange");
-      // // await this.$store.dispatch("findLocalPlaces");
-
-      // // Find places within the region. 
-      console.log("Finding regional places.")
-      await this.$store.dispatch("findRegionalPlaces");
-
-      console.log("Counting place types.")
-      await this.$store.dispatch("countPlaceTypes");
-
-      console.log("Sorting places into types.")
-      await this.sortPlacesIntoTypes();
-      // return;
+      // Find places within the region.
+      console.log("Finding regional places.");
+      await this.$store
+        .dispatch("findRegionalPlaces", this.region.address)
+        .then(() => {
+          console.log("Sorting places into types.");
+          this.sortPlacesIntoTypes();
+        });
     },
     async filterByType(type) {
       this.$router.push({
@@ -474,17 +475,32 @@ export default {
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
     async sortPlacesIntoTypes() {
+      console.log("Beginning to sort places into types.")
       var p, t, s;
-      const currentPlaces = this.$store.getters.getPlaces;
-      const currentTypes = this.$store.getters.getTypes;
+      const getPlaces = this.$store.getters.getPlaces;
+      const getTypes = this.$store.getters.getTypes;
+      var currentPlaces = [];
+      var currentTypes = [];
       var sortedPlaces = [];
       var filteredPlaces = [];
       var sortedTypes = [];
 
-      if (!currentPlaces) {
+      if (!getPlaces) {
+        console.log("There are no places.")
         this.empty = true;
         this.$store.dispatch("showSearchBar", false);
         return;
+      } else {
+        currentPlaces = getPlaces;
+      }
+
+      if (!getTypes) {
+        console.log("There are no types.")
+        await this.$store.dispatch("viewTypes").then((results) => {
+          currentTypes = results;
+        });
+      } else {
+        currentTypes = getTypes;
       }
 
       this.$store.dispatch("showSearchBar", true);
@@ -546,7 +562,7 @@ export default {
       if (this.sortedPlaces.length == 0) {
         this.empty = true;
       }
-    }
+    },
   },
   components: {
     VgAutocomplete,

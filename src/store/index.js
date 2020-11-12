@@ -664,7 +664,7 @@ const store = new Vuex.Store({
 
     // Fetches existing region with place ID.
     async fetchRegion({ dispatch, commit }, place) {
-      console.log("Fetch region:");
+      console.log("Fetch region.");
       var regionId = place.place_id;
       const snapshot = await fb.regionsCollection
         .where("place_id", "==", regionId)
@@ -672,23 +672,33 @@ const store = new Vuex.Store({
       var newRegion = {};
 
       if (snapshot.empty) {
-        dispatch("createRegion", place);
-        return;
+        console.log("Nothing found, creating new region.")
+        await dispatch("createRegion", place).then(() => {
+          return;
+        });
+      } else {
+
+        snapshot.forEach((doc) => {
+          newRegion = doc.data();
+  
+          if (!newRegion.address || !newRegion.location) {
+            console.log("Update region.")
+            dispatch("updateRegion", newRegion);
+          }
+        });
+  
+        console.log("Setting new region:")
+        console.log(newRegion)
+        commit("setRegion", newRegion);
+        
       }
 
-      snapshot.forEach((doc) => {
-        newRegion = doc.data();
 
-        if (!newRegion.address || !newRegion.location) {
-          dispatch("updateRegion", newRegion);
-        }
-      });
-
-      commit("setRegion", newRegion);
     },
 
     // Creates a new region with Google Places API data.
     async createRegion({ commit, getters }, place) {
+      console.log("Creating new region for " + place.place_id)
       var apiKey = getters.getFixieKey;
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,place_id,geometry,types,address_component,formatted_address&key=${apiKey}`;
       var newRegion = {
@@ -704,6 +714,7 @@ const store = new Vuex.Store({
         .get(URL)
         .then((response) => {
           var result = response.data.result;
+          console.log("New region created:")
           console.log(result);
           newRegion.name = result.name;
           newRegion.formatted_address = result.formatted_address;
@@ -748,6 +759,7 @@ const store = new Vuex.Store({
             lng: result.geometry.location.lng,
           };
 
+          console.log("New region has been updated:")
           console.log(newRegion);
           fb.regionsCollection.add(newRegion);
           commit("setRegion", newRegion);
@@ -967,7 +979,6 @@ const store = new Vuex.Store({
           for (let t = 0; t < result.types.length; t++) {
             if (state.validTypes.includes(result.types[t])) {
               newTypes.push(result.types[t]);
-              dispatch("updateType", result.types[t]);
             }
           }
           newPlace.types = newTypes;
@@ -1038,10 +1049,9 @@ const store = new Vuex.Store({
     },
 
     // Find existing places within a specified region.
-    async findRegionalPlaces({ state, commit }) {
-      let address = state.region.address;
-      let regionalPlaces = []
-      console.log(address.locality)
+    async findRegionalPlaces({ state, commit }, address) {
+      let regionalPlaces = [];
+      console.log(address.locality);
 
       const places = await fb.placesCollection
         .where("address.locality", "==", address.locality)
@@ -1150,7 +1160,6 @@ const store = new Vuex.Store({
         var docId = doc.id;
         var newPlace = doc.data();
 
-        // REMINDER: Add doc_id when creating place.
         if (!newPlace.doc_id) {
           newPlace.doc_id = docId;
         }
@@ -1197,8 +1206,6 @@ const store = new Vuex.Store({
         }
 
         if (!newPlace.ratings) {
-          // console.log("This place doesn't have any ratings.");
-
           newPlace.ratings = {
             general: 0, // General rating
             compliance: 0, // Compliance rating
@@ -1515,34 +1522,59 @@ const store = new Vuex.Store({
     // Types
 
     // Updates the type whenever a new place is created.
-    async updateType({ dispatch }, type) {
-      const typeDocs = await fb.typesCollection
-        .where("name", "==", type)
-        .get();
+    async updateTypes({ dispatch }, types) {
+      let t;
+      for (t = 0; t < types.length; t++) {
+        const typeDocs = await fb.typesCollection
+          .where("name", "==", types[t])
+          .get();
 
         if (typeDocs.empty) {
-          dispatch("addType", type)
-          return;
+          console.log(types[t] + " not found.");
+          dispatch("addType", types[t]).then(() => {
+            return;
+          });
         }
-  
+
         typeDocs.forEach((doc) => {
           var type = doc.data();
-          console.log("Increasing counter for " + type.name)
+          console.log("Increasing counter for " + type.name);
         });
+      }
     },
 
     // Adds a new place type whenever one cannot be found.
     async addType({}, type) {
-      console.log("Adding new type for " + type)
+      console.log("Adding new type for " + type);
       var newType = {
         name: type,
-        counter: 1
-      }
+        counter: 1,
+      };
       fb.typesCollection.add(newType);
+    },
+
+    async viewTypes({ dispatch }) {
+      console.log("Viewing types.");
+      const types = await fb.typesCollection.get();
+      var typesArray = [];
+
+      if (types.empty) {
+        console.log("Types are empty, counting place types.")
+        dispatch("countPlaceTypes");
+        return;
+      }
+
+      types.forEach((doc) => {
+        var type = doc.data();
+        typesArray.push(type);
+      });
+
+      return typesArray;
     },
 
     // Loops through places collection and counts their types.
     async countPlaceTypes({ commit, dispatch }) {
+      console.log("Beginning to count place types.")
       const places = await fb.placesCollection.get();
       let typesArray = [];
 
@@ -1606,7 +1638,6 @@ const store = new Vuex.Store({
             ) {
               return;
             }
-            
 
             let result = containsType(type, typesArray);
             if (!result) {
@@ -1634,7 +1665,13 @@ const store = new Vuex.Store({
           : 1
       );
 
+      console.log("Setting types.")
       commit("setTypes", typesArray);
+
+      console.log("Adding type to fb.")
+      typesArray.map((type) => {
+        return fb.typesCollection.add(type);
+      });
 
       function containsType(type, list) {
         var i;

@@ -208,10 +208,10 @@ export default {
     }
 
     if (this.$store.state.types === null) {
-      await this.$store.dispatch("countPlaceTypes");
+      // await this.$store.dispatch("countPlaceTypes");
     }
 
-    var currentTypes = this.$store.getters.getTypes;
+    var currentTypes = this.types;
     this.type = currentTypes[0];
 
     this.$store.dispatch("fetchPlaces", this.type.name).then((places) => {
@@ -225,6 +225,9 @@ export default {
       await this.$store.dispatch("fetchPlace", place);
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
+  },
+  props: {
+    types: Array,
   },
   computed: {
     ...mapState(["userLocation"]),

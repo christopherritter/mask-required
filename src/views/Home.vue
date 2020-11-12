@@ -1,9 +1,9 @@
 <template>
   <v-main class="mt-0">
     <v-container>
-      <popular-types-bar></popular-types-bar>
+      <popular-types-bar :types="types"></popular-types-bar>
       <primary-search-bar></primary-search-bar>
-      <popular-places-section></popular-places-section>
+      <popular-places-section :types="types"></popular-places-section>
       <latest-reviews-section></latest-reviews-section>
       <active-regions-section class="mb-16"></active-regions-section>
     </v-container>
@@ -19,7 +19,17 @@ import PrimarySearchBar from "@/components/home/PrimarySearchBar";
 
 export default {
   name: "Home",
-  created() {
+  data() {
+    return {
+      types: [],
+      loading: true,
+    };
+  },
+  async created() {
+    await this.$store.dispatch("viewTypes").then((results) => {
+      this.types = results;
+      this.loading = false;
+    });
     this.$ga.page(this.$router);
   },
   components: {
@@ -27,7 +37,7 @@ export default {
     ActiveRegionsSection,
     LatestReviewsSection,
     PrimarySearchBar,
-    PopularPlacesSection
+    PopularPlacesSection,
   },
 };
 </script>
