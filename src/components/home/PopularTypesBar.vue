@@ -213,11 +213,11 @@ export default {
         overflow = [];
 
       for (t = 0; t < types.length; t++) {
-        if (this.validTypes.includes(types[t].name)) {
-          if (types[t].counter > 2) {
+        // if (this.validTypes.includes(types[t].name)) {
+          if (types[t].counter >= 2) {
             overflow.push(types[t]);
           }
-        }
+        // }
       }
 
       for (i = 0; i < 4; i++) {
