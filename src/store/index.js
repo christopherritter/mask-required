@@ -720,6 +720,7 @@ const store = new Vuex.Store({
           newRegion.formatted_address = result.formatted_address;
           newRegion.place_id = result.place_id;
           newRegion.createdOn = new Date();
+          newRegion.updatedOn = new Date();
           newRegion.types = result.types;
 
           for (let a = 0; a < result.address_components.length; a++) {
@@ -806,6 +807,7 @@ const store = new Vuex.Store({
       snapshot.forEach((doc) => {
         var docId = doc.id;
         var newRegion = doc.data();
+        newRegion.updatedOn = new Date();
 
         // REMINDER: Add doc_id when creating place.
         if (!newRegion.doc_id) {
@@ -892,6 +894,8 @@ const store = new Vuex.Store({
 
       if (snapshot.empty) {
         await dispatch("createPlace", place).then((results) => {
+          console.log("Place created:")
+          console.log(results)
           commit("setPlace", results);
         });
         return;
@@ -923,6 +927,8 @@ const store = new Vuex.Store({
       await axios
         .get(URL)
         .then((response) => {
+          console.log("Here are the results:")
+          console.log(result)
           var result = response.data.result;
           // var latitude = newPlace.geometry.location.lat;
           // var longitude = newPlace.geometry.location.lng;
@@ -930,9 +936,10 @@ const store = new Vuex.Store({
           var newTypes = [];
 
           newPlace.name = result.name;
-          newPlace.formatted_address = formatted_address;
+          newPlace.formatted_address = result.formatted_address;
           newPlace.place_id = result.place_id;
           newPlace.createdOn = new Date();
+          newPlace.updatedOn = new Date();
           // newPlace.geohash = newGeohash;
           // newPlace.coordinates = new firebase.firestore.GeoPoint(
           //   latitude,
@@ -996,10 +1003,18 @@ const store = new Vuex.Store({
           this.errorMessage = error.message;
         });
 
+      console.log("Create place results:")
+      console.log(newPlace)
+
       await dispatch("addPlace", newPlace).then((response) => {
-        newPlace = response;
+        console.log("New place has been added: ")
+        console.log(response)
+        // var docId = response.doc_id;
+        // newPlace.doc_id = docId;
       });
 
+      console.log("After adding new place: ")
+      console.log(newPlace)
       return newPlace;
     },
 
@@ -1013,6 +1028,8 @@ const store = new Vuex.Store({
         });
       });
 
+      console.log("Adding new place:")
+      console.log(newPlace)
       return newPlace;
     },
 
@@ -1049,7 +1066,7 @@ const store = new Vuex.Store({
     },
 
     // Find existing places within a specified region.
-    async findRegionalPlaces({ state, commit }, address) {
+    async findRegionalPlaces({ commit }, address) {
       let regionalPlaces = [];
       console.log(address.locality);
 
@@ -1159,6 +1176,7 @@ const store = new Vuex.Store({
       snapshot.forEach((doc) => {
         var docId = doc.id;
         var newPlace = doc.data();
+        newPlace.updatedOn = new Date();
 
         if (!newPlace.doc_id) {
           newPlace.doc_id = docId;
@@ -1440,6 +1458,7 @@ const store = new Vuex.Store({
       fb.placesCollection
         .doc(docId)
         .update({
+          updatedOn: new Date(),
           ratings: {
             enforcement: enforcementRatings,
             general: generalRatings,
