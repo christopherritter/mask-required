@@ -692,8 +692,6 @@ const store = new Vuex.Store({
         commit("setRegion", newRegion);
         
       }
-
-
     },
 
     // Creates a new region with Google Places API data.
@@ -1018,6 +1016,7 @@ const store = new Vuex.Store({
       return newPlace;
     },
 
+    // Add the new place to Google Firebase.
     async addPlace({}, place) {
       var newPlace = place;
 
@@ -1033,6 +1032,7 @@ const store = new Vuex.Store({
       return newPlace;
     },
 
+    // Find existing places of a specific type.
     async fetchPlaces({}, type) {
       var placesArray = [];
 
@@ -1046,20 +1046,7 @@ const store = new Vuex.Store({
 
       places.forEach((doc) => {
         var searchResult = doc.data();
-
-        // dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
-        //   if (reviews) {
-        //     searchResult.reviews = reviews.reviews;
-        //     searchResult.ratings = {};
-        //     searchResult.ratings.general = reviews.rating;
-        //     searchResult.ratings.compliance = reviews.compliance;
-        //     searchResult.ratings.notifications = reviews.notifications;
-        //     searchResult.ratings.enforcement = reviews.enforcement;
-        //     placesArray.push(searchResult);
-        //   } else {
         placesArray.push(searchResult);
-        //   }
-        // });
       });
 
       return placesArray;
@@ -1086,6 +1073,7 @@ const store = new Vuex.Store({
       commit("setPlaces", regionalPlaces);
     },
 
+    // Find places of a specific type near location using Firebase GeoFirestore.
     async findNearbyPlaces({ state, commit, dispatch }, type) {
       // console.log("Fetching nearby places for " + type + "s.")
       var nearbyPlaces = [];
@@ -1103,20 +1091,7 @@ const store = new Vuex.Store({
 
       places.forEach((doc) => {
         var searchResult = doc.data();
-
-        // dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
-        //   if (reviews) {
-        //     searchResult.reviews = reviews.reviews;
-        //     searchResult.ratings = {};
-        //     searchResult.ratings.general = reviews.rating;
-        //     searchResult.ratings.compliance = reviews.compliance;
-        //     searchResult.ratings.notifications = reviews.notifications;
-        //     searchResult.ratings.enforcement = reviews.enforcement;
-        //     nearbyPlaces.push(searchResult);
-        //   } else {
         nearbyPlaces.push(searchResult);
-        //   }
-        // });
       });
 
       // console.log("Here are the nearby places!")
@@ -1143,20 +1118,7 @@ const store = new Vuex.Store({
 
       places.forEach((doc) => {
         var searchResult = doc.data();
-
-        // dispatch("fetchReviews", searchResult.place_id).then((reviews) => {
-        //   if (reviews) {
-        //     searchResult.reviews = reviews.reviews;
-        //     searchResult.ratings = {};
-        //     searchResult.ratings.general = reviews.rating;
-        //     searchResult.ratings.compliance = reviews.compliance;
-        //     searchResult.ratings.notifications = reviews.notifications;
-        //     searchResult.ratings.enforcement = reviews.enforcement;
-        //     localPlaces.push(searchResult);
-        //   } else {
         localPlaces.push(searchResult);
-        //   }
-        // });
       });
 
       commit("setPlaces", localPlaces);
@@ -1269,6 +1231,7 @@ const store = new Vuex.Store({
       // return newPlace;
     },
 
+    // Clear places and ranges set in store.
     clearPlaces({ commit }) {
       commit("setPlaces", null);
       commit("setRange", { lower: null, upper: null });
@@ -1308,7 +1271,7 @@ const store = new Vuex.Store({
         });
     },
     async fetchReviews({}, doc_id) {
-      console.log("Fetching the reviews!")
+      console.log("Fetching review " + doc_id)
       const snapshot = await fb.placesCollection
         .doc(doc_id)
         .collection("reviews")
@@ -1337,10 +1300,10 @@ const store = new Vuex.Store({
     async fetchTopReviews({ dispatch }) {
       const snapshot = await fb.placesCollection
         .orderBy("updatedOn")
-        .limitToLast(1)
+        .limitToLast(10)
         .get();
 
-      var place = {};
+      var placesArray = [];
       var reviewsArray = [];
 
       if (snapshot.empty) {
@@ -1348,22 +1311,31 @@ const store = new Vuex.Store({
       }
 
       snapshot.forEach((doc) => {
-        place = doc.data();
+        var place = doc.data();
+        
+        placesArray.push(place);
       });
 
-      console.log("Recently updated place " + place.doc_id + ":")
-      console.log(place)
+      console.log("Recently updated places:")
+      console.log(placesArray)
 
       console.log("Fetching the reviews.")
-      await dispatch("fetchReviews", place.doc_id).then((reviews) => {
-        reviewsArray = reviews;
+      for (let p = 0; p < placesArray.length; p++) {
+        console.log("Fetching reviews for " + placesArray[p].doc_id)
+        await dispatch("fetchReviews", placesArray[p].doc_id).then((reviews) => {
+          if (reviews) {
+            reviews.map((review) => {
+              reviewsArray.push(review);
+            });
+          }
+        });
+      }
 
-        console.log("Here are the reviews:")
-        console.log(reviews)
-        console.log(reviewsArray)
-      })
+      reviewsArray.sort((a, b) => (b.content.length > a.content.length) ? 1 : -1);
 
-      return reviewsArray;
+      console.log("Recent reviews:")
+      console.log(reviewsArray)
+      return reviewsArray.slice(0,6);
     },
     async likeReview({ commit }, review) {
       const userId = fb.auth.currentUser.uid;
