@@ -33,9 +33,9 @@
           <v-img
             :src="
               `https://maps.googleapis.com/maps/api/staticmap?center=${region
-                .geometry.location.lat +
+                .location.lat +
                 ',' +
-                region.geometry.location
+                region.location
                   .lng}&zoom=14&size=400x400&key=${apiKey}`
             "
             aspect-ratio="2"

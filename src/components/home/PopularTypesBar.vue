@@ -200,7 +200,11 @@ export default {
   computed: {
     ...mapState([["validTypes"]]),
     topReviewTypes() {
-      return this.types.slice(0, 4);
+      var types = this.types;
+      var sortedTypes = types.sort((a, b) => {
+          return b.counter - a.counter;
+      })
+      return types.slice(0, 4);
     },
     typeOverflow() {
       var t,
