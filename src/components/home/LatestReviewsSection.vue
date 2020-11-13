@@ -243,28 +243,23 @@ export default {
     };
   },
   async created() {
-    var collectionSize = await fb.reviewsCollection
-      .limit(1)
-      .get()
-      .then((query) => query.size);
+    console.log("Creating latest reviews section.")
+    // var collectionSize = await fb.reviewsCollection
+    //   .limit(1)
+    //   .get()
+    //   .then((query) => query.size);
 
-    if (!collectionSize) {
-      return
-    }
+    // if (!collectionSize) {
+    //   return
+    // }
 
+    console.log("Fetching top reviews!")
     await this.$store.dispatch("fetchTopReviews").then((reviews) => {
-      reviews.map((review) => {
-        var topReview = review;
-
-        this.$store
-          .dispatch("fetchPlace", { place_id: review.place.place_id })
-          .then((place) => {
-            topReview.place = place;
-          });
-
-        this.reviews.push(topReview);
-      });
+      console.log("Here are the final reviews:")
+      console.log(reviews)
+      this.reviews = reviews;
     });
+    
     this.reviewsExist = true;
     this.loading = false;
   },

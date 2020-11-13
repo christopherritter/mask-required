@@ -1308,6 +1308,7 @@ const store = new Vuex.Store({
         });
     },
     async fetchReviews({}, doc_id) {
+      console.log("Fetching the reviews!")
       const snapshot = await fb.placesCollection
         .doc(doc_id)
         .collection("reviews")
@@ -1329,26 +1330,38 @@ const store = new Vuex.Store({
         return b.createdOn - a.createdOn;
       });
 
+      console.log("Here are the reviews:")
+      console.log(reviewsArray)
       return reviewsArray;
     },
-    async fetchTopReviews({}) {
-      const snapshot = await fb.reviewsCollection
-        .orderBy("createdOn")
-        .limitToLast(6)
+    async fetchTopReviews({ dispatch }) {
+      const snapshot = await fb.placesCollection
+        .orderBy("updatedOn")
+        .limitToLast(1)
         .get();
 
-      let reviewsArray = [];
+      var place = {};
+      var reviewsArray = [];
 
       if (snapshot.empty) {
         return;
       }
 
       snapshot.forEach((doc) => {
-        let review = doc.data();
-        review.id = doc.id;
-
-        reviewsArray.push(review);
+        place = doc.data();
       });
+
+      console.log("Recently updated place " + place.doc_id + ":")
+      console.log(place)
+
+      console.log("Fetching the reviews.")
+      await dispatch("fetchReviews", place.doc_id).then((reviews) => {
+        reviewsArray = reviews;
+
+        console.log("Here are the reviews:")
+        console.log(reviews)
+        console.log(reviewsArray)
+      })
 
       return reviewsArray;
     },
