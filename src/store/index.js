@@ -712,7 +712,6 @@ const store = new Vuex.Store({
           newRegion.formatted_address = result.formatted_address;
           newRegion.place_id = result.place_id;
           newRegion.createdOn = new Date();
-          newRegion.updatedOn = new Date();
           newRegion.types = result.types;
 
           for (let a = 0; a < result.address_components.length; a++) {
@@ -925,7 +924,6 @@ const store = new Vuex.Store({
           newPlace.formatted_address = result.formatted_address;
           newPlace.place_id = result.place_id;
           newPlace.createdOn = new Date();
-          newPlace.updatedOn = new Date();
           // newPlace.geohash = newGeohash;
           // newPlace.coordinates = new firebase.firestore.GeoPoint(
           //   latitude,
