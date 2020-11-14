@@ -104,22 +104,8 @@ export default {
   },
   watch: {
     $route(to, from) {
-      console.log("Fetching new place.")
       this.fetchPlace();
     },
-    // async reviews() {
-    //   var placeId = await this.$route.params.id;
-
-    //   this.loading = true;
-          
-    //   await this.$store.dispatch("fetchPlace", {
-    //     place_id: placeId
-    //   });
-
-    //   this.currentPlace = await this.$store.getters.getPlace;
-
-    //   this.loading = false;
-    // }
   },
   computed: {
     ...mapState(["place"]),

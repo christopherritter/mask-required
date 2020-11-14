@@ -239,20 +239,7 @@ export default {
     };
   },
   async created() {
-    console.log("Creating latest reviews section.")
-    // var collectionSize = await fb.reviewsCollection
-    //   .limit(1)
-    //   .get()
-    //   .then((query) => query.size);
-
-    // if (!collectionSize) {
-    //   return
-    // }
-
-    console.log("Fetching top reviews!")
     await this.$store.dispatch("fetchTopReviews").then((reviews) => {
-      console.log("Here are the final reviews:")
-      console.log(reviews)
       this.reviews = reviews;
     });
     

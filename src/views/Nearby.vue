@@ -391,7 +391,6 @@ export default {
     }
 
     await this.viewLocalPlaces().then(() => {
-      console.log("Done loading!")
       this.loading = false;
       this.$ga.page(this.$router);
     });
@@ -452,15 +451,12 @@ export default {
         })
         .then(() => {
           this.region = this.$store.getters.getRegion;
-          console.log("Setting region: " + this.region.name)
         });
 
       // Find places within the region.
-      console.log("Finding regional places.");
       await this.$store
         .dispatch("findRegionalPlaces", this.region.address)
         .then(() => {
-          console.log("Sorting places into types.");
           this.sortPlacesIntoTypes();
         });
     },
@@ -475,7 +471,6 @@ export default {
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
     async sortPlacesIntoTypes() {
-      console.log("Beginning to sort places into types.")
       var p, t, s;
       const getPlaces = this.$store.getters.getPlaces;
       const getTypes = this.$store.getters.getTypes;
@@ -486,7 +481,6 @@ export default {
       var sortedTypes = [];
 
       if (!getPlaces) {
-        console.log("There are no places.")
         this.empty = true;
         this.$store.dispatch("showSearchBar", false);
         return;
@@ -495,7 +489,6 @@ export default {
       }
 
       if (!getTypes) {
-        console.log("There are no types.")
         await this.$store.dispatch("viewTypes").then((results) => {
           currentTypes = results;
         });

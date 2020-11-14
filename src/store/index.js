@@ -664,7 +664,6 @@ const store = new Vuex.Store({
 
     // Fetches existing region with place ID.
     async fetchRegion({ dispatch, commit }, place) {
-      console.log("Fetch region.");
       var regionId = place.place_id;
       const snapshot = await fb.regionsCollection
         .where("place_id", "==", regionId)
@@ -672,7 +671,6 @@ const store = new Vuex.Store({
       var newRegion = {};
 
       if (snapshot.empty) {
-        console.log("Nothing found, creating new region.")
         await dispatch("createRegion", place).then(() => {
           return;
         });
@@ -682,13 +680,10 @@ const store = new Vuex.Store({
           newRegion = doc.data();
   
           if (!newRegion.address || !newRegion.location) {
-            console.log("Update region.")
             dispatch("updateRegion", newRegion);
           }
         });
   
-        console.log("Setting new region:")
-        console.log(newRegion)
         commit("setRegion", newRegion);
         
       }
@@ -712,8 +707,7 @@ const store = new Vuex.Store({
         .get(URL)
         .then((response) => {
           var result = response.data.result;
-          console.log("New region created:")
-          console.log(result);
+
           newRegion.name = result.name;
           newRegion.formatted_address = result.formatted_address;
           newRegion.place_id = result.place_id;
@@ -758,8 +752,6 @@ const store = new Vuex.Store({
             lng: result.geometry.location.lng,
           };
 
-          console.log("New region has been updated:")
-          console.log(newRegion);
           fb.regionsCollection.add(newRegion);
           commit("setRegion", newRegion);
         })
@@ -892,8 +884,6 @@ const store = new Vuex.Store({
 
       if (snapshot.empty) {
         await dispatch("createPlace", place).then((results) => {
-          console.log("Place created:")
-          console.log(results)
           commit("setPlace", results);
         });
         return;
@@ -912,7 +902,6 @@ const store = new Vuex.Store({
         }
       });
 
-      console.log("Setting and committing place.")
       commit("setPlace", newPlace);
       return newPlace;
     },
@@ -926,8 +915,6 @@ const store = new Vuex.Store({
       await axios
         .get(URL)
         .then((response) => {
-          console.log("Here are the results:")
-          console.log(result)
           var result = response.data.result;
           // var latitude = newPlace.geometry.location.lat;
           // var longitude = newPlace.geometry.location.lng;
@@ -1002,18 +989,8 @@ const store = new Vuex.Store({
           this.errorMessage = error.message;
         });
 
-      console.log("Create place results:")
-      console.log(newPlace)
+      await dispatch("addPlace", newPlace);
 
-      await dispatch("addPlace", newPlace).then((response) => {
-        console.log("New place has been added: ")
-        console.log(response)
-        // var docId = response.doc_id;
-        // newPlace.doc_id = docId;
-      });
-
-      console.log("After adding new place: ")
-      console.log(newPlace)
       return newPlace;
     },
 
@@ -1028,8 +1005,6 @@ const store = new Vuex.Store({
         });
       });
 
-      console.log("Adding new place:")
-      console.log(newPlace)
       return newPlace;
     },
 
@@ -1270,7 +1245,6 @@ const store = new Vuex.Store({
         });
     },
     async fetchReviews({}, doc_id) {
-      console.log("Fetching review " + doc_id)
       const snapshot = await fb.placesCollection
         .doc(doc_id)
         .collection("reviews")
@@ -1292,8 +1266,6 @@ const store = new Vuex.Store({
         return b.createdOn - a.createdOn;
       });
 
-      console.log("Here are the reviews:")
-      console.log(reviewsArray)
       return reviewsArray;
     },
     async fetchTopReviews({ dispatch }) {
@@ -1315,13 +1287,7 @@ const store = new Vuex.Store({
         placesArray.push(place);
       });
 
-      console.log("Recently updated places:")
-      console.log(placesArray)
-
-      console.log("Fetching the reviews.")
       for (let p = 0; p < placesArray.length; p++) {
-        console.log("Fetching reviews for " + placesArray[p].doc_id)
-        console.log(placesArray[p])
         await dispatch("fetchReviews", placesArray[p].doc_id).then((reviews) => {
           if (reviews) {
             reviews.map((review) => {
@@ -1338,11 +1304,9 @@ const store = new Vuex.Store({
 
       reviewsArray.sort((a, b) => (b.content.length > a.content.length) ? 1 : -1);
 
-      console.log("Recent reviews:")
-      console.log(reviewsArray)
       return reviewsArray.slice(0,6);
     },
-    async likeReview({ commit }, review) {
+    async likeReview({}, review) {
       const userId = fb.auth.currentUser.uid;
       const docId = `${userId}_${review.id}`;
 
@@ -1363,14 +1327,14 @@ const store = new Vuex.Store({
         likes: review.likesCount + 1,
       });
     },
-    async editReview({ commit }, review) {
+    async editReview({}, review) {
       fb.placesCollection
         .doc(review.docId)
         .collection("reviews")
         .doc(review.id)
         .update(review);
     },
-    async deleteReview({ commit }, id) {
+    async deleteReview({}, id) {
       fb.placesCollection
         .doc(id.docId)
         .collection("reviews")
@@ -1388,8 +1352,6 @@ const store = new Vuex.Store({
       return averageRating;
     },
     async updateRatings({}, docId) {
-      console.log("Updating reviews for " + docId);
-
       const snapshot = await fb.placesCollection
         .doc(docId)
         .collection("reviews")
@@ -1463,8 +1425,6 @@ const store = new Vuex.Store({
         });
     },
     async updateReviews({}, place) {
-      console.log("Updating review " + place.docId);
-
       var docId = place.docId;
       var placeId = place.placeId;
 
@@ -1514,9 +1474,6 @@ const store = new Vuex.Store({
             fb.reviewsCollection
               .doc(doc.id)
               .delete()
-              .then(function() {
-                console.log("Document successfully deleted!");
-              })
               .catch(function(error) {
                 console.error("Error removing document: ", error);
               });
@@ -1554,7 +1511,6 @@ const store = new Vuex.Store({
 
     // Adds a new place type whenever one cannot be found.
     async addType({}, type) {
-      console.log("Adding new type for " + type);
       var newType = {
         name: type,
         counter: 1,
@@ -1563,12 +1519,10 @@ const store = new Vuex.Store({
     },
 
     async viewTypes({ dispatch }) {
-      console.log("Viewing types.");
       const types = await fb.typesCollection.get();
       var typesArray = [];
 
       if (types.empty) {
-        console.log("Types are empty, counting place types.")
         dispatch("countPlaceTypes");
         return;
       }
@@ -1583,7 +1537,6 @@ const store = new Vuex.Store({
 
     // Loops through places collection and counts their types.
     async countPlaceTypes({ commit, dispatch }) {
-      console.log("Beginning to count place types.")
       const places = await fb.placesCollection.get();
       let typesArray = [];
 
@@ -1674,10 +1627,8 @@ const store = new Vuex.Store({
           : 1
       );
 
-      console.log("Setting types.")
       commit("setTypes", typesArray);
 
-      console.log("Adding type to fb.")
       typesArray.map((type) => {
         return fb.typesCollection.add(type);
       });
