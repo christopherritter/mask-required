@@ -119,7 +119,7 @@
                 {{ place.formatted_address }}
               </v-card-subtitle>
               <div
-                v-if="place.reviews && place.reviews.length > 0"
+                v-if="place.ratings && place.ratings.total > 0"
                 class="d-flex flex-row"
               >
                 <v-rating
@@ -135,7 +135,7 @@
                   class="ml-4 mb-1"
                 ></v-rating>
                 <span class="text-caption mt-1 ml-2">
-                  {{ place.reviews.length }} reviews
+                  {{ place.ratings.total }} reviews
                 </span>
               </div>
               <div v-else class="d-flex flex-row">
@@ -154,19 +154,6 @@
                   0 reviews
                 </span>
               </div>
-              <v-card-text
-                v-if="
-                  place.reviews &&
-                    place.reviews.length > 0 &&
-                    place.reviews[0].title.length > 0
-                "
-                class="pt-2 hidden-sm-and-down"
-                :class="{
-                  'white--text': highlightedCard == place.place_id,
-                }"
-              >
-                &ldquo;{{ place.reviews[0].title }}&rdquo;
-              </v-card-text>
             </v-card>
           </v-col>
         </v-row>
