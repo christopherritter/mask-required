@@ -650,14 +650,14 @@ const store = new Vuex.Store({
       dispatch("fetchUserProfile", { uid: userId });
 
       // update all reviews by user
-      // const reviewDocs = await fb.reviewsCollection
-      //   .where("userId", "==", userId)
-      //   .get();
-      // reviewDocs.forEach((doc) => {
-      //   fb.reviewsCollection.doc(doc.id).update({
-      //     userName: user.name,
-      //   });
-      // });
+      const reviewDocs = await fb.reviewsCollection
+        .where("userId", "==", userId)
+        .get();
+      reviewDocs.forEach((doc) => {
+        fb.reviewsCollection.doc(doc.id).update({
+          userName: user.name,
+        });
+      });
     },
 
     // Regions
@@ -1337,6 +1337,27 @@ const store = new Vuex.Store({
       console.log(reviewsArray)
       return reviewsArray.slice(0,6);
     },
+    async likeReview({ commit }, review) {
+      const userId = fb.auth.currentUser.uid;
+      const docId = `${userId}_${review.id}`;
+
+      // check if user has liked post
+      const doc = await fb.likesCollection.doc(docId).get();
+      if (doc.exists) {
+        return;
+      }
+
+      // create post
+      await fb.likesCollection.doc(docId).set({
+        reviewId: review.id,
+        userId: userId,
+      });
+
+      // update post likes count
+      fb.reviewsCollection.doc(review.id).update({
+        likes: review.likesCount + 1,
+      });
+    },
     async editReview({ commit }, review) {
       fb.placesCollection
         .doc(review.docId)
@@ -1655,6 +1676,109 @@ const store = new Vuex.Store({
       typesArray.map((type) => {
         return fb.typesCollection.add(type);
       });
+
+      function containsType(type, list) {
+        var i;
+        for (i = 0; i < list.length; i++) {
+          if (list[i].name == type.name) {
+            return true;
+          }
+        }
+
+        return false;
+      }
+    },
+    async countReviewTypes({ commit }) {
+      const reviews = await fb.reviewsCollection.get();
+      let typesArray = [];
+
+      if (reviews.empty) {
+        return;
+      }
+
+      reviews.forEach((doc) => {
+        let review = doc.data();
+        review.id = doc.id;
+
+        if (review.place.types) {
+          for (let t = 0; t < review.place.types.length; t++) {
+            let name = review.place.types[t];
+            let type = {
+              name: name,
+              counter: 1,
+            };
+            if (
+              // name == "administrative_area_level_1" ||
+              // name == "administrative_area_level_2" ||
+              // name == "administrative_area_level_3" ||
+              // name == "administrative_area_level_4" ||
+              // name == "administrative_area_level_5" ||
+              // name == "archipelago" ||
+              // name == "colloquial_area" ||
+              // name == "continent" ||
+              // name == "country" ||
+              name == "establishment" ||
+              // name == "finance" ||
+              // name == "floor" ||
+              name == "food" ||
+              // name == "general_contractor" ||
+              name == "geocode"
+              // name == "health" ||
+              // name == "intersection" ||
+              // name == "locality" ||
+              // name == "natural_feature" ||
+              // name == "place_of_worship" ||
+              // name == "plus_code" ||
+              // name == "point_of_interest" ||
+              // name == "political" ||
+              // name == "post_box" ||
+              // name == "postal_code" ||
+              // name == "postal_code_prefix" ||
+              // name == "postal_code_suffix" ||
+              // name == "postal_town" ||
+              // name == "premise" ||
+              // name == "room" ||
+              // name == "route" ||
+              // name == "store" ||
+              // name == "street_address" ||
+              // name == "sublocality" ||
+              // name == "sublocality_level_1" ||
+              // name == "sublocality_level_2" ||
+              // name == "sublocality_level_3" ||
+              // name == "sublocality_level_4" ||
+              // name == "sublocality_level_5" ||
+              // name == "subpremise" ||
+              // name == "town_square"
+            ) {
+              return;
+            }
+            let result = containsType(type, typesArray);
+            if (!result) {
+              typesArray.push(type);
+            } else {
+              typesArray.filter((obj) => {
+                if (obj.name == type.name) {
+                  obj.counter++;
+                }
+              });
+            }
+          }
+        }
+      });
+
+      // sort array by counter then name
+
+      typesArray.sort((a, b) =>
+        a.counter > b.counter
+          ? -1
+          : a.counter === b.counter
+          ? a.name > b.name
+            ? 1
+            : -1
+          : 1
+      );
+
+      commit("setTypes", typesArray);
 
       function containsType(type, list) {
         var i;
