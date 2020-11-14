@@ -912,6 +912,7 @@ const store = new Vuex.Store({
         }
       });
 
+      console.log("Setting and committing place.")
       commit("setPlace", newPlace);
       return newPlace;
     },
@@ -1094,8 +1095,6 @@ const store = new Vuex.Store({
         nearbyPlaces.push(searchResult);
       });
 
-      // console.log("Here are the nearby places!")
-      // console.log(nearbyPlaces)
       commit("setPlaces", nearbyPlaces);
     },
 
@@ -1322,9 +1321,15 @@ const store = new Vuex.Store({
       console.log("Fetching the reviews.")
       for (let p = 0; p < placesArray.length; p++) {
         console.log("Fetching reviews for " + placesArray[p].doc_id)
+        console.log(placesArray[p])
         await dispatch("fetchReviews", placesArray[p].doc_id).then((reviews) => {
           if (reviews) {
             reviews.map((review) => {
+              review.place = {
+                name: placesArray[p].name,
+                formatted_address: placesArray[p].formatted_address,
+                ratings: placesArray[p].ratings,
+              }
               reviewsArray.push(review);
             });
           }

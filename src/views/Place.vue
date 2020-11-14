@@ -93,8 +93,7 @@ export default {
   },
   async created() {
     this.$store.dispatch("showSearchBar", true);
-    await this.fetchPlace();
-    this.loading = false;
+    this.fetchPlace();
     this.$ga.page(this.$router);
   },
   components: {
@@ -104,24 +103,23 @@ export default {
     PlaceReviewsSection,
   },
   watch: {
-    async $route(to, from) {
-      this.loading = true;
-      await this.fetchPlace();
-      this.loading = false;
+    $route(to, from) {
+      console.log("Fetching new place.")
+      this.fetchPlace();
     },
-    async reviews() {
-      var placeId = await this.$route.params.id;
+    // async reviews() {
+    //   var placeId = await this.$route.params.id;
 
-      this.loading = true;
+    //   this.loading = true;
           
-      await this.$store.dispatch("fetchPlace", {
-        place_id: placeId
-      });
+    //   await this.$store.dispatch("fetchPlace", {
+    //     place_id: placeId
+    //   });
 
-      this.currentPlace = await this.$store.getters.getPlace;
+    //   this.currentPlace = await this.$store.getters.getPlace;
 
-      this.loading = false;
-    }
+    //   this.loading = false;
+    // }
   },
   computed: {
     ...mapState(["place"]),
@@ -129,6 +127,8 @@ export default {
   methods: {
     async fetchPlace() {
       var placeId = await this.$route.params.id;
+
+      this.loading = true;
 
       await this.$store.dispatch("fetchPlace", {
         place_id: placeId
@@ -140,6 +140,7 @@ export default {
         this.reviews = results;
       });
 
+      this.loading = false;
     },
   },
 };
