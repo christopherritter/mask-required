@@ -150,6 +150,15 @@ const routes = [
       title: "Social Login Experiment",
     },
   },
+  {
+    path: "/data-ex-machina",
+    name: "data-ex-machina",
+    component: () =>
+      import(/* webpackChunkName: "data-ex-machina" */ "../views/Admin.vue"),
+    meta: {
+      title: "Automatically generate data for local experiments.",
+    },
+  },
 ];
 
 const router = new VueRouter({

@@ -45,16 +45,12 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row justify="center" v-else>
-      <generate-regions class="mb-16"></generate-regions>
-    </v-row>
   </section>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import * as fb from "@/firebase";
-import GenerateRegions from "@/components/util/GenerateRegions";
 
 export default {
   name: "active-regions-section",
@@ -91,9 +87,6 @@ export default {
       await this.$store.dispatch("fetchRegion", { place_id: region.place_id });
       this.$router.push({ name: "nearby-places", params: { id: region.place_id } });
     },
-  },
-  components: {
-    GenerateRegions,
   },
 };
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <v-btn @click="generateReviews">Generate Reviews</v-btn>
+  <v-btn @click="generateReviews" block>Generate Reviews</v-btn>
 </template>
 
 <script>

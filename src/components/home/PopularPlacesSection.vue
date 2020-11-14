@@ -172,16 +172,12 @@
         </v-row>
       </v-col>
     </v-row>
-    <v-row justify="center" v-else>
-      <generate-places class="mb-16"></generate-places>
-    </v-row>
   </section>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import * as fb from "@/firebase";
-import GeneratePlaces from "@/components/util/GeneratePlaces";
 
 export default {
   name: "popular-places-section",
@@ -242,9 +238,6 @@ export default {
         this.loading = false;
       }
     },
-  },
-  components: {
-    GeneratePlaces,
   },
   filters: {
     replaceUnderscore(val) {

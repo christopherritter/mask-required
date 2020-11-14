@@ -219,16 +219,12 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row justify="center" v-else>
-      <generate-reviews class="mb-16"></generate-reviews>
-    </v-row>
   </section>
 </template>
 
 <script>
 import { mapState } from "vuex";
 import * as fb from "@/firebase";
-import GenerateReviews from "@/components/util/GenerateReviews";
 
 export default {
   name: "latest-reviews-section",
@@ -268,9 +264,6 @@ export default {
       await this.$store.dispatch("fetchPlace", { place_id: place.place_id });
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
-  },
-  components: {
-    GenerateReviews,
   },
   filters: {
     truncateWithEllipse(val, stringLength) {

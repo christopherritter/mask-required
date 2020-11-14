@@ -1,5 +1,5 @@
 <template>
-  <v-btn @click="generateRegions">Generate Regions</v-btn>
+  <v-btn @click="generateRegions" block>Generate Regions</v-btn>
 </template>
 
 <script>

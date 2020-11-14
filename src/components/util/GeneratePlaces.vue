@@ -1,5 +1,5 @@
 <template>
-  <v-btn @click="generatePlaces">Generate Places</v-btn>
+  <v-btn @click="generatePlaces" block>Generate Places</v-btn>
 </template>
 
 <script>
