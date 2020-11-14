@@ -1295,6 +1295,7 @@ const store = new Vuex.Store({
                 name: placesArray[p].name,
                 formatted_address: placesArray[p].formatted_address,
                 ratings: placesArray[p].ratings,
+                place_id: placesArray[p].place_id,
               }
               reviewsArray.push(review);
             });
