@@ -163,7 +163,7 @@ export default {
           },
           this.callback
         );
-      } else {
+      } else if (search) {
         autocompleteService.getPlacePredictions(
           {
             input: search,

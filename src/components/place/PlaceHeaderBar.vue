@@ -103,11 +103,34 @@ export default {
       var stateObj = findState();
       var countryObj = findCountry();
 
-      this.getPlacePredictions(localityObj.long_name + ", " + stateObj.long_name + ", " + countryObj.short_name + "A");
-    } else {
-      this.getPlacePredictions(this.place.address.locality + ", " + this.place.address.state + ", " + this.place.address.country + "A");
+      this.getPlacePredictions(
+        localityObj.long_name +
+          ", " +
+          stateObj.long_name +
+          ", " +
+          countryObj.short_name +
+          "A"
+      );
+    } else if (this.place.address.locality) {
+      this.getPlacePredictions(
+        this.place.address.locality +
+          ", " +
+          this.place.address.state +
+          ", " +
+          this.place.address.country +
+          "A"
+      );
+    } else if (this.place.address.route) {
+      this.getPlacePredictions(
+        this.place.address.route +
+          ", " +
+          this.place.address.state +
+          ", " +
+          this.place.address.country +
+          "A"
+      );
     }
-   
+
     function findLocality() {
       for (a = 0; a < addressComponents.length; a++) {
         for (t = 0; t < addressComponents[a].types.length; t++) {
@@ -148,7 +171,10 @@ export default {
     },
 
     viewRegion(type) {
-      this.$router.push({ name: "nearby-places-type", params: { id: this.region.place_id, type: type } })
+      this.$router.push({
+        name: "nearby-places-type",
+        params: { id: this.region.place_id, type: type },
+      });
     },
 
     // Get place predictions
