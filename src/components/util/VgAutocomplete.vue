@@ -6,7 +6,7 @@
     item-value="PlaceId"
     :type="type"
     :items="items"
-    :loading="isLoading"
+    :loading="loading"
     :search-input.sync="search"
     clear-icon="mdi-close-box"
     clearable
@@ -38,7 +38,6 @@ export default {
     descriptionLimit: 60,
     entries: [],
     results: {},
-    isLoading: false,
     model: null,
     search: null,
     error: "",
@@ -63,7 +62,7 @@ export default {
     "appendOuterIcon",
   ],
   computed: {
-    ...mapState(["userLocation"]),
+    ...mapState(["userLocation", "loading"]),
     fields() {
       if (!this.model) return [];
 
@@ -89,14 +88,14 @@ export default {
   watch: {
     search(val) {
       // Items have already been requested
-      if (this.isLoading) return;
+      if (this.$store.getters.getLoading) return;
 
-      this.isLoading = true;
+      // this.$store.dispatch("isLoading", true);
 
-      if (!this.search) {
-        this.isLoading = false;
-        return;
-      }
+      // if (!this.search) {
+      //   this.$store.dispatch("isLoading", false);
+      //   return;
+      // }
 
       this.getPlacePredictions(this.search);
     },
@@ -213,7 +212,7 @@ export default {
         this.entries.push(prediction);
       }
 
-      this.isLoading = false;
+      this.$store.dispatch("isLoading", false);
     },
   },
 };

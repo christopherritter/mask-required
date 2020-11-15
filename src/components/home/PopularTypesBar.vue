@@ -181,7 +181,6 @@ export default {
       styleObject: { "border-color": "#7dbc96" },
       highlightedCard: null,
       hover: false,
-      loading: true,
       showSearchBox: false,
       showMenu: false,
       error: "",
@@ -192,13 +191,13 @@ export default {
     //   await this.$store.dispatch("countPlaceTypes");
     //   this.types = this.$store.getters.getTypes;
     // }
-    this.loading = false;
+    this.$store.dispatch("isLoading", false)
   },
   props: {
     types: Array,
   },
   computed: {
-    ...mapState([["validTypes"]]),
+    ...mapState([["validTypes"], "loading"]),
     topReviewTypes() {
       var types = this.types;
       var sortedTypes = types.sort((a, b) => {

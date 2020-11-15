@@ -172,7 +172,6 @@ export default {
     return {
       type: {},
       places: [],
-      loading: true,
       showLessPlaces: true,
       styleObject: { "border-color": "#7dbc96" },
       highlightedCard: null,
@@ -201,7 +200,7 @@ export default {
       this.places = places;
     });
 
-    this.loading = false;
+    this.$store.dispatch("isLoading", false)
   },
   methods: {
     async viewPlace(place) {
@@ -213,7 +212,7 @@ export default {
     types: Array,
   },
   computed: {
-    ...mapState(["userLocation"]),
+    ...mapState(["userLocation", "loading"]),
     placesToDisplay: function() {
       var places = this.places;
       return places.slice(0, 6);
@@ -222,7 +221,7 @@ export default {
   watch: {
     types(newVal, oldVal) {
       if (this.types.length > 0) {
-        this.loading = false;
+        this.$store.dispatch("isLoading", false)
       }
     },
   },

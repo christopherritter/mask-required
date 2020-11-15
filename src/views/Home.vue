@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 import PopularTypesBar from "@/components/home/PopularTypesBar";
 import ActiveRegionsSection from "@/components/home/ActiveRegionsSection";
 import LatestReviewsSection from "@/components/home/LatestReviewsSection";
@@ -22,15 +24,17 @@ export default {
   data() {
     return {
       types: [],
-      loading: true,
     };
   },
   async created() {
     await this.$store.dispatch("viewTypes").then((results) => {
       this.types = results;
-      this.loading = false;
+      this.$store.dispatch("isLoading", false)
     });
     this.$ga.page(this.$router);
+  },
+  computed: {
+    ...mapState(["loading"])
   },
   components: {
     PopularTypesBar,

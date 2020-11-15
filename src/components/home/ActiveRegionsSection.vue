@@ -80,7 +80,7 @@ export default {
       });
     }
 
-    this.loading = false;
+    this.$store.dispatch("isLoading", false)
   },
   methods: {
     async viewRegion(region) {

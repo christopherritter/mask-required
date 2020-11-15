@@ -84,7 +84,6 @@ export default {
   name: "place-header",
   data() {
     return {
-      isLoading: true,
       region: {},
     };
   },
@@ -137,7 +136,10 @@ export default {
       this.getPlacePredictions(this.place.address.locality + ", " + this.place.address.state + ", " + this.place.address.country + "A");
     }
    
-   },
+  },
+  computed: {
+    ...mapState(["loading"]),
+  },
   methods: {
     async findNearbyPlaces(type) {
       await this.$store.dispatch("findNearbyPlaces", type);
@@ -194,7 +196,7 @@ export default {
         };
       }
       this.region = this.entries[0];
-      this.isLoading = false;
+      this.$store.dispatch("isLoading", false)
     },
   },
   filters: {

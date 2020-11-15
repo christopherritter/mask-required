@@ -88,7 +88,6 @@ export default {
     return {
       currentPlace: {},
       reviews: [],
-      loading: true,
     };
   },
   async created() {
@@ -108,13 +107,13 @@ export default {
     },
   },
   computed: {
-    ...mapState(["place"]),
+    ...mapState(["place", "loading"]),
   },
   methods: {
     async fetchPlace() {
       var placeId = await this.$route.params.id;
 
-      this.loading = true;
+      this.$store.dispatch("isLoading", true)
 
       await this.$store.dispatch("fetchPlace", {
         place_id: placeId
@@ -126,7 +125,7 @@ export default {
         this.reviews = results;
       });
 
-      this.loading = false;
+      this.$store.dispatch("isLoading", false)
     },
   },
 };

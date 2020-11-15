@@ -461,6 +461,7 @@ const store = new Vuex.Store({
     geohashRange: 20,
     upperRange: null,
     lowerRange: null,
+    loading: true,
   },
   getters: {
     getField,
@@ -477,6 +478,7 @@ const store = new Vuex.Store({
     getSearchBar: (state) => state.showSearchbar,
     getGoogleAPIKey: (state) => state.googleAPIKey,
     getFixieKey: (state) => state.fixieKey,
+    getLoading: (state) => state.loading,
   },
   mutations: {
     updateField,
@@ -550,6 +552,9 @@ const store = new Vuex.Store({
     setSearchBar(state, val) {
       state.showSearchBar = val;
     },
+    setLoading(state, val) {
+      state.loading = val;
+    }
   },
   actions: {
     // Authentication
@@ -1052,7 +1057,6 @@ const store = new Vuex.Store({
       }
 
       if (places.empty) {
-        console.log("Nothing found.");
         return;
       }
 
@@ -1782,6 +1786,10 @@ const store = new Vuex.Store({
 
       commit("setRange", { lower, upper });
     },
+
+    isLoading({commit}, val) {
+      commit("setLoading", val);
+    }
   },
 });
 

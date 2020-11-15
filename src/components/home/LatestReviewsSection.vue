@@ -234,7 +234,6 @@ export default {
       styleObject: { "border-color": "#7dbc96" },
       highlightedCard: null,
       hover: false,
-      loading: true,
       reviewsExist: false,
     };
   },
@@ -244,13 +243,16 @@ export default {
     });
     
     this.reviewsExist = true;
-    this.loading = false;
+    this.$store.dispatch("isLoading", false)
   },
   methods: {
     async viewPlace(place) {
       await this.$store.dispatch("fetchPlace", { place_id: place.place_id });
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
+  },
+  computed: {
+    ...mapState(["loading"]),
   },
   filters: {
     truncateWithEllipse(val, stringLength) {

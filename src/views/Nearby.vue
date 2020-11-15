@@ -345,7 +345,6 @@ export default {
         address: {},
       },
       sortedPlaces: [],
-      loading: true,
       empty: false,
       error: "",
       showLessTypes: false,
@@ -391,13 +390,13 @@ export default {
     }
 
     await this.viewLocalPlaces().then(() => {
-      this.loading = false;
+      this.$store.dispatch("isLoading", false);
       this.$ga.page(this.$router);
     });
   },
   watch: {
     async $route(to, from) {
-      this.loading = true;
+      this.$store.dispatch("isLoading", true);
 
       if (to.params.id == from.params.id) {
         if (to.params.type) {
@@ -412,10 +411,11 @@ export default {
         this.viewLocalPlaces();
       }
 
-      this.loading = false;
+      this.$store.dispatch("isLoading", false);
     },
   },
   computed: {
+    ...mapState(["loading"]),
     typesToDisplay: function() {
       var filteredPlaces = [];
 

@@ -111,7 +111,6 @@ export default {
       showViewModal: false,
       showEditModal: false,
       showDeleteModal: false,
-      loading: true,
     };
   },
   props: {
@@ -160,7 +159,7 @@ export default {
     },
   },
   computed: {
-    ...mapState([["userProfile"]]),
+    ...mapState([["userProfile"], "loading"]),
   },
   filters: {
     formatDate(val) {
