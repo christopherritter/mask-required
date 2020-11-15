@@ -93,6 +93,7 @@ export default {
   async created() {
     this.$store.dispatch("showSearchBar", true);
     this.fetchPlace();
+    
     this.$ga.page(this.$router);
   },
   components: {
@@ -112,8 +113,6 @@ export default {
   methods: {
     async fetchPlace() {
       var placeId = await this.$route.params.id;
-
-      this.$store.dispatch("isLoading", true)
 
       await this.$store.dispatch("fetchPlace", {
         place_id: placeId

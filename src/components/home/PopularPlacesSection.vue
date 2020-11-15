@@ -199,8 +199,6 @@ export default {
     this.$store.dispatch("fetchPlaces", this.type.name).then((places) => {
       this.places = places;
     });
-
-    this.$store.dispatch("isLoading", false)
   },
   methods: {
     async viewPlace(place) {
@@ -218,13 +216,13 @@ export default {
       return places.slice(0, 6);
     },
   },
-  watch: {
-    types(newVal, oldVal) {
-      if (this.types.length > 0) {
-        this.$store.dispatch("isLoading", false)
-      }
-    },
-  },
+  // watch: {
+  //   types(newVal, oldVal) {
+  //     if (this.types.length > 0) {
+  //       this.$store.dispatch("isLoading", false)
+  //     }
+  //   },
+  // },
   filters: {
     replaceUnderscore(val) {
       var i,

@@ -159,7 +159,7 @@ export default {
     },
   },
   computed: {
-    ...mapState([["userProfile"], "loading"]),
+    ...mapState([["userProfile"]]),
   },
   filters: {
     formatDate(val) {

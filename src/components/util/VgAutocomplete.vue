@@ -105,17 +105,20 @@ export default {
         var isEstablishment = newVal.types.includes("establishment");
 
         if (isGeocode && this.type) {
+          this.$store.dispatch("isLoading", true)
           this.$router.push({
             name: "nearby-places-type",
             params: { id: newVal.place_id, type: this.type },
           });
         } else {
           if (isGeocode) {
+            this.$store.dispatch("isLoading", true)
             this.$router.push({
               name: "nearby-places",
               params: { id: newVal.place_id },
             });
           } else if (isEstablishment) {
+            this.$store.dispatch("isLoading", true)
             this.$router.push({
               name: "place",
               params: { id: newVal.place_id },

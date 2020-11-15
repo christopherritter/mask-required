@@ -79,8 +79,6 @@ export default {
         this.regions = regions;
       });
     }
-
-    this.$store.dispatch("isLoading", false)
   },
   methods: {
     async viewRegion(region) {

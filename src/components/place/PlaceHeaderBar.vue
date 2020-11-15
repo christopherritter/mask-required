@@ -80,6 +80,8 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
+
 export default {
   name: "place-header",
   data() {
@@ -96,6 +98,16 @@ export default {
       t,
       addressComponents = this.place.address_components;
 
+    if (addressComponents) {
+      var localityObj = findLocality();
+      var stateObj = findState();
+      var countryObj = findCountry();
+
+      this.getPlacePredictions(localityObj.long_name + ", " + stateObj.long_name + ", " + countryObj.short_name + "A");
+    } else {
+      this.getPlacePredictions(this.place.address.locality + ", " + this.place.address.state + ", " + this.place.address.country + "A");
+    }
+   
     function findLocality() {
       for (a = 0; a < addressComponents.length; a++) {
         for (t = 0; t < addressComponents[a].types.length; t++) {
@@ -125,20 +137,6 @@ export default {
         }
       }
     }
-
-    if (addressComponents) {
-      var localityObj = findLocality();
-      var stateObj = findState();
-      var countryObj = findCountry();
-
-      this.getPlacePredictions(localityObj.long_name + ", " + stateObj.long_name + ", " + countryObj.short_name + "A");
-    } else {
-      this.getPlacePredictions(this.place.address.locality + ", " + this.place.address.state + ", " + this.place.address.country + "A");
-    }
-   
-  },
-  computed: {
-    ...mapState(["loading"]),
   },
   methods: {
     async findNearbyPlaces(type) {
@@ -196,7 +194,6 @@ export default {
         };
       }
       this.region = this.entries[0];
-      this.$store.dispatch("isLoading", false)
     },
   },
   filters: {

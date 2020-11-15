@@ -1041,6 +1041,12 @@ const store = new Vuex.Store({
         .where("address.county", "==", address.county)
         .where("address.state", "==", address.state)
         .get();
+      } else if (address.route) {
+        places = await fb.placesCollection
+        .where("address.locality", "==", address.route)
+        .where("address.county", "==", address.county)
+        .where("address.state", "==", address.state)
+        .get();
       } else if (address.county) {
         places = await fb.placesCollection
         .where("address.county", "==", address.county)
@@ -1049,10 +1055,6 @@ const store = new Vuex.Store({
       } else if (address.state) {
         places = await fb.placesCollection
         .where("address.state", "==", address.state)
-        .get();
-      } else {
-        places = await fb.placesCollection
-        .where("address.country", "==", address.country)
         .get();
       }
 

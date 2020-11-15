@@ -62,16 +62,12 @@ export default {
   },
   watch: {
     place() {
-      this.$store.dispatch("isLoading", true)
       if (this.place.geometry) {
         this.showGeometry();
       } else if (this.place.location) {
         this.showLocation();
       }
     },
-  },
-  computed: {
-    ...mapState(["loading"]),
   },
   methods: {
     async showGeometry() {

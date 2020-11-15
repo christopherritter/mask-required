@@ -243,7 +243,6 @@ export default {
     });
     
     this.reviewsExist = true;
-    this.$store.dispatch("isLoading", false)
   },
   methods: {
     async viewPlace(place) {
