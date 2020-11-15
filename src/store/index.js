@@ -711,6 +711,7 @@ const store = new Vuex.Store({
         .get(URL)
         .then((response) => {
           var result = response.data.result;
+          console.log(result)
 
           newRegion.name = result.name;
           newRegion.formatted_address = result.formatted_address;
@@ -730,6 +731,10 @@ const store = new Vuex.Store({
                 break;
               case "locality":
                 newRegion.address.locality =
+                  result.address_components[a].long_name;
+                break;
+              case "administrative_area_level_3":
+                newRegion.address.township =
                   result.address_components[a].long_name;
                 break;
               case "administrative_area_level_2":
@@ -823,6 +828,10 @@ const store = new Vuex.Store({
                 break;
               case "locality":
                 newRegion.address.locality =
+                  newRegion.address_components[a].long_name;
+                break;
+              case "administrative_area_level_3":
+                newRegion.address.township =
                   newRegion.address_components[a].long_name;
                 break;
               case "administrative_area_level_2":
@@ -951,6 +960,10 @@ const store = new Vuex.Store({
                 break;
               case "locality":
                 newPlace.address.locality =
+                  result.address_components[a].long_name;
+                break;
+              case "administrative_area_level_3":
+                newPlace.address.township =
                   result.address_components[a].long_name;
                 break;
               case "administrative_area_level_2":
@@ -1154,6 +1167,10 @@ const store = new Vuex.Store({
                 break;
               case "locality":
                 newPlace.address.locality =
+                  newPlace.address_components[a].long_name;
+                break;
+              case "administrative_area_level_3":
+                newPlace.address.township =
                   newPlace.address_components[a].long_name;
                 break;
               case "administrative_area_level_2":
