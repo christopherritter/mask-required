@@ -691,7 +691,6 @@ const store = new Vuex.Store({
 
     // Creates a new region with Google Places API data.
     async createRegion({ commit, getters }, place) {
-      console.log("Creating new region for " + place.place_id)
       var apiKey = getters.getFixieKey;
       const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,place_id,geometry,types,address_component,formatted_address&key=${apiKey}`;
       var newRegion = {
@@ -1028,12 +1027,29 @@ const store = new Vuex.Store({
 
     // Find existing places within a specified region.
     async findRegionalPlaces({ commit }, address) {
+      var places;
       let regionalPlaces = [];
-      console.log(address.locality);
 
-      const places = await fb.placesCollection
+      if (address.locality) {
+        places = await fb.placesCollection
         .where("address.locality", "==", address.locality)
+        .where("address.county", "==", address.county)
+        .where("address.state", "==", address.state)
         .get();
+      } else if (address.county) {
+        places = await fb.placesCollection
+        .where("address.county", "==", address.county)
+        .where("address.state", "==", address.state)
+        .get();
+      } else if (address.state) {
+        places = await fb.placesCollection
+        .where("address.state", "==", address.state)
+        .get();
+      } else {
+        places = await fb.placesCollection
+        .where("address.country", "==", address.country)
+        .get();
+      }
 
       if (places.empty) {
         console.log("Nothing found.");
