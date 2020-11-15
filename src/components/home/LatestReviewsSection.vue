@@ -247,6 +247,7 @@ export default {
   methods: {
     async viewPlace(place) {
       await this.$store.dispatch("fetchPlace", { place_id: place.place_id });
+      this.$store.dispatch("isLoading", true);
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
   },

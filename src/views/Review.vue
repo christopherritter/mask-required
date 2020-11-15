@@ -297,6 +297,7 @@ export default {
     },
     fetchPlace(place) {
       this.$store.dispatch("fetchPlace", place);
+      this.$store.dispatch("isLoading", true);
     },
     createReview(place) {
       if (this.$refs.form.validate()) {
@@ -315,6 +316,7 @@ export default {
         this.$refs.form.reset();
         this.$store.dispatch("updateRatings", place.doc_id);
         this.$router.push({ name: "place", params: { id: place.place_id } });
+        this.$store.dispatch("isLoading", true);
       } else {
         this.$vuetify.goTo("form");
       }
@@ -325,6 +327,7 @@ export default {
     cancelReview(place) {
       this.$refs.form.reset();
       this.$router.push({ name: "place", params: { id: place.place_id } });
+      this.$store.dispatch("isLoading", true);
     },
   },
   filters: {

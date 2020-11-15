@@ -906,6 +906,7 @@ const store = new Vuex.Store({
 
         if (
           !newPlace.address ||
+          !newPlace.address.township ||
           !newPlace.ratings ||
           !newPlace.location ||
           !newPlace.doc_id
@@ -1222,6 +1223,9 @@ const store = new Vuex.Store({
           delete newPlace.icon;
           delete newPlace.geohash;
         }
+
+        console.log("Here's the new place")
+        console.log(newPlace)
 
         fb.placesCollection
           .doc(docId)
