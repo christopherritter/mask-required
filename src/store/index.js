@@ -1131,8 +1131,9 @@ const store = new Vuex.Store({
     },
 
     // Update older places that lack the proper fields.
-    async updatePlace({ dispatch }, place) {
+    async updatePlace({ getters }, place) {
       var placeId = place.place_id;
+      var docId = "";
       var newPlace = {};
       const snapshot = await fb.placesCollection
         .where("place_id", "==", placeId)
@@ -1143,121 +1144,82 @@ const store = new Vuex.Store({
       }
 
       snapshot.forEach((doc) => {
-        // docId = doc.id;
+        docId = doc.id;
         newPlace = doc.data();
-        newPlace.doc_id = doc.id;
-        newPlace.updatedOn = new Date();
 
-        // if (!newPlace.doc_id) {
-        //   newPlace.doc_id = docId;
-        // }
-
-        if (!newPlace.address) {
-          // console.log("This place doesn't have an address.");
-          newPlace.address = {};
-
-          for (let a = 0; a < newPlace.address_components.length; a++) {
-            switch (newPlace.address_components[a].types[0]) {
-              case "street_number":
-                newPlace.address.street_number =
-                  newPlace.address_components[a].long_name;
-                break;
-              case "route":
-                newPlace.address.route =
-                  newPlace.address_components[a].short_name;
-                break;
-              case "locality":
-                newPlace.address.locality =
-                  newPlace.address_components[a].long_name;
-                break;
-              case "administrative_area_level_3":
-                newPlace.address.township =
-                  newPlace.address_components[a].long_name;
-                break;
-              case "administrative_area_level_2":
-                newPlace.address.county =
-                  newPlace.address_components[a].long_name;
-                break;
-              case "administrative_area_level_1":
-                newPlace.address.state =
-                  newPlace.address_components[a].long_name;
-                break;
-              case "country":
-                newPlace.address.country =
-                  newPlace.address_components[a].short_name;
-                break;
-              case "postal_code":
-                newPlace.address.postal_code =
-                  newPlace.address_components[a].long_name;
-            }
-          }
-          newPlace.address.plus_code = newPlace.plus_code.compound_code;
-
-          delete newPlace.address_components;
-          delete newPlace.plus_code;
+        if (!newPlace.address.township) {
+          fetchTownship();
         }
 
-        if (!newPlace.ratings) {
-          newPlace.ratings = {
-            general: 0, // General rating
-            compliance: 0, // Compliance rating
-            notifications: 0, // Notification rating
-            enforcement: 0, // Enforcement rating
-            total: 0, // Total number of ratings
-          };
-
-          delete newPlace.review;
-        }
-
-        if (!newPlace.location) {
-          // console.log("This place doesn't have a location.");
-
-          newPlace.location = {
-            lat: newPlace.geometry.location.lat,
-            lng: newPlace.geometry.location.lng,
-          };
-
-          delete newPlace.geometry;
-          delete newPlace.g;
-          delete newPlace.coordinates;
-          delete newPlace.icon;
-          delete newPlace.geohash;
-        }
-
-        fb.placesCollection
-          .doc(newPlace.doc_id)
-          .set(newPlace)
-          .then(function() {
-            dispatch("updateReviews", {
-              docId: newPlace.doc_id,
-              placeId: newPlace.place_id,
-            });
-          })
-          .catch(function(error) {
-            // The document probably doesn't exist.
-            console.error("Error updating document: ", error);
-          });
       });
 
-      // if (!newPlace.address.township) {
-      //   await dispatch("createPlace", { place_id: newPlace.place_id }).then(
-      //     (results) => {
-      //       if (results.address.township) {
-      //         fb.placesCollection
-      //           .doc(newPlace.doc_id)
-      //           .set({
-      //             address: {
-      //               township: newPlace.address.township,
-      //             },
-      //           })
-      //           .catch(function(error) {
-      //             // The document probably doesn't exist.
-      //             console.error("Error updating document: ", error);
-      //           });
-      //       }
-      //     }
-      //   );
-      // }
+      async function fetchTownship() {
+        var apiKey = getters.getFixieKey;
+        const URL = `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?place_id=${place.place_id}&fields=name,place_id,geometry,plus_code,types,address_component,formatted_address&key=${apiKey}`;
+        newPlace.address = {};
+
+        await axios
+          .get(URL)
+          .then((response) => {
+            var result = response.data.result;
+
+            for (let a = 0; a < result.address_components.length; a++) {
+              switch (result.address_components[a].types[0]) {
+                case "street_number":
+                  newPlace.address.street_number =
+                    result.address_components[a].long_name;
+                  break;
+                case "route":
+                  newPlace.address.route =
+                    result.address_components[a].short_name;
+                  break;
+                case "locality":
+                  newPlace.address.locality =
+                    result.address_components[a].long_name;
+                  break;
+                case "administrative_area_level_3":
+                  newPlace.address.township =
+                    result.address_components[a].long_name;
+                  break;
+                case "administrative_area_level_2":
+                  newPlace.address.county =
+                    result.address_components[a].long_name;
+                  break;
+                case "administrative_area_level_1":
+                  newPlace.address.state =
+                    result.address_components[a].long_name;
+                  break;
+                case "country":
+                  newPlace.address.country =
+                    result.address_components[a].short_name;
+                  break;
+                case "postal_code":
+                  newPlace.address.postal_code =
+                    result.address_components[a].long_name;
+              }
+            }
+
+            updateTownship(newPlace);
+          })
+          .catch((error) => {
+            console.log(error.message);
+            this.errorMessage = error.message;
+          });
+      }
+
+      async function updateTownship(results) {
+        if (results.address.township) {
+          fb.placesCollection
+            .doc(docId)
+            .update({
+              address: results.address,
+            })
+            .catch(function(error) {
+              // The document probably doesn't exist.
+              console.error("Error updating document: ", error);
+            });
+        }
+      }
     },
 
     // Clear places and ranges set in store.
