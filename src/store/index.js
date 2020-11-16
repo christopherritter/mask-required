@@ -554,7 +554,7 @@ const store = new Vuex.Store({
     },
     setLoading(state, val) {
       state.loading = val;
-    }
+    },
   },
   actions: {
     // Authentication
@@ -680,17 +680,15 @@ const store = new Vuex.Store({
           return;
         });
       } else {
-
         snapshot.forEach((doc) => {
           newRegion = doc.data();
-  
+
           if (!newRegion.address || !newRegion.location) {
             dispatch("updateRegion", newRegion);
           }
         });
-  
+
         commit("setRegion", newRegion);
-        
       }
     },
 
@@ -711,7 +709,7 @@ const store = new Vuex.Store({
         .get(URL)
         .then((response) => {
           var result = response.data.result;
-          console.log(result)
+          console.log(result);
 
           newRegion.name = result.name;
           newRegion.formatted_address = result.formatted_address;
@@ -1051,25 +1049,25 @@ const store = new Vuex.Store({
 
       if (address.locality) {
         places = await fb.placesCollection
-        .where("address.locality", "==", address.locality)
-        .where("address.county", "==", address.county)
-        .where("address.state", "==", address.state)
-        .get();
+          .where("address.locality", "==", address.locality)
+          .where("address.county", "==", address.county)
+          .where("address.state", "==", address.state)
+          .get();
       } else if (address.route) {
         places = await fb.placesCollection
-        .where("address.locality", "==", address.route)
-        .where("address.county", "==", address.county)
-        .where("address.state", "==", address.state)
-        .get();
+          .where("address.locality", "==", address.route)
+          .where("address.county", "==", address.county)
+          .where("address.state", "==", address.state)
+          .get();
       } else if (address.county) {
         places = await fb.placesCollection
-        .where("address.county", "==", address.county)
-        .where("address.state", "==", address.state)
-        .get();
+          .where("address.county", "==", address.county)
+          .where("address.state", "==", address.state)
+          .get();
       } else if (address.state) {
         places = await fb.placesCollection
-        .where("address.state", "==", address.state)
-        .get();
+          .where("address.state", "==", address.state)
+          .get();
       }
 
       if (places.empty) {
@@ -1135,6 +1133,7 @@ const store = new Vuex.Store({
     // Update older places that lack the proper fields.
     async updatePlace({ dispatch }, place) {
       var placeId = place.place_id;
+      var newPlace = {};
       const snapshot = await fb.placesCollection
         .where("place_id", "==", placeId)
         .get();
@@ -1144,13 +1143,14 @@ const store = new Vuex.Store({
       }
 
       snapshot.forEach((doc) => {
-        var docId = doc.id;
-        var newPlace = doc.data();
+        // docId = doc.id;
+        newPlace = doc.data();
+        newPlace.doc_id = doc.id;
         newPlace.updatedOn = new Date();
 
-        if (!newPlace.doc_id) {
-          newPlace.doc_id = docId;
-        }
+        // if (!newPlace.doc_id) {
+        //   newPlace.doc_id = docId;
+        // }
 
         if (!newPlace.address) {
           // console.log("This place doesn't have an address.");
@@ -1224,15 +1224,12 @@ const store = new Vuex.Store({
           delete newPlace.geohash;
         }
 
-        console.log("Here's the new place")
-        console.log(newPlace)
-
         fb.placesCollection
-          .doc(docId)
+          .doc(newPlace.doc_id)
           .set(newPlace)
           .then(function() {
             dispatch("updateReviews", {
-              docId: docId,
+              docId: newPlace.doc_id,
               placeId: newPlace.place_id,
             });
           })
@@ -1242,8 +1239,25 @@ const store = new Vuex.Store({
           });
       });
 
-      // commit("setPlace", newPlace);
-      // return newPlace;
+      // if (!newPlace.address.township) {
+      //   await dispatch("createPlace", { place_id: newPlace.place_id }).then(
+      //     (results) => {
+      //       if (results.address.township) {
+      //         fb.placesCollection
+      //           .doc(newPlace.doc_id)
+      //           .set({
+      //             address: {
+      //               township: newPlace.address.township,
+      //             },
+      //           })
+      //           .catch(function(error) {
+      //             // The document probably doesn't exist.
+      //             console.error("Error updating document: ", error);
+      //           });
+      //       }
+      //     }
+      //   );
+      // }
     },
 
     // Clear places and ranges set in store.
@@ -1324,29 +1338,33 @@ const store = new Vuex.Store({
 
       snapshot.forEach((doc) => {
         var place = doc.data();
-        
+
         placesArray.push(place);
       });
 
       for (let p = 0; p < placesArray.length; p++) {
-        await dispatch("fetchReviews", placesArray[p].doc_id).then((reviews) => {
-          if (reviews) {
-            reviews.map((review) => {
-              review.place = {
-                name: placesArray[p].name,
-                formatted_address: placesArray[p].formatted_address,
-                ratings: placesArray[p].ratings,
-                place_id: placesArray[p].place_id,
-              }
-              reviewsArray.push(review);
-            });
+        await dispatch("fetchReviews", placesArray[p].doc_id).then(
+          (reviews) => {
+            if (reviews) {
+              reviews.map((review) => {
+                review.place = {
+                  name: placesArray[p].name,
+                  formatted_address: placesArray[p].formatted_address,
+                  ratings: placesArray[p].ratings,
+                  place_id: placesArray[p].place_id,
+                };
+                reviewsArray.push(review);
+              });
+            }
           }
-        });
+        );
       }
 
-      reviewsArray.sort((a, b) => (b.content.length > a.content.length) ? 1 : -1);
+      reviewsArray.sort((a, b) =>
+        b.content.length > a.content.length ? 1 : -1
+      );
 
-      return reviewsArray.slice(0,6);
+      return reviewsArray.slice(0, 6);
     },
     async likeReview({}, review) {
       const userId = fb.auth.currentUser.uid;
@@ -1810,9 +1828,9 @@ const store = new Vuex.Store({
       commit("setRange", { lower, upper });
     },
 
-    isLoading({commit}, val) {
+    isLoading({ commit }, val) {
       commit("setLoading", val);
-    }
+    },
   },
 });
 
