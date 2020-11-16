@@ -709,7 +709,6 @@ const store = new Vuex.Store({
         .get(URL)
         .then((response) => {
           var result = response.data.result;
-          console.log(result);
 
           newRegion.name = result.name;
           newRegion.formatted_address = result.formatted_address;
