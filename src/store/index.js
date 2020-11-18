@@ -901,15 +901,15 @@ const store = new Vuex.Store({
       snapshot.forEach((doc) => {
         newPlace = doc.data();
 
-        if (
-          !newPlace.address ||
-          !newPlace.address.township ||
-          !newPlace.ratings ||
-          !newPlace.location ||
-          !newPlace.doc_id
-        ) {
-          dispatch("updatePlace", newPlace);
-        }
+        // if (
+        //   !newPlace.address ||
+        //   !newPlace.address.township ||
+        //   !newPlace.ratings ||
+        //   !newPlace.location ||
+        //   !newPlace.doc_id
+        // ) {
+        //   dispatch("updatePlace", newPlace);
+        // }
       });
 
       commit("setPlace", newPlace);
