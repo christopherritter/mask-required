@@ -452,10 +452,26 @@ export default {
     };
   },
   methods: {
-    generateReviews() {
-      this.starterReviews.map((review) => {
-        return fb.reviewsCollection.add(review);
-      });
+    async generateReviews() {
+      for (let r = 0; r < this.starterReviews.length; r++) {
+        let review = this.starterReviews[r];
+
+        const places = await fb.placesCollection
+          .where("place_id", "==", review.place.place_id)
+          .get();
+
+        if (!places) {
+          return;
+        }
+
+        places.forEach((doc) => {
+          return fb.placesCollection
+            .doc(doc.id)
+            .collection("reviews")
+            .doc(review.docId)
+            .set(review);
+        });
+      }
     },
   },
 };

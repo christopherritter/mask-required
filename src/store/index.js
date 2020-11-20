@@ -1299,7 +1299,7 @@ const store = new Vuex.Store({
 
       snapshot.forEach((doc) => {
         var place = doc.data();
-
+        place.doc_id = doc.id;
         placesArray.push(place);
       });
 
@@ -1316,7 +1316,7 @@ const store = new Vuex.Store({
                 };
                 reviewsArray.push(review);
               });
-            }
+            } 
           }
         );
       }
