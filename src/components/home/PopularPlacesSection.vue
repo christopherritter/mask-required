@@ -199,7 +199,9 @@ export default {
 
     this.$store.dispatch("fetchPlaces", this.type.name).then((places) => {
       this.places = places;
+      this.loading = false;
     });
+    
   },
   methods: {
     async viewPlace(place) {
@@ -218,13 +220,13 @@ export default {
       return places.slice(0, 6);
     },
   },
-  watch: {
-    types(newVal, oldVal) {
-      if (this.types.length > 0) {
-        this.loading = false;
-      }
-    },
-  },
+  // watch: {
+  //   types(newVal, oldVal) {
+  //     if (this.types.length > 0) {
+  //       this.loading = false;
+  //     }
+  //   },
+  // },
   filters: {
     replaceUnderscore(val) {
       var i,
