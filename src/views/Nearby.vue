@@ -46,33 +46,35 @@
         ></v-skeleton-loader>
       </v-row>
       <v-row v-else>
-        <v-chip-group
-          show-arrows
-          class="px-0"
-          mandatory
-          active-class="teal--text"
-          v-model="type"
-        >
-          <v-chip
-            color="white"
-            value="view_all"
-            @click="
-              $router.push({
-                name: 'nearby-places',
-                params: { id: region.place_id },
-              })
-            "
-            >View All</v-chip
+        <v-col>
+          <v-chip-group
+            show-arrows
+            class="px-0"
+            mandatory
+            active-class="teal--text"
+            v-model="type"
           >
-          <v-chip
-            color="white"
-            v-for="(type, index) in sortedPlaces"
-            :key="index"
-            @click="filterByType(type)"
-            :value="type.name"
-            >{{ type.name | replaceUnderscore }}</v-chip
-          >
-        </v-chip-group>
+            <v-chip
+              color="white"
+              value="view_all"
+              @click="
+                $router.push({
+                  name: 'nearby-places',
+                  params: { id: region.place_id },
+                })
+              "
+              >View All</v-chip
+            >
+            <v-chip
+              color="white"
+              v-for="(type, index) in sortedPlaces"
+              :key="index"
+              @click="filterByType(type)"
+              :value="type.name"
+              >{{ type.name | replaceUnderscore }}</v-chip
+            >
+          </v-chip-group>
+        </v-col>
       </v-row>
       <div v-if="loading">
         <v-skeleton-loader
@@ -287,7 +289,7 @@
         </v-col>
       </v-row>
       <v-row v-show="empty">
-        <v-col>
+        <v-col cols="12" md="6">
           <v-card outlined>
             <h3 class="mt-12 text-center">Find another location.</h3>
             <vg-autocomplete
@@ -300,7 +302,7 @@
             ></vg-autocomplete>
           </v-card>
         </v-col>
-        <v-col>
+        <v-col cols="12" md="6">
           <v-card outlined color="#c5f9da">
             <h3 class="mt-12 text-center">Create your own review.</h3>
             <vg-autocomplete
