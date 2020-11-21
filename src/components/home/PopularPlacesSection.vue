@@ -177,6 +177,7 @@ export default {
       highlightedCard: null,
       hover: false,
       placesExist: false,
+      loading: true,
     };
   },
   async created() {
@@ -203,7 +204,7 @@ export default {
   methods: {
     async viewPlace(place) {
       await this.$store.dispatch("fetchPlace", place);
-      this.$store.dispatch("isLoading", true);
+      // this.$store.dispatch("isLoading", true);
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
   },
@@ -211,19 +212,19 @@ export default {
     types: Array,
   },
   computed: {
-    ...mapState(["userLocation", "loading"]),
+    ...mapState(["userLocation"]),
     placesToDisplay: function() {
       var places = this.places;
       return places.slice(0, 6);
     },
   },
-  // watch: {
-  //   types(newVal, oldVal) {
-  //     if (this.types.length > 0) {
-  //       this.$store.dispatch("isLoading", false)
-  //     }
-  //   },
-  // },
+  watch: {
+    types(newVal, oldVal) {
+      if (this.types.length > 0) {
+        this.loading = false;
+      }
+    },
+  },
   filters: {
     replaceUnderscore(val) {
       var i,

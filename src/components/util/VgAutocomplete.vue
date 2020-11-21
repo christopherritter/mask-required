@@ -41,6 +41,7 @@ export default {
     model: null,
     search: null,
     error: "",
+    loading: false,
     spinner: false,
   }),
   props: [
@@ -62,7 +63,7 @@ export default {
     "appendOuterIcon",
   ],
   computed: {
-    ...mapState(["userLocation", "loading"]),
+    ...mapState(["userLocation"]),
     fields() {
       if (!this.model) return [];
 
@@ -88,7 +89,7 @@ export default {
   watch: {
     search(val) {
       // Items have already been requested
-      if (this.$store.getters.getLoading) return;
+      if (this.loading) return;
 
       // this.$store.dispatch("isLoading", true);
 
@@ -105,20 +106,20 @@ export default {
         var isEstablishment = newVal.types.includes("establishment");
 
         if (isGeocode && this.type) {
-          this.$store.dispatch("isLoading", true)
+          this.loading = true;
           this.$router.push({
             name: "nearby-places-type",
             params: { id: newVal.place_id, type: this.type },
           });
         } else {
           if (isGeocode) {
-            this.$store.dispatch("isLoading", true)
+            this.loading = true;
             this.$router.push({
               name: "nearby-places",
               params: { id: newVal.place_id },
             });
           } else if (isEstablishment) {
-            this.$store.dispatch("isLoading", true)
+            this.loading = true;
             this.$router.push({
               name: "place",
               params: { id: newVal.place_id },
@@ -126,6 +127,7 @@ export default {
           }
         }
       } else {
+        this.loading = false;
         this.model = null;
         this.entries = [];
       }
@@ -215,7 +217,7 @@ export default {
         this.entries.push(prediction);
       }
 
-      this.$store.dispatch("isLoading", false);
+      this.loading = false;
     },
   },
 };

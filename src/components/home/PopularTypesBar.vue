@@ -184,20 +184,21 @@ export default {
       showSearchBox: false,
       showMenu: false,
       error: "",
+      loading: true,
     };
   },
-  async mounted() {
-    // if (!this.types.length) {
-    //   await this.$store.dispatch("countPlaceTypes");
-    //   this.types = this.$store.getters.getTypes;
-    // }
-    this.$store.dispatch("isLoading", false)
+  watch: {
+    types() {
+      if (this.types.length >= 1) {
+        this.loading = false;
+      }
+    }
   },
   props: {
     types: Array,
   },
   computed: {
-    ...mapState([["validTypes"], "loading"]),
+    ...mapState([["validTypes"]]),
     topReviewTypes() {
       var types = this.types;
       var sortedTypes = types.sort((a, b) => {

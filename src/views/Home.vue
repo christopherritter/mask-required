@@ -29,12 +29,8 @@ export default {
   async created() {
     await this.$store.dispatch("viewTypes").then((results) => {
       this.types = results;
-      this.$store.dispatch("isLoading", false)
     });
     this.$ga.page(this.$router);
-  },
-  computed: {
-    ...mapState(["loading"])
   },
   components: {
     PopularTypesBar,

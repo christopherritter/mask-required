@@ -11,7 +11,7 @@
         <v-divider class="mb-1"></v-divider>
       </v-col>
     </v-row>
-    <v-row v-if="loading && reviewsExist">
+    <v-row v-if="loading">
       <v-col cols="12" md="6" lg="4">
         <v-card height="325" outlined>
           <v-card-text>
@@ -103,7 +103,7 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-row v-if="!loading && reviewsExist">
+    <v-row v-if="!loading">
       <v-col
         cols="12"
         md="6"
@@ -235,25 +235,26 @@ export default {
       highlightedCard: null,
       hover: false,
       reviewsExist: false,
+      loading: true,
     };
   },
   async created() {
     await this.$store.dispatch("fetchTopReviews").then((reviews) => {
       this.reviews = reviews;
     });
-    
+    this.loading = false;
     this.reviewsExist = true;
   },
   methods: {
     async viewPlace(place) {
       await this.$store.dispatch("fetchPlace", { place_id: place.place_id });
-      this.$store.dispatch("isLoading", true);
+      // this.$store.dispatch("isLoading", true);
       this.$router.push({ name: "place", params: { id: place.place_id } });
     },
   },
-  computed: {
-    ...mapState(["loading"]),
-  },
+  // computed: {
+  //   ...mapState(["loading"]),
+  // },
   filters: {
     truncateWithEllipse(val, stringLength) {
       if (!val) {
