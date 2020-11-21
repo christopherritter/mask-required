@@ -13,7 +13,7 @@
         <v-divider class="mb-1"></v-divider>
       </v-col>
     </v-row>
-    <v-row v-if="placesExist">
+    <v-row>
       <v-col
         cols="12"
         sm="12"
@@ -176,7 +176,6 @@ export default {
       styleObject: { "border-color": "#7dbc96" },
       highlightedCard: null,
       hover: false,
-      placesExist: false,
       loading: true,
     };
   },
@@ -185,10 +184,6 @@ export default {
       .limit(1)
       .get()
       .then((query) => query.size);
-
-    if (collectionSize) {
-      this.placesExist = true;
-    }
 
     if (this.$store.state.types === null) {
       // await this.$store.dispatch("countPlaceTypes");
